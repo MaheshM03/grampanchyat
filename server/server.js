@@ -41,6 +41,21 @@ app.get('/api/test', (req, res) => {
   res.json({ message: "API is working 🚀" });
 });
 
+// Mount API routes
+const newsRoutes = require('./routes/news');
+const kunbiRoutes = require('./routes/kunbi');
+
+app.use('/api/news', newsRoutes);
+app.use('/api/kunbi', kunbiRoutes);
+
+// Basic error handler for API routes
+app.use((err, req, res, next) => {
+  console.error(err);
+  if (req.path && req.path.startsWith('/api')) {
+    return res.status(500).json({ message: 'Server error' });
+  }
+  next(err);
+});
 // ─────────────────────────────────────────
 // SERVE REACT BUILD (IMPORTANT)
 // ─────────────────────────────────────────
