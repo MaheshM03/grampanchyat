@@ -1,4 +1,4 @@
-require('dotenv').config(); // Load env variables first
+require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
@@ -27,10 +27,10 @@ app.use(rateLimit({
 }));
 
 // ─────────────────────────────────────────
-// CORS (for development + production)
+// CORS
 // ─────────────────────────────────────────
 app.use(cors({
-  origin: '*', // For now allow all (fix later if needed)
+  origin: '*',
   credentials: true
 }));
 
@@ -41,14 +41,18 @@ app.get('/api/test', (req, res) => {
   res.json({ message: "API is working 🚀" });
 });
 
-// Mount API routes
+// ─────────────────────────────────────────
+// ROUTES
+// ─────────────────────────────────────────
 const newsRoutes = require('./routes/news');
 const kunbiRoutes = require('./routes/kunbi');
 
 app.use('/api/news', newsRoutes);
 app.use('/api/kunbi', kunbiRoutes);
 
-// Basic error handler for API routes
+// ─────────────────────────────────────────
+// ERROR HANDLER (API)
+// ─────────────────────────────────────────
 app.use((err, req, res, next) => {
   console.error(err);
   if (req.path && req.path.startsWith('/api')) {
@@ -56,17 +60,27 @@ app.use((err, req, res, next) => {
   }
   next(err);
 });
+
 // ─────────────────────────────────────────
-// SERVE REACT BUILD (IMPORTANT)
+// SERVE REACT BUILD (SAFE)
 // ─────────────────────────────────────────
-app.use(express.static(path.join(__dirname, 'build')));
+const buildPath = path.join(__dirname, 'build');
+
+app.use(express.static(buildPath));
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+  const indexPath = path.join(buildPath, 'index.html');
+
+  res.sendFile(indexPath, (err) => {
+    if (err) {
+      console.error("Error serving React build:", err);
+      res.status(500).send("Frontend not found");
+    }
+  });
 });
 
 // ─────────────────────────────────────────
-// START SERVER (CRITICAL FOR RAILWAY)
+// START SERVER (IMPORTANT)
 // ─────────────────────────────────────────
 const PORT = process.env.PORT || 5000;
 
