@@ -1,5 +1,5 @@
 // Razorpay Configuration
-// ⚠️ TODO: Replace with your TEST keys from https://dashboard.razorpay.com/app/keys
+//  TODO: Replace with your TEST keys from https://dashboard.razorpay.com/app/keys
 
 module.exports = {
   key_id: 'rzp_test_YOUR_KEY_ID', 
