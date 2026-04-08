@@ -30,7 +30,7 @@ app.use(rateLimit({
 // CORS
 // ─────────────────────────────────────────
 app.use(cors({
-  origin: '*',
+  origin: 'http://localhost:3000',
   credentials: true
 }));
 
@@ -42,12 +42,58 @@ app.get('/api/test', (req, res) => {
 });
 
 // ─────────────────────────────────────────
+// MIDDLEWARE - Session & Auth
+// ─────────────────────────────────────────
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
+const authMiddleware = (req, res, next) => {
+  if (req.session && req.session.admin) {
+    return next();
+  }
+  res.status(401).json({ success: false, message: 'Admin access required' });
+};
+
+app.use(cookieParser());
+app.use(session({
+  secret: 'grampanchayat-session-secret',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 }
+}));
+
+// ─────────────────────────────────────────
+// AUTH ROUTES
+// ─────────────────────────────────────────
+app.post('/api/auth/login', (req, res) => {
+  const { username, password } = req.body;
+  if (username === 'admin' && password === 'admin123') {
+    req.session.admin = true;
+    req.session.save(err => {
+      if (err) return res.status(500).json({ message: 'Session error' });
+      res.json({ success: true, message: 'Logged in', token: 'dummy-for-client' });
+    });
+  } else {
+    res.status(401).json({ success: false, message: 'Invalid credentials' });
+  }
+});
+
+// ─────────────────────────────────────────
 // ROUTES
 // ─────────────────────────────────────────
 const newsRoutes = require('./routes/news');
 const kunbiRoutes = require('./routes/kunbi');
+const grievanceRoutes = require('./routes/grievance');
 
-app.use('/api/news', newsRoutes);
+app.use('/api/grievance', (req, res, next) => {
+  if (req.method === 'GET') return authMiddleware(req, res, next);
+  next();
+}, grievanceRoutes);
+
+app.use('/api/news', (req, res, next) => {
+  if (['POST', 'PUT', 'DELETE'].includes(req.method)) return authMiddleware(req, res, next);
+  next();
+}, newsRoutes);
+
 app.use('/api/kunbi', kunbiRoutes);
 
 // ─────────────────────────────────────────
