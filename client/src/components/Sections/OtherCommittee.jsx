@@ -1,4 +1,5 @@
 import Navbar from "./Navbar";
+import { useTranslator } from "../../context/LanguageContext.js";
 
 const conflictFreeMembers = [
   { sr: 1, position: "Elected by the Gram Sabha", name: "Mr. Vinay Ramchandra Yadav", role: "Secretary" },
@@ -12,6 +13,7 @@ const conflictFreeMembers = [
 ];
 
 export default function OtherCommittee() {
+  const { t, currentLanguage } = useTranslator();
   return (
     <section >
         <Navbar/>
@@ -43,7 +45,7 @@ export default function OtherCommittee() {
               marginBottom: 14,
             }}
           >
-            Grama Sachivalaya Kadepur
+            {t('otherCommittee.badge')}
           </span>
           <h2
             style={{
@@ -54,7 +56,7 @@ export default function OtherCommittee() {
               lineHeight: 1.2,
             }}
           >
-            Gram Panchayat Kadepur Sarva Samiti
+            {t('otherCommittee.heroTitle')}
           </h2>
           <p
             style={{
@@ -64,12 +66,7 @@ export default function OtherCommittee() {
               marginBottom: 24,
             }}
           >
-            Organization of committees working for the progress of the village.
-            These committees contribute to important areas like education, health,
-            sanitation, water management, women and child welfare, agricultural
-            development and social welfare. All committees are committed to
-            fulfilling the expectations of the villagers with transparency, unity,
-            and a people-oriented approach.
+            {t('otherCommittee.heroDesc')}
           </p>
           <button
             style={{
@@ -82,7 +79,7 @@ export default function OtherCommittee() {
               cursor: "pointer",
             }}
           >
-            Search
+            {t('otherCommittee.search')}
           </button>
         </div>
         <div style={{ fontSize: 90 }}>🧑‍💻🌱</div>
@@ -98,7 +95,7 @@ export default function OtherCommittee() {
           margin: "0 0 28px",
         }}
       >
-        Conflict-Free Village Committee
+        {t('otherCommittee.tableTitle')}
       </h3>
       <div
         style={{
@@ -112,7 +109,7 @@ export default function OtherCommittee() {
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
             <tr>
-              {["Sr. No.", "Position", "Name", "Committee Designation"].map(
+              {[t('otherCommittee.headers.0'), t('otherCommittee.headers.1'), t('otherCommittee.headers.2'), t('otherCommittee.headers.3')].map(
                 (h, i) => (
                   <th
                     key={h}
@@ -163,7 +160,7 @@ export default function OtherCommittee() {
                     borderBottom: "1px solid #e0e7ef",
                   }}
                 >
-                  {m.position}
+                  {currentLanguage === 'mr' ? (m.positionMr || m.position) : m.position}
                 </td>
                 <td
                   style={{
@@ -193,7 +190,7 @@ export default function OtherCommittee() {
                       fontWeight: 600,
                     }}
                   >
-                    {m.role}
+                    {currentLanguage === 'mr' ? (m.roleMr || m.role) : m.role}
                   </span>
                 </td>
               </tr>
@@ -204,3 +201,4 @@ export default function OtherCommittee() {
     </section>
   );
 }
+

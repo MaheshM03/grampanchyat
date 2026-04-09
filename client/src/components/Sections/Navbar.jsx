@@ -15,7 +15,7 @@ export default function Navbar() {
     { key: "nav.rti", name: "RTI", to: "/rti" },
     { key: "nav.news", name: "News", to: "/news" },
     { key: "nav.grievance", name: "Grievance", to: "/grievance" },
-    { key: "nav.moreInfo", name: "More Info", to: "/" }
+{ key: "nav.aboutus", name: "About Us", to: "/aboutus" }
   ];
 
   return (

@@ -16,6 +16,7 @@ import { NewsProvider } from './context/NewsContext.js';
 import { GrievanceProvider } from './context/GrievanceContext.js';
 import BirthCertificateForm from './certificates/BirthCertificateForm.jsx';
 import DeathCertificateForm from './certificates/DeathCertificateForm.jsx';
+import AboutUs from './components/Sections/AboutUs.jsx';
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
           <Route path="/admin" element={<AdminPanel />} />
           <Route path="/birth" element={<BirthCertificateForm />} />
           <Route path="/death" element={<DeathCertificateForm />} />
+          <Route path="/aboutus" element={<AboutUs />} />
           <Route path="*" element={
             <div style={{ padding: '20px', textAlign: 'center' }}>
               <h1>404 - Page Not Found</h1>

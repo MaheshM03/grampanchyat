@@ -1,95 +1,224 @@
+import { useState } from "react";
 import { useTranslator } from "../../context/LanguageContext.js";
 
 const ministers = [
-  { name: "देवेंद्र फडणवीस", role: "मा. मुख्यमंत्री", emoji: "👨‍💼" },
-  { name: "एकनाथ शिंदे", role: "मा. उपमुख्यमंत्री", emoji: "👨‍💼" },
-  { name: "सुनेत्रा अजित पवार", role: "मा. उपमुख्यमंत्री", emoji: "👩‍💼" },
-  { name: "जयकुमार गोरे", role: "मा. मंत्री", emoji: "👨‍💼" },
-  { name: "गणेश कदम", role: "मा. आमदार", emoji: "👨‍💼" },
-  { name: "दयानंद ढवळे", role: "उप सभापती", emoji: "👨‍💼" },
-  { name: "डॉ. पंकजा पुणेकर", role: "जिल्हाधिकारी अहमदनगर", emoji: "👩‍💼" },
-  { name: "विशाल नरसाळे", role: "मुख्य कार्यकारी अधिकारी", emoji: "👨‍💼" },
-  { name: "शासिकांत सिंह", role: "तहसीलदार", emoji: "👨‍💼" },
-  { name: "प्रशांत राठव", role: "सभापती", emoji: "👨‍💼" },
+  {
+    name: "देवेंद्र फडणवीस",
+    role: "मा. मुख्यमंत्री",
+    img: "/devndra fadanvis.jfif",
+    desc: "Chief Minister of Maharashtra."
+  },
+  {
+    name: "एकनाथ शिंदे",
+    role: "मा. उपमुख्यमंत्री",
+    img: "/eknath shinde.avif",
+    desc: "Deputy Chief Minister."
+  },
+  {
+    name: "सुनेत्रा अजित पवार",
+    role: "मा. उपमुख्यमंत्री",
+    img: "/sunetra ajit pawar.jfif",
+    desc: "Deputy Chief Minister."
+  },
+  {
+    name: "श्री. ओमकार पवार ",
+    role: "मुख्य कार्यकारी अधिकारी, जिल्हा परिषद नाशिक",
+    img: "/omkar pawar.jfif",
+    desc: "Administrative officer."
+  },
 ];
 
 const gpOfficials = [
-  { name: "सरपंच", role: "हरिदास गणक", emoji: "🧑‍💼" },
-  { name: "उपसरपंच", role: "हनुमान गणक", emoji: "🧑‍💼" },
-  { name: "ग्रामपंचायत अधिकारी", role: "श्री. डी. पुजारी", emoji: "🧑‍💼" },
+  {
+    name: "हरिदास गणक",
+    role: "सरपंच",
+    img: "https://randomuser.me/api/portraits/men/21.jpg",
+    desc: "Village head responsible for governance."
+  },
+  {
+    name: "हनुमान गणक",
+    role: "उपसरपंच ",
+    img: "https://randomuser.me/api/portraits/men/22.jpg",
+    desc: "Deputy head assisting administration."
+  },
+  {
+    name: " श्री. डी. पुजारी",
+    role: "ग्रामपंचायत अधिकारी",
+    img: "https://randomuser.me/api/portraits/men/23.jpg",
+    desc: "Administrative officer."
+  },
+  
 ];
 
 export default function Hero() {
   const { t } = useTranslator();
+  const [selected, setSelected] = useState(null);
 
   return (
     <section>
-      {/* Hero Banner */}
+
+      {/* HERO */}
       <div style={{
-        background: "linear-gradient(135deg, #0f1f3d 0%, #1a2a4a 60%, #2d4a7a 100%)",
-        minHeight: 320, position: "relative", display: "flex", flexDirection: "column",
-        alignItems: "center", justifyContent: "center", overflow: "hidden", padding: "60px 20px 40px"
+        background: "linear-gradient(135deg,#1a2a4a,#2563eb)",
+        padding: "60px 20px",
+        textAlign: "center",
+        color: "#fff"
       }}>
-        {/* Decorative dots */}
-        {[...Array(20)].map((_, i) => (
-          <div key={i} style={{
-            position: "absolute", borderRadius: "50%", opacity: 0.07,
-            width: Math.random() * 80 + 20, height: Math.random() * 80 + 20,
-            background: "#fff", left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%`
-          }} />
-        ))}
-        <div style={{ position: "relative", zIndex: 2, textAlign: "center", maxWidth: 700 }}>
-          <div style={{  color: "#fff", display: "inline-block", padding: "3px 16px", borderRadius: 20, fontSize: 50, marginBottom: 12, fontFamily: "sans-serif" }}>
-            {t('hero.welcome')}
-          </div>
-          <h1 style={{ color: "#fff", fontSize: 42, fontWeight: 800, margin: "0 0 14px", fontFamily: "'Noto Sans Devanagari', sans-serif", textShadow: "0 2px 16px rgba(0,0,0,0.3)" }}>
-            {t('hero.title')}
-          </h1>
-         
-          <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
-            <button style={{ background: "#2563eb", color: "#fff", border: "none", padding: "11px 26px", borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "sans-serif" }}>
-              {t('hero.citizenLogin')}
-            </button>
-            <button style={{ background: "transparent", color: "#fff", border: "2px solid #fff", padding: "11px 26px", borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "sans-serif" }}>
-              {t('hero.moreKnow')}
-            </button>
-          </div>
-        </div>
+        <h1>{t('hero.title')}</h1>
+        <p>{t('hero.welcome')}</p>
       </div>
 
-      {/* Officials card */}
-      <div style={{ background: "#fff", maxWidth: 900, margin: "-10px auto 0", borderRadius: 16, padding: "36px 40px", boxShadow: "0 8px 40px rgba(0,0,0,0.10)", position: "relative", zIndex: 5 }}>
-        <h2 style={{ textAlign: "center", fontSize: 22, fontWeight: 700, color: "#1a2a4a", marginBottom: 28, fontFamily: "'Noto Sans Devanagari', sans-serif" }}>
+      {/* MAIN CARD */}
+      <div style={{
+        maxWidth: "1100px",
+        margin: "-40px auto 0",
+        padding: "30px 20px",
+        background: "#fff",
+        borderRadius: "16px",
+        boxShadow: "0 10px 40px rgba(0,0,0,0.1)"
+      }}>
+
+        {/* MINISTERS */}
+        <h2 style={{ textAlign: "center", marginBottom: 20 }}>
           {t('hero.ministers')}
         </h2>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 20, justifyContent: "center", marginBottom: 32 }}>
+
+        <div style={gridStyle}>
           {ministers.map((m, i) => (
-            <div key={i} style={{ textAlign: "center", width: 90 }}>
-              <div style={{
-                width: 64, height: 64, borderRadius: "50%", margin: "0 auto 8px",
-                background: `linear-gradient(135deg, ${["#2563eb","#16a34a","#e8a020","#dc2626","#7c3aed","#0891b2","#c2410c","#0f172a","#b91c1c","#065f46"][i % 10]}, ${["#60a5fa","#4ade80","#fbbf24","#f87171","#a78bfa","#38bdf8","#fb923c","#334155","#fca5a5","#34d399"][i % 10]})`,
-                display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24
-              }}>{m.emoji}</div>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "#1e293b", fontFamily: "sans-serif" }}>{m.name}</div>
-              <div style={{ fontSize: 11, color: "#64748b", fontFamily: "sans-serif", lineHeight: 1.3 }}>{m.role}</div>
+            <div key={i} style={cardStyle} onClick={() => setSelected(m)}>
+              <div style={imgWrapper}>
+                <img src={m.img} alt={m.name} className="zoom-img" />
+              </div>
+              <div style={nameStyle}>{m.name}</div>
+              <div style={roleStyle}>{m.role}</div>
             </div>
           ))}
         </div>
 
-        <h2 style={{ textAlign: "center", fontSize: 18, fontWeight: 700, color: "#1a2a4a", marginBottom: 20, fontFamily: "'Noto Sans Devanagari', sans-serif" }}>
+        {/* GP OFFICIALS */}
+        <h2 style={{ textAlign: "center", margin: "30px 0 20px" }}>
           {t('hero.gpOfficials')}
         </h2>
-        <div style={{ display: "flex", gap: 24, justifyContent: "center" }}>
+
+        <div style={gridStyle}>
           {gpOfficials.map((o, i) => (
-            <div key={i} style={{ textAlign: "center", width: 110 }}>
-              <div style={{ width: 70, height: 70, borderRadius: "50%", margin: "0 auto 8px", background: `linear-gradient(135deg,#1a2a4a,#2563eb)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 28 }}>{o.emoji}</div>
-              <div style={{ fontSize: 13, fontWeight: 700, color: "#1e293b", fontFamily: "sans-serif" }}>{o.name}</div>
-              <div style={{ fontSize: 12, color: "#64748b", fontFamily: "sans-serif" }}>{o.role}</div>
+            <div key={i} style={cardStyle} onClick={() => setSelected(o)}>
+              <div style={imgWrapper}>
+                <img src={o.img} alt={o.name} className="zoom-img" />
+              </div>
+              <div style={nameStyle}>{o.name}</div>
+              <div style={roleStyle}>{o.role}</div>
             </div>
           ))}
         </div>
       </div>
+
+      {/* MODAL */}
+      {selected && (
+        <div style={overlay} onClick={() => setSelected(null)}>
+          <div style={modal} onClick={(e) => e.stopPropagation()}>
+            <img src={selected.img} style={modalImg} alt="" />
+            <h3>{selected.name}</h3>
+            <p>{selected.role}</p>
+            <p style={{ marginTop: 10 }}>{selected.desc}</p>
+
+            <button style={btn} onClick={() => setSelected(null)}>
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* HOVER CSS */}
+      <style>
+        {`
+          .zoom-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.4s;
+          }
+
+          .zoom-img:hover {
+            transform: scale(1.1);
+          }
+        `}
+      </style>
     </section>
   );
 }
 
+/* STYLES */
+
+const gridStyle = {
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+  gap: "20px"
+};
+
+const cardStyle = {
+  background: "#fff",
+  padding: "16px",
+  borderRadius: "12px",
+  textAlign: "center",
+  boxShadow: "0 6px 18px rgba(0,0,0,0.08)",
+  cursor: "pointer",
+  transition: "0.3s"
+};
+
+const imgWrapper = {
+  width: "90px",
+  height: "90px",
+  borderRadius: "50%",
+  overflow: "hidden",
+  margin: "0 auto"
+};
+
+const nameStyle = {
+  fontWeight: "600",
+  marginTop: "10px"
+};
+
+const roleStyle = {
+  fontSize: "13px",
+  color: "#64748b"
+};
+
+const overlay = {
+  position: "fixed",
+  top: 0,
+  left: 0,
+  width: "100%",
+  height: "100%",
+  background: "rgba(0,0,0,0.6)",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center"
+};
+
+const modal = {
+  background: "#fff",
+  padding: "25px",
+  borderRadius: "12px",
+  textAlign: "center",
+  width: "90%",
+  maxWidth: "400px"
+};
+
+const modalImg = {
+  width: "120px",
+  height: "120px",
+  borderRadius: "50%",
+  objectFit: "cover",
+  marginBottom: "10px"
+};
+
+const btn = {
+  marginTop: "15px",
+  padding: "10px 20px",
+  background: "#2563eb",
+  color: "#fff",
+  border: "none",
+  borderRadius: "6px",
+  cursor: "pointer"
+};
