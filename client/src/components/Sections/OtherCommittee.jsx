@@ -14,182 +14,121 @@ const conflictFreeMembers = [
 
 export default function OtherCommittee() {
   const { t, currentLanguage } = useTranslator();
+
   return (
-    <section >
-        <Navbar/>
-      {/* ── Hero Card ── */}
-      <div
-        style={{
-          background: "linear-gradient(135deg,#0f4c75,#1b6ca8,#118ab2)",
-          
-          padding: "60px 48px",
-          display: "flex",
-          alignItems: "center",
-          gap: 40,
-          marginBottom: 56,
-          flexWrap: "wrap",
-        }}
-      >
-        <div style={{ flex: 1, minWidth: 260 }}>
-          <span
-            style={{
-              background: "rgba(255,255,255,.15)",
-              color: "#bae6fd",
-              fontSize: "0.78rem",
-              fontWeight: 600,
-              letterSpacing: 2,
-              textTransform: "uppercase",
-              borderRadius: 20,
-              padding: "4px 14px",
-              display: "inline-block",
-              marginBottom: 14,
-            }}
-          >
+    <section style={{ background: "#f8fafc" }}>
+      <Navbar />
+
+      {/* HERO */}
+      <div style={{
+        background: "linear-gradient(135deg,#1e3a8a,#2563eb,#1d4ed8)",
+        padding: "60px 20px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        flexWrap: "wrap",
+        borderRadius: "0 0 30px 30px"
+      }}>
+        <div style={{ maxWidth: 600 }}>
+          <span style={{
+            background: "rgba(255,255,255,0.2)",
+            color: "#e0f2fe",
+            padding: "6px 14px",
+            borderRadius: 20,
+            fontSize: 12,
+            fontWeight: 600
+          }}>
             {t('otherCommittee.badge')}
           </span>
-          <h2
-            style={{
-              color: "#fff",
-              fontSize: "2.1rem",
-              fontWeight: 800,
-              margin: "0 0 16px",
-              lineHeight: 1.2,
-            }}
-          >
+
+          <h2 style={{
+            color: "#fff",
+            fontSize: "clamp(22px,5vw,32px)",
+            marginTop: 15,
+            fontWeight: 800
+          }}>
             {t('otherCommittee.heroTitle')}
           </h2>
-          <p
-            style={{
-              color: "#bae6fd",
-              fontSize: "0.95rem",
-              lineHeight: 1.7,
-              marginBottom: 24,
-            }}
-          >
+
+          <p style={{
+            color: "#c7d2fe",
+            marginTop: 10,
+            lineHeight: 1.6
+          }}>
             {t('otherCommittee.heroDesc')}
           </p>
-          <button
-            style={{
-              background: "#f59e0b",
-              color: "#1c1c1c",
-              border: "none",
-              borderRadius: 8,
-              padding: "10px 24px",
-              fontWeight: 700,
-              cursor: "pointer",
-            }}
-          >
+
+          <button style={{
+            marginTop: 20,
+            background: "#facc15",
+            color: "#1e293b",
+            padding: "10px 20px",
+            borderRadius: 8,
+            border: "none",
+            fontWeight: 600,
+            cursor: "pointer"
+          }}>
             {t('otherCommittee.search')}
           </button>
         </div>
-        <div style={{ fontSize: 90 }}>🧑‍💻🌱</div>
+
+        <div style={{ fontSize: 80 }}>🏛️</div>
       </div>
 
-      {/* ── Table ── */}
-      <h3
-        style={{
-          textAlign: "center",
-          fontSize: "1.7rem",
-          fontWeight: 800,
-          color: "#0f4c75",
-          margin: "0 0 28px",
-        }}
-      >
+      {/* TABLE TITLE */}
+      <h3 style={{
+        textAlign: "center",
+        fontSize: "1.6rem",
+        fontWeight: 700,
+        color: "#1e3a8a",
+        margin: "30px 0"
+      }}>
         {t('otherCommittee.tableTitle')}
       </h3>
-      <div
-        style={{
-          overflowX: "auto",
-          maxWidth: 960,
-          margin: "0 auto",
-          borderRadius: 14,
-          boxShadow: "0 4px 24px rgba(15,76,117,.10)",
-        }}
-      >
+
+      {/* TABLE CARD */}
+      <div style={{
+        maxWidth: 1000,
+        margin: "0 auto 40px",
+        background: "#fff",
+        borderRadius: 16,
+        boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
+        overflowX: "auto"
+      }}>
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
-            <tr>
-              {[t('otherCommittee.headers.0'), t('otherCommittee.headers.1'), t('otherCommittee.headers.2'), t('otherCommittee.headers.3')].map(
-                (h, i) => (
-                  <th
-                    key={h}
-                    style={{
-                      background: "#0f4c75",
-                      color: "#fff",
-                      padding: "14px 18px",
-                      fontWeight: 700,
-                      fontSize: "0.88rem",
-                      textAlign: "left",
-                      borderRadius:
-                        i === 0
-                          ? "12px 0 0 0"
-                          : i === 3
-                          ? "0 12px 0 0"
-                          : 0,
-                    }}
-                  >
-                    {h}
-                  </th>
-                )
-              )}
+            <tr style={{ background: "#1e3a8a", color: "#fff" }}>
+              {[t('otherCommittee.headers.0'), t('otherCommittee.headers.1'), t('otherCommittee.headers.2'), t('otherCommittee.headers.3')].map(h => (
+                <th key={h} style={{ padding: 14, textAlign: "left" }}>{h}</th>
+              ))}
             </tr>
           </thead>
+
           <tbody>
             {conflictFreeMembers.map((m, i) => (
-              <tr
-                key={i}
-                style={{ background: i % 2 === 0 ? "#fff" : "#f0f9ff" }}
-              >
-                <td
-                  style={{
-                    padding: "14px 18px",
-                    fontSize: "0.9rem",
-                    textAlign: "center",
-                    fontWeight: 700,
-                    color: "#0f4c75",
-                    borderBottom: "1px solid #e0e7ef",
-                  }}
-                >
-                  {m.sr}
-                </td>
-                <td
-                  style={{
-                    padding: "14px 18px",
-                    fontSize: "0.9rem",
-                    color: "#1e293b",
-                    borderBottom: "1px solid #e0e7ef",
-                  }}
-                >
+              <tr key={i} style={{
+                background: i % 2 === 0 ? "#fff" : "#f1f5f9",
+                transition: "0.2s"
+              }}>
+                <td style={tdStyle}>{m.sr}</td>
+
+                <td style={tdStyle}>
                   {currentLanguage === 'mr' ? (m.positionMr || m.position) : m.position}
                 </td>
-                <td
-                  style={{
-                    padding: "14px 18px",
-                    fontSize: "0.9rem",
-                    color: "#1e293b",
-                    fontWeight: 600,
-                    borderBottom: "1px solid #e0e7ef",
-                  }}
-                >
+
+                <td style={{ ...tdStyle, fontWeight: 600 }}>
                   {m.name}
                 </td>
-                <td
-                  style={{
-                    padding: "14px 18px",
-                    fontSize: "0.9rem",
-                    borderBottom: "1px solid #e0e7ef",
-                  }}
-                >
-                  <span
-                    style={{
-                      background: "#dbeafe",
-                      color: "#1d4ed8",
-                      borderRadius: 12,
-                      padding: "3px 12px",
-                      fontSize: "0.8rem",
-                      fontWeight: 600,
-                    }}
-                  >
+
+                <td style={tdStyle}>
+                  <span style={{
+                    background: "#dbeafe",
+                    color: "#1d4ed8",
+                    padding: "4px 12px",
+                    borderRadius: 20,
+                    fontSize: 12,
+                    fontWeight: 600
+                  }}>
                     {currentLanguage === 'mr' ? (m.roleMr || m.role) : m.role}
                   </span>
                 </td>
@@ -202,3 +141,8 @@ export default function OtherCommittee() {
   );
 }
 
+const tdStyle = {
+  padding: "14px",
+  borderBottom: "1px solid #e5e7eb",
+  fontSize: 14,
+};

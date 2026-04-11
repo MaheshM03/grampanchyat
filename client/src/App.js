@@ -14,9 +14,14 @@ import News from './components/Sections/News.jsx';
 import AdminPanel from './pages/AdminPanel.jsx';
 import { NewsProvider } from './context/NewsContext.js';
 import { GrievanceProvider } from './context/GrievanceContext.js';
+import BirthCertificate from './certificates/BirthCertificate.jsx';
 import BirthCertificateForm from './certificates/BirthCertificateForm.jsx';
+import DeathCertificate from './certificates/DeathCertificate.jsx';
 import DeathCertificateForm from './certificates/DeathCertificateForm.jsx';
+import ResidenceCertificate from './certificates/ResidenceCertificate.jsx';
+import ResidenceCertificateForm from './certificates/ResidenceCertificateForm.jsx';
 import AboutUs from './components/Sections/AboutUs.jsx';
+import Schemes from './pages/Schemes.jsx';
 
 function App() {
   return (
@@ -35,9 +40,14 @@ function App() {
           <Route path="/committee" element={<OtherCommittee />} />
           <Route path="/news" element={<News/>} />
           <Route path="/admin" element={<AdminPanel />} />
-          <Route path="/birth" element={<BirthCertificateForm />} />
-          <Route path="/death" element={<DeathCertificateForm />} />
+          <Route path="/birth" element={<BirthCertificate />} />
+          <Route path="/birth-apply" element={<BirthCertificateForm />} />
+          <Route path="/death" element={<DeathCertificate />} />
+          <Route path="/death-apply" element={<DeathCertificateForm />} />
+          <Route path="/residence" element={<ResidenceCertificate />} />
+          <Route path="/residence-apply" element={<ResidenceCertificateForm />} />
           <Route path="/aboutus" element={<AboutUs />} />
+          <Route path="/schemes" element={<Schemes />} />
           <Route path="*" element={
             <div style={{ padding: '20px', textAlign: 'center' }}>
               <h1>404 - Page Not Found</h1>
@@ -53,4 +63,3 @@ function App() {
 }
 
 export default App;
-

@@ -1,37 +1,40 @@
+import React from "react";
 import { useTranslator } from "../../context/LanguageContext.js";
 import Footer from "./Footer.jsx";
 import Navbar from "./Navbar.jsx";
+import { motion } from "framer-motion";
+import { Droplet, Building2, Gem, Zap, BookOpen } from "lucide-react";
 
 const pillars = [
   {
-    icon: "💧",
+    icon: Droplet,
     titleKey: "smart.pillars.water",
     descKey: "smart.waterDesc",
-    bg: "linear-gradient(145deg,#0891b2,#06b6d4)",
+    color: "#0891b2",
   },
   {
-    icon: "🏗️",
+    icon: Building2,
     titleKey: "smart.pillars.management",
     descKey: "smart.managementDesc",
-    bg: "linear-gradient(145deg,#7c3aed,#a855f7)",
+    color: "#7c3aed",
   },
   {
-    icon: "💎",
+    icon: Gem,
     titleKey: "smart.pillars.liability",
     descKey: "smart.liabilityDesc",
-    bg: "linear-gradient(145deg,#16a34a,#22c55e)",
+    color: "#16a34a",
   },
   {
-    icon: "⚡",
+    icon: Zap,
     titleKey: "smart.pillars.energy",
     descKey: "smart.energyDesc",
-    bg: "linear-gradient(145deg,#d97706,#f59e0b)",
+    color: "#d97706",
   },
   {
-    icon: "📚",
+    icon: BookOpen,
     titleKey: "smart.pillars.education",
     descKey: "smart.educationDesc",
-    bg: "linear-gradient(145deg,#dc2626,#f87171)",
+    color: "#dc2626",
   },
 ];
 
@@ -39,160 +42,202 @@ export default function SmartVillage() {
   const { t } = useTranslator();
 
   return (
-    <section style={{ background: "#f8faff" }}>
-      <Navbar/>
-      {/* ── Hero ── */}
+    <section style={{ background: "#f8fafc" }}>
+      <Navbar />
+
+      {/* HERO */}
       <div
         style={{
-          background: "#fff",
-          padding: "72px 60px",
+          background: "linear-gradient(135deg,#0f172a,#1e3a8a,#2563eb)",
+          padding: "80px 20px",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
           flexWrap: "wrap",
-          gap: 40,
-          borderBottom: "2px solid #e0e7ef",
+          borderRadius: "0 0 40px 40px",
+          boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
         }}
       >
-        <div style={{ flex: 1, minWidth: 260 }}>
+        <div style={{ flex: 1, minWidth: 260, maxWidth: 520 }}>
           <div
             style={{
-              color: "#7c3aed",
-              fontSize: "0.82rem",
+              color: "#93c5fd",
+              fontSize: "0.8rem",
               fontWeight: 700,
               letterSpacing: 2,
-              textTransform: "uppercase",
               marginBottom: 10,
             }}
           >
-            Grama Sachivalaya Kadepur  {/* Static brand - can add t if needed */}
+            GRAM PANCHAYAT PORTAL
           </div>
+
           <h2
             style={{
-              fontSize: "2.4rem",
+              fontSize: "clamp(24px,5vw,38px)",
               fontWeight: 800,
-              color: "#1e1b4b",
-              margin: "0 0 16px",
+              color: "#fff",
               lineHeight: 1.2,
+              marginBottom: 16,
             }}
           >
-            {t('smart.title')}
+            {t("smart.title")}
           </h2>
+
           <p
             style={{
-              color: "#475569",
-              fontSize: "0.97rem",
+              color: "#cbd5f5",
+              fontSize: "0.95rem",
               lineHeight: 1.7,
               marginBottom: 24,
-              maxWidth: 420,
             }}
           >
-            {t('smart.desc')}
+            {t("smart.desc")}
           </p>
-          <button
-            style={{
-              background: "transparent",
-              color: "#7c3aed",
-              border: "2px solid #7c3aed",
-              borderRadius: 8,
-              padding: "10px 24px",
-              fontWeight: 700,
-              cursor: "pointer",
-              fontSize: "0.95rem",
-            }}
-          >
-            {t('smart.cta')}
-          </button>
+
+          {/* BUTTONS IN ONE LINE */}
+          <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+            <button
+              style={{
+                background: "#facc15",
+                color: "#1e293b",
+                borderRadius: 8,
+                padding: "10px 20px",
+                fontWeight: 700,
+                border: "none",
+                cursor: "pointer",
+              }}
+            >
+              {t("smart.cta")}
+            </button>
+
+            <button
+              style={{
+                background: "transparent",
+                color: "#fff",
+                border: "1.5px solid #cbd5f5",
+                borderRadius: 8,
+                padding: "10px 20px",
+                fontWeight: 600,
+                cursor: "pointer",
+              }}
+            >
+              Learn More
+            </button>
+          </div>
         </div>
-        <div style={{ fontSize: 90 }}>🌿💻🏘️</div>
+
+        <div style={{ fontSize: 90 }}>🏡</div>
       </div>
 
-      {/* ── Pillars ── */}
-      <div style={{ padding: "72px 40px" }}>
+      {/* PILLARS */}
+      <div style={{ padding: "70px 20px" }}>
         <h3
           style={{
             textAlign: "center",
-            fontSize: "1.9rem",
+            fontSize: "2rem",
             fontWeight: 800,
-            color: "#1e1b4b",
-            margin: "0 0 8px",
+            color: "#0f172a",
+            marginBottom: 10,
           }}
         >
-          {t('smart.journey')}
+          {t("smart.journey")}
         </h3>
+
         <p
           style={{
             textAlign: "center",
             color: "#64748b",
-            fontSize: "0.97rem",
+            maxWidth: 700,
+            margin: "0 auto 50px",
             lineHeight: 1.7,
-            maxWidth: 800,
-            margin: "0 auto 48px",
           }}
         >
-          {t('smart.journeyDesc')}
+          {t("smart.journeyDesc")}
         </p>
+
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fill,minmax(250px,1fr))",
-            gap: 24,
+            gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))",
+            gap: 30,
             maxWidth: 1200,
             margin: "0 auto",
           }}
         >
-          {pillars.map((p, i) => (
-            <div
-              key={i}
-              style={{
-                background: p.bg,
-                borderRadius: 20,
-                padding: "36px 28px",
-                color: "#fff",
-                boxShadow: "0 6px 30px rgba(0,0,0,.13)",
-              }}
-            >
-              <div style={{ fontSize: 44, marginBottom: 18 }}>{p.icon}</div>
-              <h4
+          {pillars.map((p, i) => {
+            const Icon = p.icon;
+            return (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                whileHover={{ scale: 1.05, y: -5 }}
+                transition={{ duration: 0.4, delay: i * 0.1 }}
                 style={{
-                  fontSize: "1.15rem",
-                  fontWeight: 800,
-                  margin: "0 0 12px",
-                  color: "#fff",
-                }}
-              >
-                {t(p.titleKey)}
-              </h4>
-              <p
-                style={{
-                  fontSize: "0.87rem",
-                  lineHeight: 1.6,
-                  color: "rgba(255,255,255,.88)",
-                  margin: "0 0 20px",
-                }}
-              >
-                {t(p.descKey)}
-              </p>
-              <button
-                style={{
-                  background: "rgba(255,255,255,.2)",
-                  color: "#fff",
-                  border: "1.5px solid rgba(255,255,255,.5)",
-                  borderRadius: 8,
-                  padding: "8px 18px",
-                  fontWeight: 600,
+                  background: "#ffffff",
+                  borderRadius: 18,
+                  padding: "28px",
+                  boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
+                  border: "1px solid #e2e8f0",
                   cursor: "pointer",
-                  fontSize: "0.85rem",
                 }}
               >
-                {t('smart.more')}
-              </button>
-            </div>
-          ))}
+                <div
+                  style={{
+                    display: "inline-flex",
+                    padding: 12,
+                    borderRadius: 12,
+                    background: p.color + "20",
+                    marginBottom: 15,
+                  }}
+                >
+                  <Icon size={28} color={p.color} />
+                </div>
+
+                <h4
+                  style={{
+                    fontSize: "1.1rem",
+                    fontWeight: 700,
+                    color: "#1e293b",
+                    marginBottom: 10,
+                  }}
+                >
+                  {t(p.titleKey)}
+                </h4>
+
+                <p
+                  style={{
+                    fontSize: "0.9rem",
+                    color: "#475569",
+                    lineHeight: 1.6,
+                    marginBottom: 18,
+                  }}
+                >
+                  {t(p.descKey)}
+                </p>
+
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  style={{
+                    background: p.color,
+                    color: "#fff",
+                    borderRadius: 6,
+                    padding: "8px 16px",
+                    border: "none",
+                    fontSize: "0.85rem",
+                    fontWeight: 600,
+                    cursor: "pointer",
+                  }}
+                >
+                  {t("smart.more")}
+                </motion.button>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
-      <Footer/>
+
+      <Footer />
     </section>
   );
 }
-

@@ -1,62 +1,83 @@
 // @desc Create new grievance/complaint/suggestion
 const Grievance = require('../models/Grievance');
 
-// In-memory handlers (no DB needed)
-const grievances = []; // direct array like other controllers
-
 // @route POST /api/grievance
 // @desc Submit new grievance form
 const createGrievance = async (req, res) => {
   try {
-    const { firstName, middleName, lastName, mobile, aadhaar, email, department, details, type } = req.body;
-    
+    // Proper destructuring (removed \n and fixed naming)
+    const {
+      firstName,
+      mobile,
+      department,
+      complaint,
+      image,
+      email,
+      aadhaar,
+      type
+    } = req.body;
+
+    // Rename fields properly
+    const fullName = firstName;
+    const details = complaint;
+
     // Basic validation
-    if (!firstName || !middleName || !lastName || !mobile || !department || !details) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'Missing required fields: name, mobile, department, details' 
+    if (!fullName || !mobile || !department || !details) {
+      return res.status(400).json({
+        success: false,
+        message: 'Missing required fields: name, mobile, department, complaint'
       });
     }
-    
-    const fullName = `${firstName} ${middleName} ${lastName}`.trim();
+
+    // Create grievance object
     const grievanceData = {
       fullName,
       mobile,
-      aadhaar,
+      aadhaar: aadhaar || '',
       email: email || '',
       department,
       details,
+      image: image || '',
       type: type || 'complaint', // complaint/suggestion
       status: 'pending',
       id: Date.now().toString(),
-      createdAt: new Date().toISOString()
+      createdAt: new Date()
     };
-    
-    // Save (in-memory - matches other controllers)
-    const saved = Grievance.create(grievanceData);
-    grievances.unshift(saved); // newest first
-    
-    res.status(201).json({ 
-      success: true, 
-      message: 'Grievance submitted successfully. Token: ' + saved.id,
-      data: saved 
+
+    const saved = await new Grievance(grievanceData).save();
+
+    res.status(201).json({
+      success: true,
+      message: `Grievance submitted successfully. Token: ${saved.id}`,
+      data: saved
     });
+
   } catch (error) {
     console.error('Create grievance error:', error);
-    res.status(500).json({ success: false, message: 'Server error' });
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
   }
 };
 
-// Export for future admin endpoints
+// @desc Get all grievances
 const getGrievances = async (req, res) => {
   try {
-    res.json({ 
-      success: true, 
-      count: grievances.length, 
-      data: grievances 
+    const grievances = await Grievance.find().sort({ createdAt: -1 });
+
+    res.json({
+      success: true,
+      count: grievances.length,
+      data: grievances
     });
+
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server error' });
+    console.error('Fetch grievance error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
   }
 };
 
@@ -64,4 +85,3 @@ module.exports = {
   createGrievance,
   getGrievances
 };
-

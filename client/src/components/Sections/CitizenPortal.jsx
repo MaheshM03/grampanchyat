@@ -35,148 +35,109 @@ export default function CitizenPortal() {
   );
 
   return (
-    <section>
-        <Navbar/>
-      {/* ── Hero ── */}
-      <div
-        style={{
-          background: "linear-gradient(135deg,#78350f,#b45309,#d97706)",
-          padding: "64px 60px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          flexWrap: "wrap",
-          gap: 32,
-        }}
-      >
-        <div style={{ maxWidth: 440 }}>
-          <h2
-            style={{
-              color: "#fff",
-              fontSize: "2.1rem",
-              fontWeight: 800,
-              margin: "0 0 20px",
-              lineHeight: 1.2,
-            }}
-          >
+    <section style={{ background: "#f8fafc" }}>
+      <Navbar />
+
+      {/* HERO */}
+      <div style={{
+        background: "linear-gradient(135deg,#0f172a,#1e3a8a,#2563eb)",
+        padding: "60px 20px",
+        display: "flex",
+        justifyContent: "space-between",
+        flexWrap: "wrap"
+      }}>
+        <div>
+          <h2 style={{ color: "#fff", fontSize: "28px", fontWeight: 800 }}>
             Citizen Service Facility Center
-            <br />
-            Gram Panchayat Kadepur
           </h2>
-          <button
-            style={{
-              background: "#fff",
-              color: "#78350f",
-              border: "none",
-              borderRadius: 8,
-              padding: "10px 24px",
-              fontWeight: 700,
-              cursor: "pointer",
-            }}
-          >
+          <button style={{
+            marginTop: 10,
+            background: "#facc15",
+            padding: "8px 18px",
+            borderRadius: 6,
+            border: "none"
+          }}>
             Find out
           </button>
         </div>
-        <div style={{ fontSize: 90 }}>🏛️💻</div>
       </div>
 
-      {/* ── Body ── */}
-      <div style={{ background: "#fff", padding: "48px 40px" }}>
-        {/* Search */}
-        <div
-          style={{
-            display: "flex",
-            gap: 10,
-            maxWidth: 700,
-            margin: "0 auto 28px",
-          }}
-        >
+      {/* BODY */}
+      <div style={{ padding: 20 }}>
+
+        {/* SEARCH */}
+        <div style={{
+          display: "flex",
+          gap: 10,
+          flexWrap: "wrap",
+          maxWidth: 700,
+          margin: "0 auto 20px"
+        }}>
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Find your service..."
             style={{
               flex: 1,
-              padding: "12px 20px",
+              padding: 10,
               borderRadius: 8,
-              border: "1.5px solid #e5e7eb",
-              fontSize: "0.95rem",
-              outline: "none",
+              border: "1px solid #ccc"
             }}
           />
-          <button
-            style={{
-              background: "#d97706",
-              color: "#fff",
-              border: "none",
-              borderRadius: 8,
-              padding: "12px 20px",
-              cursor: "pointer",
-              fontWeight: 700,
-            }}
-          >
-            🔍
+          <button style={{
+            background: "#2563eb",
+            color: "#fff",
+            padding: "10px 15px",
+            borderRadius: 8,
+            border: "none"
+          }}>
+            Search
           </button>
         </div>
 
-        {/* Category Chips */}
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 8,
-            maxWidth: 1000,
-            margin: "0 auto 32px",
-            justifyContent: "center",
-          }}
-        >
+        {/* CATEGORY */}
+        <div style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 8,
+          justifyContent: "center",
+          marginBottom: 20
+        }}>
           {categories.map((c) => (
-            <span
-              key={c}
-              style={{
-                background: "#fef3c7",
-                color: "#92400e",
-                borderRadius: 20,
-                padding: "6px 14px",
-                fontSize: "0.78rem",
-                fontWeight: 600,
-                cursor: "pointer",
-                border: "1px solid #fcd34d",
-              }}
-            >
+            <span key={c} style={{
+              background: "#e0e7ff",
+              color: "#1e3a8a",
+              padding: "5px 10px",
+              borderRadius: 20,
+              fontSize: 12
+            }}>
               {c}
             </span>
           ))}
         </div>
 
-        {/* Tabs */}
-        <div
-          style={{
-            display: "flex",
-            maxWidth: 1000,
-            margin: "0 auto 20px",
-            borderRadius: 10,
-            overflow: "hidden",
-            border: "1.5px solid #d97706",
-          }}
-        >
+        {/* TABS */}
+        <div style={{
+          display: "flex",
+          maxWidth: 1000,
+          margin: "auto",
+          border: "1px solid #2563eb",
+          borderRadius: 8,
+          overflow: "hidden"
+        }}>
           {[
-            ["csc", "📋 CSC Services"],
-            ["dept", "🏢 Department-wise Services"],
+            ["csc", "CSC Services"],
+            ["dept", "Department-wise Services"],
           ].map(([key, label]) => (
             <button
               key={key}
               onClick={() => setTab(key)}
               style={{
                 flex: 1,
-                padding: 13,
-                fontWeight: 700,
-                fontSize: "0.95rem",
-                cursor: "pointer",
-                border: "none",
-                background: tab === key ? "#d97706" : "#fff",
-                color: tab === key ? "#fff" : "#78350f",
-                transition: "all .2s",
+                padding: 10,
+                background: tab === key ? "#2563eb" : "#fff",
+                color: tab === key ? "#fff" : "#000",
+                border: "none"
               }}
             >
               {label}
@@ -184,61 +145,51 @@ export default function CitizenPortal() {
           ))}
         </div>
 
-        {/* Table */}
-        <div
-          style={{
-            maxWidth: 1000,
-            margin: "0 auto",
-            borderRadius: 14,
-            overflow: "hidden",
-            boxShadow: "0 4px 24px rgba(180,83,9,.10)",
-          }}
-        >
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+        {/* TABLE */}
+        <div style={{
+          maxWidth: 1000,
+          margin: "20px auto",
+          overflowX: "auto",
+          borderRadius: 10
+        }}>
+          <table style={{
+            width: "100%",
+            minWidth: "700px",
+            borderCollapse: "collapse"
+          }}>
             <thead>
-              <tr>
-                {["No.", "Scheme name", "Department", "Service details", "Portal", "Website"].map(
-                  (h) => (
-                    <th
-                      key={h}
-                      style={{
-                        background: "#78350f",
-                        color: "#fff",
-                        padding: "14px 16px",
-                        fontSize: "0.88rem",
-                        fontWeight: 700,
-                        textAlign: "left",
-                      }}
-                    >
-                      {h}
-                    </th>
-                  )
-                )}
+              <tr style={{ background: "#1e3a8a", color: "#fff" }}>
+                {["No.", "Scheme name", "Department", "Service details", "Portal", "Website"].map((h) => (
+                  <th key={h} style={{ padding: 10 }}>{h}</th>
+                ))}
               </tr>
             </thead>
+
             <tbody>
               {filtered.map((s, i) => (
-                <tr
-                  key={i}
-                  style={{ background: i % 2 === 0 ? "#fff" : "#fef9f0" }}
-                >
-                  <td style={{ padding: "13px 16px", textAlign: "center", fontWeight: 700, fontSize: "0.88rem", borderBottom: "1px solid #fef3c7" }}>{s.no}</td>
-                  <td style={{ padding: "13px 16px", fontSize: "0.88rem", borderBottom: "1px solid #fef3c7" }}>
-                    <span style={{ background: s.color, borderRadius: 6, padding: "2px 8px", fontSize: "0.83rem" }}>{s.scheme}</span>
-                  </td>
-                  <td style={{ padding: "13px 16px", fontSize: "0.88rem", borderBottom: "1px solid #fef3c7" }}>{s.dept}</td>
-                  <td style={{ padding: "13px 16px", fontSize: "0.88rem", borderBottom: "1px solid #fef3c7" }}>{s.service}</td>
-                  <td style={{ padding: "13px 16px", fontSize: "0.88rem", borderBottom: "1px solid #fef3c7" }}>
-                    <span style={{ background: s.color, borderRadius: 6, padding: "3px 10px", fontWeight: 700, fontSize: "0.8rem" }}>{s.portal}</span>
-                  </td>
-                  <td style={{ padding: "13px 16px", fontSize: "0.82rem", borderBottom: "1px solid #fef3c7", color: "#d97706", textDecoration: "underline", cursor: "pointer" }}>{s.website}</td>
+                <tr key={i} style={{
+                  background: i % 2 === 0 ? "#fff" : "#f1f5f9"
+                }}>
+                  <td style={td}>{s.no}</td>
+                  <td style={td}>{s.scheme}</td>
+                  <td style={td}>{s.dept}</td>
+                  <td style={td}>{s.service}</td>
+                  <td style={td}>{s.portal}</td>
+                  <td style={{ ...td, color: "#2563eb" }}>{s.website}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
+
       </div>
-      <Footer/>
+
+      <Footer />
     </section>
   );
 }
+
+const td = {
+  padding: 10,
+  borderBottom: "1px solid #ddd"
+};

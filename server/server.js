@@ -11,6 +11,15 @@ const path = require('path');
 
 const app = express();
 
+const mongoose = require('mongoose');
+
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => console.log('✅ MongoDB connected successfully'))
+  .catch(err => {
+    console.error('❌ MongoDB connection error:', err);
+    process.exit(1);
+  });
+
 // ─────────────────────────────────────────
 // MIDDLEWARE
 // ─────────────────────────────────────────
@@ -83,7 +92,9 @@ app.post('/api/auth/login', (req, res) => {
 const newsRoutes = require('./routes/news');
 const kunbiRoutes = require('./routes/kunbi');
 const grievanceRoutes = require('./routes/grievance');
+const logoutRoutes = require('./routes/logout');
 
+app.use('/api/logout', logoutRoutes);
 app.use('/api/grievance', (req, res, next) => {
   if (req.method === 'GET') return authMiddleware(req, res, next);
   next();

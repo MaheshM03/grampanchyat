@@ -2,180 +2,230 @@ import { useState } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { useGrievances } from "../../context/GrievanceContext";
-
-const departments = [
-  "Water Supply", "Road & Infrastructure", "Health Department",
-  "Education", "Agriculture", "Revenue", "Sanitation", "Other",
-];
-
-const contactInfo = [
-  { icon: "📍", label: "Location", value: "गंगावऱ्हे, नाशिक - 422222" },
-  { icon: "📞", label: "Phone", value: "+91 7620068056" },
-  { icon: "📧", label: "Email", value: "nsk.gangavarhe@gmail.com" },
-];
+import {
+  Droplet, Road, Hospital, BookOpen,
+  Wheat, BarChart3, Trash2, Zap, MapPin, Phone, Mail
+} from "lucide-react";
 
 export default function GrievanceSection() {
+
   const { fetchGrievances } = useGrievances();
 
+  const departments = [
+    { name: "Water Supply", icon: <Droplet size={18} /> },
+    { name: "Road & Infrastructure", icon: <Road size={18} /> },
+    { name: "Health Department", icon: <Hospital size={18} /> },
+    { name: "Education", icon: <BookOpen size={18} /> },
+    { name: "Agriculture", icon: <Wheat size={18} /> },
+    { name: "Revenue", icon: <BarChart3 size={18} /> },
+    { name: "Sanitation", icon: <Trash2 size={18} /> },
+    { name: "Electricity", icon: <Zap size={18} /> }
+  ];
+
+  const contactInfo = [
+    { icon: <MapPin size={18} />, label: "Location", value: "Gangavarhe, Nashik - 422222" },
+    { icon: <Phone size={18} />, label: "Phone", value: "+917620068056", action: "call" },
+    { icon: <Mail size={18} />, label: "Email", value: "nsk.gangavarhe@gmail.com", action: "email" }
+  ];
+
   const [form, setForm] = useState({
-    firstName: "", middleName: "", lastName: "",
-    mobile: "", aadhar: "", email: "",
-    department: "", complaint: "",
+    firstName: "",
+    mobile: "",
+    department: "",
+    complaint: "",
+    image: ""
   });
 
-  const [errors, setErrors] = useState({});
+  const [toast, setToast] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
 
-  const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:5000";
-
-  const validateForm = () => {
-    const newErrors = {};
-
-    if (!/^\d{10}$/.test(form.mobile)) newErrors.mobile = "Enter 10 digit mobile";
-    if (!/^\d{12}$/.test(form.aadhar)) newErrors.aadhar = "Enter 12 digit aadhar";
-    if (!form.department) newErrors.department = "Select department";
-    if (form.complaint.length < 20) newErrors.complaint = "Minimum 20 characters";
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+  const showToast = (msg, type = "success") => {
+    setToast({ msg, type });
+    setTimeout(() => setToast(null), 3000);
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-    if (name === "mobile" && !/^\d{0,10}$/.test(value)) return;
-    if (name === "aadhar" && !/^\d{0,12}$/.test(value)) return;
-
-    setForm({ ...form, [name]: value });
-    setErrors({ ...errors, [name]: "" });
+    const reader = new FileReader();
+    reader.onload = () => setForm({ ...form, image: reader.result });
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!validateForm()) return;
+    if (!form.firstName || !form.mobile || !form.department || !form.complaint) {
+      return showToast("Please fill all fields", "error");
+    }
+
+    const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
     setLoading(true);
-
     try {
-      await fetch(`${API_BASE}/api/grievance`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+      const response = await fetch(`${API_BASE}/grievance`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          firstName: form.firstName,
+          mobile: form.mobile,
+          department: form.department,
+          complaint: form.complaint,
+          image: form.image,
+        }),
       });
 
-      setSubmitted(true);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Submission failed');
+      }
+
+      const data = await response.json();
+      showToast(data.message || "Submitted Successfully ✅");
       fetchGrievances();
-
-      setForm({
-        firstName: "", middleName: "", lastName: "",
-        mobile: "", aadhar: "", email: "",
-        department: "", complaint: "",
-      });
-
-    } catch {
-      alert("Error submitting form");
+      setForm({ firstName: "", mobile: "", department: "", complaint: "", image: "" });
+    } catch (error) {
+      console.error('Submit error:', error);
+      showToast(error.message || "Error ❌", "error");
     } finally {
       setLoading(false);
     }
   };
 
+
+  const handleAction = (item) => {
+    if (item.action === "call") window.location.href = `tel:${item.value}`;
+    if (item.action === "email") window.location.href = `mailto:${item.value}`;
+  };
+
   return (
-    <section style={{ background: "#f0fdf4" }}>
+    <section style={{ background: "#f8fafc" }}>
       <Navbar />
 
-      {/* HEADER */}
-      <div style={{ textAlign: "center", padding: "40px" }}>
-        <h2>Grievance Section</h2>
+      {/* TOAST */}
+      {toast && (
+        <div style={{
+          position: "fixed",
+          top: 20,
+          right: 20,
+          background: toast.type === "error" ? "#ef4444" : "#16a34a",
+          color: "#fff",
+          padding: "10px 18px",
+          borderRadius: 8
+        }}>
+          {toast.msg}
+        </div>
+      )}
+
+      {/* HERO */}
+      <div style={{
+        background: "linear-gradient(135deg,#0f172a,#1e3a8a,#2563eb)",
+        padding: 50,
+        textAlign: "center",
+        color: "#fff"
+      }}>
+        <h2 style={{ fontWeight: 800 }}>Grievance Portal</h2>
       </div>
 
-      {/* MAIN GRID */}
-      <div className="grid-container" style={{
+      {/* MAIN */}
+      <div style={{
         display: "grid",
-        gridTemplateColumns: "1fr 1fr",
-        gap: 30,
+        gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))",
+        gap: 25,
         maxWidth: 1100,
-        margin: "0 auto",
+        margin: "40px auto",
         padding: 20
       }}>
 
         {/* FORM */}
         <div style={card}>
-          <h3>Submit Complaint</h3>
+          <h3 style={heading}>Submit Complaint</h3>
 
-          {submitted ? (
-            <h4>✅ Submitted Successfully</h4>
-          ) : (
-            <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit}>
 
-              <div className="name-row" style={{ display: "flex", gap: 10 }}>
-                <input name="firstName" placeholder="First Name" value={form.firstName} onChange={handleChange} style={input} />
-                <input name="middleName" placeholder="Middle Name" value={form.middleName} onChange={handleChange} style={input} />
-                <input name="lastName" placeholder="Last Name" value={form.lastName} onChange={handleChange} style={input} />
+            <input placeholder="Name" style={input} />
+
+            <input placeholder="Mobile" style={input} />
+
+            {/* DEPARTMENT GRID */}
+            <div style={{ marginBottom: 15 }}>
+              <p style={{ fontWeight: 600 }}>Select Department</p>
+
+              <div style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))",
+                gap: 10
+              }}>
+                {departments.map((d, i) => (
+                  <div
+                    key={i}
+                    onClick={() => setForm({ ...form, department: d.name })}
+                    style={{
+                      padding: 10,
+                      borderRadius: 10,
+                      cursor: "pointer",
+                      display: "flex",
+                      gap: 8,
+                      alignItems: "center",
+                      border: form.department === d.name
+                        ? "2px solid #2563eb"
+                        : "1px solid #ccc"
+                    }}
+                  >
+                    {d.icon}
+                    <span style={{ fontSize: 12 }}>{d.name}</span>
+                  </div>
+                ))}
               </div>
+            </div>
 
-              <input name="mobile" value={form.mobile} placeholder="Mobile" onChange={handleChange} style={input} />
-              {errors.mobile && <p style={error}>{errors.mobile}</p>}
+            <textarea placeholder="Complaint" style={{ ...input, height: 100 }} />
 
-              <input name="aadhar" value={form.aadhar} placeholder="Aadhar" onChange={handleChange} style={input} />
-              {errors.aadhar && <p style={error}>{errors.aadhar}</p>}
+            <input type="file" onChange={handleImageUpload} style={input} />
 
-              <input name="email" value={form.email} placeholder="Email" onChange={handleChange} style={input} />
+            {form.image && (
+              <img src={form.image} style={{ width: 80, borderRadius: 8 }} />
+            )}
 
-              <select name="department" value={form.department} onChange={handleChange} style={input}>
-                <option value="">Select Department</option>
-                {departments.map((d) => <option key={d}>{d}</option>)}
-              </select>
-              {errors.department && <p style={error}>{errors.department}</p>}
+            <button style={btn}>
+              {loading ? "Submitting..." : "Submit"}
+            </button>
 
-              <textarea name="complaint" value={form.complaint} placeholder="Complaint" onChange={handleChange} style={{ ...input, minHeight: 100 }} />
-              {errors.complaint && <p style={error}>{errors.complaint}</p>}
-
-              <button type="submit" style={btn}>
-                {loading ? "Submitting..." : "Submit"}
-              </button>
-
-            </form>
-          )}
+          </form>
         </div>
 
-        {/* CONTACT (UPDATED DESIGN) */}
+        {/* CONTACT */}
         <div style={contactCard}>
-          <h3 style={contactHeading}>Get In Touch</h3>
+          <h3 style={heading}>Contact Office</h3>
 
-          {contactInfo.map((c, i) => (
+          {contactInfo.map((item, i) => (
             <div key={i} style={contactItem}>
-              <div style={iconBox}>{c.icon}</div>
-              <div>
-                <div style={label}>{c.label}</div>
-                <div style={value}>{c.value}</div>
+
+              <div style={iconBox}>{item.icon}</div>
+
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 12 }}>{item.label}</div>
+                <div style={{ fontWeight: 600 }}>{item.value}</div>
               </div>
+
+              {item.action && (
+                <button
+                  onClick={() => handleAction(item)}
+                  style={actionBtn}
+                >
+                  {item.action === "call" ? "Call" : "Email"}
+                </button>
+              )}
+
             </div>
           ))}
 
-          <div style={officeBox}>
-            <div style={{ fontSize: 40 }}>🏛️</div>
-            <div style={{ fontWeight: "600" }}>Gram Panchayat Office</div>
-            <div style={{ fontSize: 13 }}>Gangavarhe, Nashik</div>
-          </div>
         </div>
 
       </div>
-
-      {/* RESPONSIVE */}
-      <style>
-        {`
-          @media (max-width: 768px) {
-            .grid-container {
-              grid-template-columns: 1fr !important;
-            }
-            .name-row {
-              flex-direction: column !important;
-            }
-          }
-        `}
-      </style>
 
       <Footer />
     </section>
@@ -186,79 +236,61 @@ export default function GrievanceSection() {
 const card = {
   background: "#fff",
   padding: 20,
-  borderRadius: 12,
-  boxShadow: "0 4px 12px rgba(0,0,0,0.1)"
+  borderRadius: 16,
+  boxShadow: "0 10px 25px rgba(0,0,0,0.08)"
 };
 
 const input = {
   width: "100%",
   padding: 10,
   marginBottom: 10,
-  borderRadius: 6,
+  borderRadius: 8,
   border: "1px solid #ccc"
 };
 
 const btn = {
-  background: "#16a34a",
+  background: "#2563eb",
   color: "#fff",
-  padding: 10,
-  border: "none",
-  borderRadius: 6,
-  cursor: "pointer"
+  padding: 12,
+  width: "100%",
+  borderRadius: 8,
+  border: "none"
 };
 
-const error = {
-  color: "red",
-  fontSize: 12
+const heading = {
+  marginBottom: 15,
+  fontWeight: 700
 };
 
-/* CONTACT UI */
 const contactCard = {
   background: "#fff",
-  padding: 24,
+  padding: 20,
   borderRadius: 16,
-  boxShadow: "0 8px 25px rgba(0,0,0,0.08)"
-};
-
-const contactHeading = {
-  marginBottom: 20,
-  fontSize: 20,
-  fontWeight: "600"
+  boxShadow: "0 10px 25px rgba(0,0,0,0.08)"
 };
 
 const contactItem = {
   display: "flex",
-  gap: 12,
-  padding: 12,
-  background: "#f8fafc",
-  borderRadius: 10,
+  alignItems: "center",
+  gap: 10,
   marginBottom: 10
 };
 
 const iconBox = {
-  width: 40,
-  height: 40,
+  width: 35,
+  height: 35,
+  background: "#e0e7ff",
   borderRadius: "50%",
-  background: "#dcfce7",
   display: "flex",
   alignItems: "center",
   justifyContent: "center"
 };
 
-const label = {
-  fontSize: 12,
-  color: "#64748b"
-};
-
-const value = {
-  fontSize: 14,
-  fontWeight: "500"
-};
-
-const officeBox = {
-  marginTop: 20,
-  padding: 20,
-  textAlign: "center",
-  borderRadius: 12,
-  background: "#eef2ff"
+const actionBtn = {
+  background: "#2563eb",
+  color: "#fff",
+  border: "none",
+  padding: "5px 10px",
+  borderRadius: 6,
+  cursor: "pointer"
 };

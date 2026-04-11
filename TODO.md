@@ -1,5 +1,6 @@
-# Task: Import minister images to Hero section
+# Navbar Citizen Portal Dropdown Task
 
-## Steps:
-- [x] 1. Create TODO.md with plan steps\n- [x] 2. Edit Hero.jsx to use local minister images\n- [x] 3. Verify changes and complete task
+- [x] Step 1: Update Navbar.jsx to add Citizen Portal dropdown with Birth (/birth), Death (/death), Residence (/residence) links
+- [x] Step 2: Test navigation in browser
+- [x] Step 3: Complete task
 

@@ -1,3 +1,5 @@
+const mongoose = require('mongoose');
+
 // Dummy model - controllers already in-memory
 module.exports = require('./DummyModel.js');
 

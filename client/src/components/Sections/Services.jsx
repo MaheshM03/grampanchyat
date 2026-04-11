@@ -5,7 +5,7 @@ export default function OnlineServices() {
   const { t, currentLanguage } = useTranslator();
 
 const serviceKeys = [
-    { icon: "📜", titleKey: 'services.birth.title', descKey: 'services.birth.desc', to: '/birth' },
+{ icon: "📜", titleKey: 'services.birth.title', descKey: 'services.birth.desc', to: '/birth' },
     { icon: "⚰️", titleKey: 'services.death.title', descKey: 'services.death.desc', to: '/death' },
     { icon: "🏠", titleKey: 'services.residence.title', descKey: 'services.residence.desc', to: '/residence' },
     { icon: "📢", titleKey: 'services.grievance.title', descKey: 'services.grievance.desc', to: '/grievance' },

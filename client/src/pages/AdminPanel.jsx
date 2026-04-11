@@ -1,303 +1,248 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Navbar from '../components/Sections/Navbar';
-import Footer from '../components/Sections/Footer';
-import { useNews } from '../context/NewsContext';
-import { useGrievances } from '../context/GrievanceContext';
-import { useTranslator } from '../context/LanguageContext';
+import React, { useState, useEffect } from "react";
+import { useNews } from "../context/NewsContext";
+import { useGrievances } from "../context/GrievanceContext";
 
-const API_BASE = process.env.REACT_APP_API_URL || '';
+import { Menu, X, Newspaper, MessageSquare, LayoutDashboard, Trash2, Edit, Sun, Moon } from "lucide-react";
 
 export default function AdminPanel() {
-  const [tab, setTab] = useState('grievances');
-  const [loginOpen, setLoginOpen] = useState(true);
-  const [loginCreds, setLoginCreds] = useState({ username: '', password: '' });
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [authLoading, setAuthLoading] = useState(false);
+  const [tab, setTab] = useState("dashboard");
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const navigate = useNavigate();
-  const { t } = useTranslator();
-  const { grievances, loading: gLoading } = useGrievances();
-  const { news, loading: nLoading, addNews } = useNews();
-  const [newNews, setNewNews] = useState({ title: '', desc: '', category: '', img: '' });
+const [darkMode, setDarkMode] = useState(false);
+  const { news, loading: newsLoading, addNews, updateNews, deleteNews, fetchNews } = useNews();
+  const { grievances, loading: grievanceLoading, fetchGrievances } = useGrievances();
+
+  const [form, setForm] = useState({ title: "", desc: "", img: "", imageFile: null });
+  const [editingId, setEditingId] = useState(null);
+  const [toast, setToast] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem('adminToken');
-    if (token) {
-      setIsAuthenticated(true);
-      setLoginOpen(false);
-    }
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setAuthLoading(true);
+  // Style constants
+  const inputStyle = { display: "block", width: "100%", marginBottom: 10, padding: 10, borderRadius: 8, border: "1px solid #ccc" };
+  const btnStyle = { background: "#22c55e", color: "white", padding: 10, border: "none", borderRadius: 8, width: "100%" };
+  const editBtn = { background: "#3b82f6", color: "white", border: "none", padding: "6px 10px", borderRadius: 6 };
+  const delBtn = { background: "#ef4444", color: "white", border: "none", padding: "6px 10px", borderRadius: 6 };
+
+  const showToast = (msg, type = "success") => {
+    setToast({ msg, type });
+    setTimeout(() => setToast(null), 3000);
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => setForm({ ...form, img: reader.result, imageFile: file });
+    reader.readAsDataURL(file);
+  };
+
+  const addOrUpdateNews = async () => {
+    if (!form.title || !form.desc) return showToast("Fill all fields", "error");
+
     try {
-      const res = await fetch(`${API_BASE}/api/auth/login`, {
+      if (editingId) {
+        await updateNews(editingId, form);
+        showToast("News updated");
+      } else {
+        await addNews(form);
+        showToast("News added");
+      }
+      setForm({ title: "", desc: "", img: "", imageFile: null });
+      setEditingId(null);
+    } catch (err) {
+      showToast("Operation failed", "error");
+    }
+  };
+
+  const editNews = (n) => {
+    setForm({ title: n.title, desc: n.desc, img: n.img });
+    setEditingId(n.id);
+  };
+
+  const updateStatus = async (id) => {
+    try {
+      const res = await fetch(`http://localhost:5000/api/grievance/${id}/status`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(loginCreds)
+        credentials: 'omit',
+        body: JSON.stringify({ status: 'Resolved' })
       });
       if (res.ok) {
-        localStorage.setItem('adminToken', 'logged-in');
-        setIsAuthenticated(true);
-        setLoginOpen(false);
+        fetchGrievances();
+        showToast("Status updated");
       } else {
-        alert('Invalid credentials. Use: admin / admin123');
+        showToast("Update failed", "error");
       }
     } catch (err) {
-      alert('Login failed. Is server running?');
-    }
-    setAuthLoading(false);
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem('adminToken');
-    setIsAuthenticated(false);
-    setLoginOpen(true);
-  };
-
-  const handleAddNews = async (e) => {
-    e.preventDefault();
-    if (!newNews.title || !newNews.desc) return alert('Title & desc required');
-    const saved = await addNews({
-      title: newNews.title,
-      desc: newNews.desc,
-      date: new Date().toISOString().split('T')[0],
-      category: newNews.category || 'general',
-      img: newNews.img || ''
-    });
-    if (saved) {
-      setNewNews({ title: '', desc: '', category: '', img: '' });
-      alert('News added!');
+      showToast("Update failed", "error");
     }
   };
 
-  const isLoggedIn = isAuthenticated && localStorage.getItem('adminToken');
-
-  if (loginOpen && !isLoggedIn) {
-    return (
-      <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #f0fdf4 0%, #d1fae5 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-        <div style={{ background: '#fff', borderRadius: 20, padding: '40px', boxShadow: '0 20px 40px rgba(22,163,74,0.15)', maxWidth: 400, width: '100%' }}>
-          <h2 style={{ textAlign: 'center', color: '#14532d', fontSize: '1.8rem', fontWeight: 800, marginBottom: 24 }}>Admin Login</h2>
-          <form onSubmit={handleLogin}>
-            <div style={{ marginBottom: 16 }}>
-              <label style={{ display: 'block', fontWeight: 600, color: '#374151', marginBottom: 6 }}>Username</label>
-              <input
-                type="text"
-                value={loginCreds.username}
-                onChange={(e) => setLoginCreds({ ...loginCreds, username: e.target.value })}
-                style={{ width: '100%', padding: '12px 16px', border: '2px solid #d1fae5', borderRadius: 10, fontSize: '1rem' }}
-                required
-              />
-            </div>
-            <div style={{ marginBottom: 24 }}>
-              <label style={{ display: 'block', fontWeight: 600, color: '#374151', marginBottom: 6 }}>Password</label>
-              <input
-                type="password"
-                value={loginCreds.password}
-                onChange={(e) => setLoginCreds({ ...loginCreds, password: e.target.value })}
-                style={{ width: '100%', padding: '12px 16px', border: '2px solid #d1fae5', borderRadius: 10, fontSize: '1rem' }}
-                required
-              />
-            </div>
-            <button
-              type="submit"
-              disabled={authLoading}
-              style={{
-                width: '100%',
-                background: 'linear-gradient(90deg, #16a34a, #22c55e)',
-                color: '#fff',
-                border: 'none',
-                borderRadius: 10,
-                padding: '14px',
-                fontSize: '1.1rem',
-                fontWeight: 700,
-                cursor: authLoading ? 'not-allowed' : 'pointer'
-              }}
-            >
-              {authLoading ? 'Logging in...' : 'Login'}
-            </button>
-          </form>
-          <p style={{ textAlign: 'center', marginTop: 16, fontSize: '0.9rem', color: '#6b7280' }}>Demo: admin / admin123</p>
-        </div>
-      </div>
-    );
-  }
+  const bg = darkMode ? "#0f172a" : "#f1f5f9";
+  const card = darkMode ? "#1e293b" : "white";
+  const text = darkMode ? "white" : "black";
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc' }}>
-      <Navbar />
-      <div style={{ padding: '20px 40px', maxWidth: 1400, margin: '0 auto' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
-          <h1 style={{ fontSize: '2.2rem', fontWeight: 800, color: '#14532d', margin: 0 }}>Admin Dashboard</h1>
+    <div style={{ display: "flex", minHeight: "100vh", background: bg, color: text }}>
+
+      {/* TOAST */}
+      {toast && (
+        <div style={{ position: "fixed", top: 20, right: 20, background: toast.type === "error" ? "#ef4444" : "#22c55e", color: "white", padding: "10px 20px", borderRadius: 8 }}>
+          {toast.msg}
+        </div>
+      )}
+
+      {/* MOBILE TOP BAR */}
+      {isMobile && (
+        <div style={{ position: "fixed", top: 0, left: 0, right: 0, background: "#0f172a", color: "white", padding: 12, display: "flex", justifyContent: "space-between", zIndex: 1000 }}>
+          <span>Admin</span>
+          <button onClick={() => setSidebarOpen(!sidebarOpen)} style={{ background: "none", border: "none", color: "white" }}>
+            {sidebarOpen ? <X /> : <Menu />}
+          </button>
+        </div>
+      )}
+
+      {/* SIDEBAR */}
+      <div style={{
+        width: isMobile ? (sidebarOpen ? "200px" : "0") : "220px",
+        background: "#0f172a",
+        color: "white",
+        padding: isMobile ? (sidebarOpen ? "20px" : "0") : "20px",
+        overflow: "hidden",
+        transition: "0.3s",
+        display: "flex",
+        flexDirection: "column",
+        height: "100vh"
+      }}>
+        <h2>ADMIN</h2>
+
+        {[{ key: "dashboard", icon: <LayoutDashboard size={16} /> }, { key: "grievances", icon: <MessageSquare size={16} /> }, { key: "news", icon: <Newspaper size={16} /> }].map(item => (
+          <button key={item.key} onClick={() => { setTab(item.key); setSidebarOpen(false); }} style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", background: tab === item.key ? "#22c55e" : "transparent", color: "white", border: "none", padding: 10, borderRadius: 8, marginBottom: 10 }}>
+            {item.icon} {item.key}
+          </button>
+        ))}
+
+        {/* LOGOUT */}
+        <div style={{ marginTop: "auto" }}>
           <button
-            onClick={handleLogout}
-            style={{
-              background: '#ef4444',
-              color: '#fff',
-              border: 'none',
-              borderRadius: 10,
-              padding: '10px 24px',
-              fontWeight: 600,
-              cursor: 'pointer'
+            onClick={async () => {
+              try {
+                await fetch('/api/logout', {
+                  method: 'POST',
+                  credentials: 'include'
+                });
+              } catch {}
+              localStorage.removeItem("adminToken");
+              window.location.href = '/';
             }}
+            style={{ width: "100%", background: "#ef4444", color: "white", border: "none", padding: 10, borderRadius: 8 }}
           >
             Logout
           </button>
         </div>
+      </div>
 
-        <div style={{ display: 'flex', gap: 8, marginBottom: 32 }}>
-          <button
-            onClick={() => setTab('grievances')}
-            style={{
-              padding: '12px 24px',
-              border: '2px solid #d1fae5',
-              background: tab === 'grievances' ? '#16a34a' : '#f0fdf4',
-              color: tab === 'grievances' ? '#fff' : '#14532d',
-              borderRadius: 12,
-              fontWeight: 600,
-              cursor: 'pointer'
-            }}
-          >
-            Grievances ({grievances.length})
-          </button>
-          <button
-            onClick={() => setTab('news')}
-            style={{
-              padding: '12px 24px',
-              border: '2px solid #d1fae5',
-              background: tab === 'news' ? '#16a34a' : '#f0fdf4',
-              color: tab === 'news' ? '#fff' : '#14532d',
-              borderRadius: 12,
-              fontWeight: 600,
-              cursor: 'pointer'
-            }}
-          >
-            Manage News
+      {/* MAIN */}
+      <div style={{ flex: 1, padding: isMobile ? "70px 10px" : "20px" }}>
+
+        {/* HEADER */}
+        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 20 }}>
+          <h1>Admin Panel</h1>
+          <button onClick={() => setDarkMode(!darkMode)} style={{ background: "#e5e7eb", border: "none", padding: 8, borderRadius: 8 }}>
+            {darkMode ? <Sun /> : <Moon />}
           </button>
         </div>
 
-        {tab === 'grievances' && (
-          <div style={{ background: '#fff', borderRadius: 16, boxShadow: '0 4px 24px rgba(0,0,0,0.08)', overflow: 'hidden' }}>
-            <div style={{ padding: '24px 32px', borderBottom: '1px solid #e5e7eb', background: '#f8fafc' }}>
-              <h2 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 700, color: '#1e293b' }}>All Grievances ({grievances.length})</h2>
-            </div>
-            {gLoading ? (
-              <div style={{ padding: '40px', textAlign: 'center', color: '#6b7280' }}>Loading...</div>
-            ) : grievances.length === 0 ? (
-              <div style={{ padding: '40px', textAlign: 'center', color: '#6b7280' }}>No grievances yet</div>
-            ) : (
-              <div style={{ maxHeight: 600, overflow: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                  <thead>
-                    <tr style={{ background: '#f3f4f6' }}>
-                      <th style={{ padding: '16px 24px', textAlign: 'left', fontWeight: 600, borderBottom: '2px solid #e5e7eb' }}>Name</th>
-                      <th style={{ padding: '16px 24px', textAlign: 'left', fontWeight: 600, borderBottom: '2px solid #e5e7eb' }}>Mobile</th>
-                      <th style={{ padding: '16px 24px', textAlign: 'left', fontWeight: 600, borderBottom: '2px solid #e5e7eb' }}>Department</th>
-                      <th style={{ padding: '16px 24px', textAlign: 'left', fontWeight: 600, borderBottom: '2px solid #e5e7eb' }}>Status</th>
-                      <th style={{ padding: '16px 24px', textAlign: 'left', fontWeight: 600, borderBottom: '2px solid #e5e7eb' }}>Date</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {grievances.slice(0, 50).map((g, i) => (
-                      <tr key={g.id || i} style={{ borderBottom: '1px solid #f3f4f6' }}>
-                        <td style={{ padding: '16px 24px', fontWeight: 500 }}>{g.fullName}</td>
-                        <td style={{ padding: '16px 24px' }}>{g.mobile}</td>
-                        <td style={{ padding: '16px 24px' }}>{g.department}</td>
-                        <td style={{ padding: '16px 24px' }}>
-                          <span style={{
-                            background: g.status === 'resolved' ? '#dcfce7' : '#fef3c7',
-                            color: g.status === 'resolved' ? '#166534' : '#92400e',
-                            padding: '4px 12px',
-                            borderRadius: 20,
-                            fontSize: '0.85rem',
-                            fontWeight: 600
-                          }}>
-                            {g.status?.toUpperCase() || 'PENDING'}
-                          </span>
-                        </td>
-                        <td style={{ padding: '16px 24px', fontSize: '0.9rem', color: '#6b7280' }}>
-                          {new Date(g.createdAt).toLocaleDateString()}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+        {/* DASHBOARD */}
+        {tab === "dashboard" && (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 15 }}>
+
+            {/* Grievances Card */}
+            <div style={{ flex: "1 1 220px", background: card, padding: 20, borderRadius: 12 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <h3>Grievances</h3>
+                <MessageSquare />
               </div>
-            )}
+              <p style={{ fontSize: 24, fontWeight: "bold" }}>{grievances.length}</p>
+
+              <div style={{ fontSize: 12, marginTop: 8 }}>
+                <div>Pending: {grievances.filter(g => g.status !== "Resolved").length}</div>
+                <div>Resolved: {grievances.filter(g => g.status === "Resolved").length}</div>
+              </div>
+            </div>
+
+            {/* News Card */}
+            <div style={{ flex: "1 1 220px", background: card, padding: 20, borderRadius: 12 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <h3>News</h3>
+                <Newspaper />
+              </div>
+              <p style={{ fontSize: 24, fontWeight: "bold" }}>{news.length}</p>
+            </div>
+
           </div>
         )}
 
-        {tab === 'news' && (
-          <div style={{ background: '#fff', borderRadius: 16, boxShadow: '0 4px 24px rgba(0,0,0,0.08)', overflow: 'hidden' }}>
-            <div style={{ padding: '24px 32px', borderBottom: '1px solid #e5e7eb', background: '#f8fafc' }}>
-              <h2 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 700, color: '#1e293b' }}>Add New News</h2>
-            </div>
-            <form onSubmit={handleAddNews} style={{ padding: '32px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, marginBottom: 24 }}>
-                <div>
-                  <label style={{ display: 'block', fontWeight: 600, marginBottom: 8 }}>Title *</label>
-                  <input
-                    type="text"
-                    value={newNews.title}
-                    onChange={(e) => setNewNews({ ...newNews, title: e.target.value })}
-                    style={{ width: '100%', padding: '12px 16px', border: '2px solid #d1fae5', borderRadius: 10 }}
-                  />
-                </div>
-                <div>
-                  <label style={{ display: 'block', fontWeight: 600, marginBottom: 8 }}>Category</label>
-                  <input
-                    type="text"
-                    value={newNews.category}
-                    onChange={(e) => setNewNews({ ...newNews, category: e.target.value })}
-                    placeholder="e.g. Announcement"
-                    style={{ width: '100%', padding: '12px 16px', border: '2px solid #d1fae5', borderRadius: 10 }}
-                  />
+
+        {/* GRIEVANCES */}
+        {tab === "grievances" && (
+          <div style={{ background: card, padding: 15, borderRadius: 12 }}>
+            <h3>Grievances</h3>
+            {grievances.map(g => (
+              <div key={g.id} style={{ border: "1px solid #ccc", padding: 10, marginTop: 10, borderRadius: 8 }}>
+                <h4>{g.name}</h4>
+                <p>{g.issue}</p>
+                <span style={{ fontSize: 12, color: g.status === "Resolved" ? "green" : "orange" }}>{g.status}</span>
+                <div style={{ marginTop: 8 }}>
+                  <button onClick={() => updateStatus(g.id)} style={editBtn}>Resolve</button>
                 </div>
               </div>
-              <div style={{ marginBottom: 24 }}>
-                <label style={{ display: 'block', fontWeight: 600, marginBottom: 8 }}>Description *</label>
-                <textarea
-                  value={newNews.desc}
-                  onChange={(e) => setNewNews({ ...newNews, desc: e.target.value })}
-                  rows={4}
-                  style={{ width: '100%', padding: '12px 16px', border: '2px solid #d1fae5', borderRadius: 10, fontFamily: 'inherit' }}
-                />
-              </div>
-              <div style={{ marginBottom: 24 }}>
-                <label style={{ display: 'block', fontWeight: 600, marginBottom: 8 }}>Image URL (optional)</label>
-                <input
-                  type="url"
-                  value={newNews.img}
-                  onChange={(e) => setNewNews({ ...newNews, img: e.target.value })}
-                  placeholder="https://example.com/image.jpg"
-                  style={{ width: '100%', padding: '12px 16px', border: '2px solid #d1fae5', borderRadius: 10 }}
-                />
-              </div>
-              <button
-                type="submit"
-                style={{
-                  background: 'linear-gradient(90deg, #16a34a, #22c55e)',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: 10,
-                  padding: '14px 32px',
-                  fontSize: '1.1rem',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  width: '100%'
-                }}
-              >
-                Add News
-              </button>
-            </form>
-            {nLoading && <div style={{ padding: '20px', textAlign: 'center', color: '#6b7280' }}>Loading news...</div>}
+            ))}
           </div>
         )}
+
+        {/* NEWS */}
+        {tab === "news" && (
+          <div style={{ background: card, padding: 15, borderRadius: 12 }}>
+            <h3>{editingId ? "Edit News" : "Add News"}</h3>
+
+            <input placeholder="Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} style={inputStyle} />
+            <textarea placeholder="Description" value={form.desc} onChange={(e) => setForm({ ...form, desc: e.target.value })} style={{ ...inputStyle, height: 80 }} />
+            <input type="file" accept="image/*" onChange={handleImageUpload} />
+
+            {form.img && <img src={form.img} alt="preview" style={{ width: 100, marginTop: 10, borderRadius: 8 }} />}
+
+            <button onClick={addOrUpdateNews} style={btnStyle}>{editingId ? "Update" : "Add"}</button>
+
+            {news.map(n => (
+              <div key={n.id} style={{ border: "1px solid #ccc", padding: 10, marginTop: 10, borderRadius: 8 }}>
+                <h4>{n.title}</h4>
+                <p>{n.desc}</p>
+                {n.img && <img src={n.img} style={{ width: 80 }} />}
+                <div style={{ display: "flex", gap: 10 }}>
+                  <button onClick={() => editNews(n)} style={editBtn}><Edit size={14} /> Edit</button>
+                  <button onClick={async () => {
+                    await deleteNews(n.id);
+                    showToast("News deleted", "success");
+                  }} style={delBtn}><Trash2 size={14} /> Delete</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
       </div>
-      <Footer />
     </div>
   );
-}
+ }
 
+const inputStyle = { display: "block", width: "100%", marginBottom: 10, padding: 10, borderRadius: 8, border: "1px solid #ccc" };
+const btnStyle = { background: "#22c55e", color: "white", padding: 10, border: "none", borderRadius: 8, width: "100%" };
+const editBtn = { background: "#3b82f6", color: "white", border: "none", padding: "6px 10px", borderRadius: 6 };
+const delBtn = { background: "#ef4444", color: "white", border: "none", padding: "6px 10px", borderRadius: 6 };

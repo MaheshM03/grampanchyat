@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useTranslator } from "../../context/LanguageContext.js";
+import { Link } from "react-router-dom";
 
 const ministers = [
   {
@@ -111,6 +112,7 @@ export default function Hero() {
             </div>
           ))}
         </div>
+        
       </div>
 
       {/* MODAL */}
@@ -221,4 +223,42 @@ const btn = {
   border: "none",
   borderRadius: "6px",
   cursor: "pointer"
+};
+
+const LinkCard = ({ to, icon, title, subtitle }) => (
+  <Link to={to} style={linkCardStyle} className="apply-now-link">
+    <div style={{ fontSize: "2.2rem", marginBottom: 8 }}>{icon}</div>
+    <div style={{ fontSize: "1rem", fontWeight: 700, color: "#1a2a4a", marginBottom: 4 }}>
+      {title}
+    </div>
+    <div style={{ fontSize: "0.85rem", color: "#64748b" }}>
+      {subtitle}
+    </div>
+    <div style={applyNowStyle}>आवेदन करा →</div>
+  </Link>
+);
+
+const linkCardStyle = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  textAlign: "center",
+  textDecoration: "none",
+  background: "#fff",
+  borderRadius: "12px",
+  padding: "24px 20px",
+  boxShadow: "0 6px 20px rgba(0,0,0,0.08)",
+  transition: "all 0.3s ease",
+  border: "2px solid transparent"
+};
+
+const applyNowStyle = {
+  marginTop: 12,
+  padding: "8px 20px",
+  background: "linear-gradient(135deg, #e8a020, #f59e0b)",
+  color: "#fff",
+  borderRadius: "20px",
+  fontSize: "0.8rem",
+  fontWeight: 700,
+  letterSpacing: "0.5px"
 };

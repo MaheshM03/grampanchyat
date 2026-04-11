@@ -1,31 +1,62 @@
-// In-memory store for grievances (server restart resets)
-let grievances = [];
+const mongoose = require('mongoose');
 
-// Helper functions
-const getAllGrievances = () => [...grievances];
-const createGrievance = (data) => {
-  const grievance = { 
-    ...data, 
-    id: Date.now().toString(),
-    createdAt: new Date().toISOString(),
-    status: 'pending' // new, processed, resolved
-  };
-  grievances.unshift(grievance); // newest first
-  return grievance;
-};
+const grievanceSchema = new mongoose.Schema(
+  {
+    fullName: {
+      type: String,
+      required: true,
+      trim: true
+    },
 
-module.exports = {
-  create: createGrievance,
-  find: getAllGrievances,
-  findById: (id) => grievances.find(g => g.id === id),
-  // for future admin use
-  updateStatus: (id, status) => {
-    const index = grievances.findIndex(g => g.id === id);
-    if (index > -1) {
-      grievances[index].status = status;
-      return grievances[index];
+    mobile: {
+      type: String,
+      required: true,
+      match: [/^[0-9]{10}$/, 'Please use a valid 10-digit mobile number']
+    },
+
+    aadhaar: {
+      type: String,
+      required: true,
+      match: [/^[0-9]{12}$/, 'Please use a valid 12-digit Aadhaar number']
+    },
+
+    email: {
+      type: String,
+      trim: true,
+      lowercase: true,
+      match: [/^\S+@\S+\.\S+$/, 'Please use a valid email']
+    },
+
+    department: {
+      type: String,
+      required: true
+    },
+
+    details: {
+      type: String,
+      required: true
+    },
+
+    type: {
+      type: String,
+      enum: ['complaint', 'suggestion'],
+      default: 'complaint'
+    },
+
+    status: {
+      type: String,
+      enum: ['pending', 'processed', 'resolved'],
+      default: 'pending'
+    },
+
+    image: {
+      type: String,
+      default: ''
     }
-    return null;
+  },
+  {
+    timestamps: true
   }
-};
+);
 
+module.exports = mongoose.model('Grievance', grievanceSchema);

@@ -3,7 +3,9 @@ import { Link } from "react-router-dom";
 import { useTranslator } from "../../context/LanguageContext.js";
 
 export default function Navbar() {
-  const [mobileMenu, setMobileMenu] = useState(false);
+const [mobileMenu, setMobileMenu] = useState(false);
+  const [citizenOpen, setCitizenOpen] = useState(false);
+  const [mobileCitizenOpen, setMobileCitizenOpen] = useState(false);
   const { t, selectLanguage, currentLanguage } = useTranslator();
 
   const navLinks = [
@@ -11,6 +13,7 @@ export default function Navbar() {
     { key: "nav.adminCommittee", name: "Admin Committee", to: "/admin-committee" },
     { key: "nav.otherCommittee", name: "Other Committee", to: "/committee" },
     { key: "nav.citizenPortal", name: "Citizen Portal", to: "/citizen-portal" },
+    // Citizen Portal dropdown handled separately
     { key: "nav.smartVillage", name: "Smart Village", to: "/smart-village" },
     { key: "nav.rti", name: "RTI", to: "/rti" },
     { key: "nav.news", name: "News", to: "/news" },
@@ -128,7 +131,7 @@ export default function Navbar() {
           gap: "12px",
           flexWrap: "wrap"
         }}>
-          {navLinks.map((link, i) => (
+          {navLinks.filter(link => link.key !== "nav.citizenPortal").map((link, i) => (
             <Link
               key={i}
               to={link.to}
@@ -152,6 +155,75 @@ export default function Navbar() {
               {t(link.key) || link.name}
             </Link>
           ))}
+
+          {/* Citizen Portal Dropdown */}
+          <div style={{ position: "relative" }} 
+               onMouseEnter={() => setCitizenOpen(true)}
+               onMouseLeave={() => setCitizenOpen(false)}>
+            <Link
+              to="/citizen-portal"
+              style={{
+                color: "#e2e8f0",
+                padding: "8px 10px",
+                fontSize: "13px",
+                textDecoration: "none",
+                borderBottom: "2px solid transparent",
+                transition: "0.2s"
+              }}
+            >
+              {t('nav.citizenPortal') || "Citizen Portal"}
+            </Link>
+            {citizenOpen && (
+              <div style={{
+                position: "absolute",
+                top: "100%",
+                left: 0,
+                background: "#1a2a4a",
+                minWidth: "180px",
+                boxShadow: "0 8px 32px rgba(0,0,0,0.3)",
+                borderRadius: "8px",
+                zIndex: 1001,
+                borderTop: "2px solid #e8a020"
+              }}>
+                <Link to="/birth" style={{
+                  display: "block",
+                  padding: "12px 16px",
+                  color: "#e2e8f0",
+                  textDecoration: "none",
+                  fontSize: "13px"
+                }}>
+                  👶 Birth Certificate
+                </Link>
+                <Link to="/death" style={{
+                  display: "block",
+                  padding: "12px 16px",
+                  color: "#e2e8f0",
+                  textDecoration: "none",
+                  fontSize: "13px"
+                }}>
+                  ☠️ Death Certificate
+                </Link>
+                <Link to="/residence" style={{
+                  display: "block",
+                  padding: "12px 16px",
+                  color: "#e2e8f0",
+                  textDecoration: "none",
+                  fontSize: "13px"
+                }}>
+                  🏠 Residence Certificate
+                </Link>
+                <Link to="/schemes" style={{
+                  display: "block",
+                  padding: "12px 16px",
+                  color: "#e2e8f0",
+                  textDecoration: "none",
+                  fontSize: "13px"
+                }}>
+                  📋 Schemes
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* ADMIN BUTTON */}
@@ -182,7 +254,7 @@ export default function Navbar() {
             flexDirection: "column",
             zIndex: 1000
           }}>
-            {navLinks.map((link, i) => (
+            {navLinks.filter(link => link.key !== "nav.citizenPortal").map((link, i) => (
               <Link
                 key={i}
                 to={link.to}
@@ -197,6 +269,64 @@ export default function Navbar() {
                 {t(link.key) || link.name}
               </Link>
             ))}
+
+            {/* Mobile Citizen Portal */}
+            <div>
+              <div
+                style={{
+                  padding: "12px",
+                  color: "#fff",
+                  borderTop: "1px solid #2c3e50",
+                  cursor: "pointer"
+                }}
+                onClick={() => setMobileCitizenOpen(!mobileCitizenOpen)}
+              >
+                {t('nav.citizenPortal') || "Citizen Portal"}
+              </div>
+              {mobileCitizenOpen && (
+                <div>
+                  <Link to="/birth" style={{
+                    display: "block",
+                    padding: "12px 24px",
+                    color: "#e2e8f0",
+                    textDecoration: "none",
+                    fontSize: "13px",
+                    borderTop: "1px solid #2c3e50"
+                  }} onClick={() => setMobileMenu(false)}>
+                  🍼 Birth Certificate
+                  </Link>
+                  <Link to="/death" style={{
+                    display: "block",
+                    padding: "12px 24px",
+                    color: "#e2e8f0",
+                    textDecoration: "none",
+                    fontSize: "13px",
+                    borderTop: "1px solid #2c3e50"
+                  }} onClick={() => setMobileMenu(false)}>
+                  ⚰️ Death Certificate
+                  </Link>
+                  <Link to="/residence" style={{
+                    display: "block",
+                    padding: "12px 24px",
+                    color: "#e2e8f0",
+                    textDecoration: "none",
+                    fontSize: "13px"
+                  }} onClick={() => setMobileMenu(false)}>
+                  🏠 Residence Certificate
+                  </Link>
+                  <Link to="/schemes" style={{
+                    display: "block",
+                    padding: "12px 24px",
+                    color: "#e2e8f0",
+                    textDecoration: "none",
+                    fontSize: "13px",
+                    borderTop: "1px solid #2c3e50"
+                  }} onClick={() => setMobileMenu(false)}>
+                    📋 Schemes
+                  </Link>
+                </div>
+              )}
+            </div>
           </div>
         )}
       </nav>
