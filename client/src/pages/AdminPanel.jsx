@@ -113,7 +113,7 @@ export default function AdminPanel() {
 
   const updateStatus = async (id) => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/grievance/${id}/status`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/grievance/${id}/status`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'resolved' })
@@ -197,7 +197,7 @@ export default function AdminPanel() {
           <button
             onClick={async () => {
               try {
-                await fetch(`${import.meta.env.VITE_API_URL}/api/logout`, {
+                await fetch(`${process.env.REACT_APP_API_URL}/api/logout`, {
                   method: 'POST',
                   credentials: 'include'
                 });

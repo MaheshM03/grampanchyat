@@ -42,7 +42,8 @@ app.use(rateLimit({
 app.use(cors({
   origin: [
     'http://localhost:3000',
-    'https://grampanchyat1.onrender.com'
+    'https://grampanchyat1.onrender.com',
+    'https://grampanchyat-065z.onrender.com'
   ],
   credentials: true
 }));

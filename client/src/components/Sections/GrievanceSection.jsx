@@ -87,11 +87,11 @@ export default function GrievanceSection() {
     e.preventDefault();
     if (!validateForm()) return showToast("Please fix errors", "error");
 
-    const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+    const API_BASE = process.env.REACT_APP_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:5000' : 'https://grampanchyat1.onrender.com');
 
     setLoading(true);
     try {
-      const response = await fetch(`${API_BASE}/grievance`, {
+      const response = await fetch(`${API_BASE}/api/grievance`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
