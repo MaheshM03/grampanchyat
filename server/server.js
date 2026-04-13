@@ -10,13 +10,16 @@ const xss = require('xss-clean');
 const path = require('path');
 
 const app = express();
-
 const mongoose = require('mongoose');
 
-mongoose.connect(process.env.MONGODB_URI, {
+// ✅ DEBUG (optional - remove later)
+console.log("MONGO_URI:", process.env.MONGO_URI);
+
+// ✅ CONNECT MONGODB (FIXED)
+mongoose.connect(process.env.MONGO_URI, {
   dbName: 'grampanchyat'
 })
-  .then(() => console.log('✅ MongoDB connected successfully to grampanchyat DB'))
+  .then(() => console.log('✅ MongoDB connected successfully'))
   .catch(err => {
     console.error('❌ MongoDB connection error:', err);
     process.exit(1);
@@ -25,7 +28,7 @@ mongoose.connect(process.env.MONGODB_URI, {
 // ─────────────────────────────────────────
 // MIDDLEWARE
 // ─────────────────────────────────────────
-app.use(express.json({ limit: '10mb' })); // Fix PayloadTooLargeError for images
+app.use(express.json({ limit: '10mb' }));
 app.use(helmet());
 app.use(morgan('dev'));
 app.use(mongoSanitize());
@@ -38,10 +41,13 @@ app.use(rateLimit({
 }));
 
 // ─────────────────────────────────────────
-// CORS
+// CORS (FIXED FOR PRODUCTION)
 // ─────────────────────────────────────────
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: [
+    'http://localhost:3000',
+    'https://grampanchyat-065z.onrender.com'
+  ],
   credentials: true
 }));
 
@@ -53,12 +59,10 @@ app.get('/api/test', (req, res) => {
 });
 
 // ─────────────────────────────────────────
-// MIDDLEWARE - Session & Auth
+// SESSION & COOKIE
 // ─────────────────────────────────────────
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
-// Removed inline session auth - using middleware/auth.js
-
 
 app.use(cookieParser());
 app.use(session({
@@ -72,10 +76,11 @@ app.use(session({
 // AUTH ROUTES
 // ─────────────────────────────────────────
 const jwt = require('jsonwebtoken');
-const SECRET = 'grampanchayat-admin-secret-key-change-in-prod'; // Match auth.js
+const SECRET = 'grampanchayat-admin-secret-key-change-in-prod';
 
 app.post('/api/auth/login', (req, res) => {
   const { username, password } = req.body;
+
   if (username === 'admin' && password === 'admin123') {
     const token = jwt.sign({ adminId: 'admin' }, SECRET, { expiresIn: '24h' });
     res.json({ success: true, message: 'Logged in', token });
@@ -92,20 +97,19 @@ const kunbiRoutes = require('./routes/kunbi');
 const grievanceRoutes = require('./routes/grievance');
 const logoutRoutes = require('./routes/logout');
 
-// PUBLIC: Get news (no auth) - controller direct import
+// Public route
 app.get('/api/news', require('./controllers/newsController').getNews);
 
 app.use('/api/logout', logoutRoutes);
 app.use('/api/grievance', grievanceRoutes);
 
 const authMiddleware = require('./middleware/auth');
-// PROTECTED: Other news routes (admin only)
 app.use('/api/news', authMiddleware, newsRoutes);
 
 app.use('/api/kunbi', kunbiRoutes);
 
 // ─────────────────────────────────────────
-// ERROR HANDLER (API)
+// ERROR HANDLER
 // ─────────────────────────────────────────
 app.use((err, req, res, next) => {
   console.error(err);
@@ -116,11 +120,7 @@ app.use((err, req, res, next) => {
 });
 
 // ─────────────────────────────────────────
-// API ROUTES FIRST (before static)
-// ─────────────────────────────────────────
-
-// ─────────────────────────────────────────
-// SERVE REACT BUILD (only non-API routes)
+// SERVE FRONTEND (RENDER)
 // ─────────────────────────────────────────
 app.use(express.static(path.join(__dirname, '../client/build')));
 
@@ -132,10 +132,10 @@ app.get('*', (req, res) => {
 });
 
 // ─────────────────────────────────────────
-// START SERVER (IMPORTANT)
+// START SERVER
 // ─────────────────────────────────────────
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
