@@ -12,7 +12,7 @@ const app = express();
 const mongoose = require('mongoose');
 
 // ✅ MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI, {
+mongoose.connect(process.env.MONGO_URI, {
   dbName: 'grampanchyat'
 })
   .then(() => console.log('✅ MongoDB connected successfully'))
@@ -37,19 +37,25 @@ app.use(rateLimit({
 }));
 
 // ─────────────────────────────────────────
-// CORS (FIXED FOR RENDER)
+// CORS (IMPORTANT)
 // ─────────────────────────────────────────
 app.use(cors({
   origin: [
     'http://localhost:3000',
-    'https://grampanchyat1.onrender.com',
     'https://grampanchyat-065z.onrender.com'
   ],
   credentials: true
 }));
 
 // ─────────────────────────────────────────
-// BASIC ROUTE
+// TEST ROUTE (IMPORTANT)
+// ─────────────────────────────────────────
+app.get('/api/test', (req, res) => {
+  res.json({ message: "API is working 🚀" });
+});
+
+// ─────────────────────────────────────────
+// BASIC ROOT ROUTE
 // ─────────────────────────────────────────
 app.get('/', (req, res) => {
   res.send('API is running 🚀');
@@ -94,9 +100,10 @@ const kunbiRoutes = require('./routes/kunbi');
 const grievanceRoutes = require('./routes/grievance');
 const logoutRoutes = require('./routes/logout');
 
-// Public route
+// Public news route
 app.get('/api/news', require('./controllers/newsController').getNews);
 
+// Other routes
 app.use('/api/logout', logoutRoutes);
 app.use('/api/grievance', grievanceRoutes);
 
@@ -119,7 +126,7 @@ app.use((err, req, res, next) => {
 // ─────────────────────────────────────────
 // START SERVER
 // ─────────────────────────────────────────
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 10000;
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);

@@ -113,7 +113,8 @@ export default function AdminPanel() {
 
   const updateStatus = async (id) => {
     try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/grievance/${id}/status`, {
+      const API_BASE = process.env.REACT_APP_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:5000' : 'https://grampanchyat1.onrender.com');
+      const res = await fetch(`${API_BASE}/api/grievance/${id}/status`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'resolved' })
@@ -197,7 +198,8 @@ export default function AdminPanel() {
           <button
             onClick={async () => {
               try {
-                await fetch(`${process.env.REACT_APP_API_URL}/api/logout`, {
+                const API_BASE = process.env.REACT_APP_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:5000' : 'https://grampanchyat1.onrender.com');
+                await fetch(`${API_BASE}/api/logout`, {
                   method: 'POST',
                   credentials: 'include'
                 });

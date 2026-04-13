@@ -420,8 +420,9 @@ function Step5({ data, onBack, onSuccess }) {
     setErr(""); setProcessing(true);
 
     try {
+      const API_BASE = process.env.REACT_APP_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:5000' : 'https://grampanchyat1.onrender.com');
       // Step 1: Create Razorpay order
-      const orderRes = await fetch(`${process.env.REACT_APP_API_URL}/api/payment/order`, {
+      const orderRes = await fetch(`${API_BASE}/api/payment/order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -444,7 +445,7 @@ function Step5({ data, onBack, onSuccess }) {
         order_id: orderData.data.order_id,
         handler: async function (response) {
           // Step 3: Verify payment and submit form
-          const verifyRes = await fetch(`${process.env.REACT_APP_API_URL}/api/payment/verify`, {
+          const verifyRes = await fetch(`${API_BASE}/api/payment/verify`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -471,7 +472,7 @@ function Step5({ data, onBack, onSuccess }) {
             }
           };
 
-          const submitRes = await fetch(`${process.env.REACT_APP_API_URL}/api/death-certificates`, {
+          const submitRes = await fetch(`${API_BASE}/api/death-certificates`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(formData)

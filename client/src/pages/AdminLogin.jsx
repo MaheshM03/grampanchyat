@@ -14,7 +14,8 @@ export default function AdminLogin() {
     setError('');
 
     try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/login`, {
+      const API_BASE = process.env.REACT_APP_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:5000' : 'https://grampanchyat1.onrender.com');
+      const res = await fetch(`${API_BASE}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)

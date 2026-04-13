@@ -32,7 +32,7 @@ const normalizeApiBase = (baseUrl) => {
   if (!baseUrl) return '';
   return baseUrl.replace(/\/+$|\/api$/i, '');
 };
-const API_BASE = normalizeApiBase(process.env.REACT_APP_API_URL || '');
+const API_BASE = normalizeApiBase(process.env.REACT_APP_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:5000' : 'https://grampanchyat1.onrender.com'));
 // Helper: safely parse a response as JSON with content-type guard
 const safeJson = async (res) => {
   const contentType = res.headers.get('content-type');
