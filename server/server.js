@@ -12,7 +12,12 @@ const app = express();
 const mongoose = require('mongoose');
 
 // ✅ MongoDB Connection
-mongoose.connect(process.env.MONGO_URI, {
+const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI;
+if (!mongoUri) {
+  console.error('❌ MongoDB connection error: missing MONGODB_URI');
+  process.exit(1);
+}
+mongoose.connect(mongoUri, {
   dbName: 'grampanchyat'
 })
   .then(() => console.log('✅ MongoDB connected successfully'))
