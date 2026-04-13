@@ -12,7 +12,7 @@ const app = express();
 const mongoose = require('mongoose');
 
 // ✅ MongoDB Connection
-mongoose.connect(process.env.MONGO_URI, {
+mongoose.connect(process.env.MONGODB_URI, {
   dbName: 'grampanchyat'
 })
   .then(() => console.log('✅ MongoDB connected successfully'))
@@ -42,7 +42,7 @@ app.use(rateLimit({
 app.use(cors({
   origin: [
     'http://localhost:3000',
-    'https://grampanchyat-065z.onrender.com'
+    'https://grampanchyat1.onrender.com'
   ],
   credentials: true
 }));

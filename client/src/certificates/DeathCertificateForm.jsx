@@ -421,7 +421,7 @@ function Step5({ data, onBack, onSuccess }) {
 
     try {
       // Step 1: Create Razorpay order
-      const orderRes = await fetch('http://localhost:5000/api/payment/order', {
+      const orderRes = await fetch(`${import.meta.env.VITE_API_URL}/api/payment/order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -444,7 +444,7 @@ function Step5({ data, onBack, onSuccess }) {
         order_id: orderData.data.order_id,
         handler: async function (response) {
           // Step 3: Verify payment and submit form
-          const verifyRes = await fetch('http://localhost:5000/api/payment/verify', {
+          const verifyRes = await fetch(`${import.meta.env.VITE_API_URL}/api/payment/verify`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -471,7 +471,7 @@ function Step5({ data, onBack, onSuccess }) {
             }
           };
 
-          const submitRes = await fetch('http://localhost:5000/api/death-certificates', {
+          const submitRes = await fetch(`${import.meta.env.VITE_API_URL}/api/death-certificates`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(formData)
