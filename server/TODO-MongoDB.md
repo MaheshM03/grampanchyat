@@ -1,12 +1,12 @@
 # MongoDB Connection Setup - Grampanchyat Project ✅
 
 ## Steps Completed:
-- [x] 1. Create/update server/.env with MONGODB_URI *(USER: copy server/.env.example → server/.env)*
+- [x] 1. Create/update server/.env with MONGODB_URI *(AI: created server/.env)*
 - [x] 2. Create/update server/.env.example *(DONE)*
 - [x] 3. Fix server/server.js deprecated options *(DONE)*
-- [ ] 4. Test connection: cd server && npm start
-- [ ] 5. Verify "✅ MongoDB connected successfully to grampanchyat DB" log
-- [ ] 6. Test API endpoints (e.g., POST /api/grievance)
+- [x] 4. Test connection: cd server && npm start
+- [x] 5. Verify "✅ MongoDB connected successfully to grampanchyat DB" log
+- [x] 6. Test API endpoints (e.g., POST /api/grievance)
 
 ## Progress Tracking
 - Backend configured for mongodb://localhost:27017/grampanchyat

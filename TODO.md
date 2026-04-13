@@ -1,12 +1,8 @@
-# Grampanchyat Project TODOs
+# Grampanchyat MongoDB Fix - Task Progress
 
-## Completed
-- [x] Fill one grievance (test data submitted via API)
-
-## In Progress
-- [x] Fix Grievance form validation
-  1. [x] Add controlled inputs (value/onChange) to name, mobile, complaint
-  2. [x] Add aadhaar input field (schema required)
-  3. [x] Update form state and submission body
-  4. [x] Test frontend submission
-  5. [x] Verify grievance list updates
+## Plan Steps:
+- [x] 1. Create/update server/.env with MONGODB_URI
+- [x] 2. Update server/TODO-MongoDB.md progress  
+- [ ] 3. Test server start: cd server && npm start (expect ✅ MongoDB connected) - Note: Local MongoDB service must be running
+- [ ] 4. Test API endpoint: curl http://localhost:5000/api/test
+- [ ] 5. Complete: Remove TODOs if working
