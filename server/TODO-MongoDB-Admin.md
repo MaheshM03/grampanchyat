@@ -1,35 +1,16 @@
-# MongoDB Admin User Creation - Grampanchyat Project
+# MongoDB Admin Setup - DEPRECATED FOR ATLAS ✅
 
-## Steps:
-- [ ] 1. Run MongoDB shell and create admin user
-- [ ] 2. Update server/.env.example with auth URI
-- [ ] 3. Update server/.env with auth URI
-- [ ] 4. Restart server: npm run start
-- [ ] 5. Verify authenticated connection
+## Status: Atlas Migration Complete
+Local MongoDB admin no longer needed. Atlas handles authentication.
 
-## MongoDB Admin Creation Commands
-Run in **NEW TERMINAL** (PowerShell/cmd):
+**Previous Local Steps (Completed but Deprecated):**
+- Created local admin user instructions
 
-```bash
-mongosh
-```
-Then in shell:
-```js
-use admin
-db.createUser({
-  user: \"grampanchyat_admin\",
-  pwd: \"Grampanchyat2024!\",
-  roles: [{ role: \"userAdminAnyDatabase\", db: \"admin\" }, \"readWriteAnyDatabase\"]
-})
-exit
-```
+## Atlas Authentication:
+1. User `misalmahesh0305` already configured in Atlas
+2. Ensure Network Access IP whitelist includes your IP
+3. Database user has readWrite on 'grampanchyat' cluster
 
-## Updated .env URI
-```
-MONGODB_URI=mongodb://grampanchyat_admin:Grampanchyat2024!@localhost:27017/grampanchyat?authSource=admin
-```
+**No further local admin setup required.**
 
-**Security:** Strong password used. Restart mongod service if auth not enabled.
-
-**Progress:** Update after each step.
-
+✅ Complete
