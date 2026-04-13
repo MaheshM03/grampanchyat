@@ -7,15 +7,11 @@ const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
-const path = require('path');
 
 const app = express();
 const mongoose = require('mongoose');
 
-// ✅ DEBUG (optional - remove later)
-console.log("MONGO_URI:", process.env.MONGO_URI);
-
-// ✅ CONNECT MONGODB (FIXED)
+// ✅ MongoDB Connection
 mongoose.connect(process.env.MONGO_URI, {
   dbName: 'grampanchyat'
 })
@@ -41,7 +37,7 @@ app.use(rateLimit({
 }));
 
 // ─────────────────────────────────────────
-// CORS (FIXED FOR PRODUCTION)
+// CORS (FIXED FOR RENDER)
 // ─────────────────────────────────────────
 app.use(cors({
   origin: [
@@ -52,10 +48,10 @@ app.use(cors({
 }));
 
 // ─────────────────────────────────────────
-// TEST ROUTE
+// BASIC ROUTE
 // ─────────────────────────────────────────
-app.get('/api/test', (req, res) => {
-  res.json({ message: "API is working 🚀" });
+app.get('/', (req, res) => {
+  res.send('API is running 🚀');
 });
 
 // ─────────────────────────────────────────
@@ -73,7 +69,7 @@ app.use(session({
 }));
 
 // ─────────────────────────────────────────
-// AUTH ROUTES
+// AUTH ROUTE
 // ─────────────────────────────────────────
 const jwt = require('jsonwebtoken');
 const SECRET = 'grampanchayat-admin-secret-key-change-in-prod';
@@ -117,18 +113,6 @@ app.use((err, req, res, next) => {
     return res.status(500).json({ message: 'Server error' });
   }
   next(err);
-});
-
-// ─────────────────────────────────────────
-// SERVE FRONTEND (RENDER)
-// ─────────────────────────────────────────
-app.use(express.static(path.join(__dirname, '../client/build')));
-
-app.get('*', (req, res) => {
-  if (req.path.startsWith('/api')) {
-    return res.status(404).json({ message: 'API endpoint not found' });
-  }
-  res.sendFile(path.join(__dirname, '../client/build/index.html'));
 });
 
 // ─────────────────────────────────────────
