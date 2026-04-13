@@ -1,44 +1,18 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
+import { useNews } from "../../context/NewsContext";
 import "swiper/css";
 import "swiper/css/pagination";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import { useEffect } from "react";
 
 export default function News() {
+  const { news, loading } = useNews();
 
-  const getDate = (daysAgo) => {
-    const d = new Date();
-    d.setDate(d.getDate() - daysAgo);
-    return d.toDateString();
+  const formatDate = (dateString) => {
+    return new Date(dateString).toDateString();
   };
-
-  const newsData = [
-    {
-      title: "Maharashtra Digitizes Land Records",
-      desc: "Citizens can now access land records online with improved transparency.",
-      date: getDate(1),
-      img: "https://images.unsplash.com/photo-1560518883-ce09059eeffa"
-    },
-    {
-      title: "Online Birth Certificate Services Expanded",
-      desc: "Faster processing through online portal across districts.",
-      date: getDate(2),
-      img: "https://images.unsplash.com/photo-1581090700227-1e8a1a0c4a8e"
-    },
-    {
-      title: "Rural Employment Boost",
-      desc: "Government increases budget allocation under MGNREGA.",
-      date: getDate(3),
-      img: "https://images.unsplash.com/photo-1503387762-592deb58ef4e"
-    },
-    {
-      title: "Smart Village Initiative Launched",
-      desc: "Focus on digital services and rural infrastructure.",
-      date: getDate(4),
-      img: "https://images.unsplash.com/photo-1494526585095-c41746248156"
-    }
-  ];
 
   const styles = {
     page: {
@@ -87,7 +61,8 @@ export default function News() {
     image: {
       width: "100%",
       height: "200px",
-      objectFit: "cover"
+      objectFit: "cover",
+      backgroundColor: "#f1f5f9"
     },
 
     overlay: {
@@ -122,8 +97,32 @@ export default function News() {
       fontSize: "12px",
       color: "#2563eb",
       fontWeight: "600"
+    },
+
+    loading: {
+      textAlign: "center",
+      padding: "60px 20px",
+      color: "#64748b"
+    },
+
+    empty: {
+      textAlign: "center",
+      padding: "80px 20px",
+      color: "#64748b"
     }
   };
+
+  if (loading) {
+    return (
+      <div style={styles.page}>
+        <Navbar />
+        <div style={styles.loading}>
+          <h2>Loading latest news...</h2>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div style={styles.page}>
@@ -136,39 +135,48 @@ export default function News() {
       </div>
 
       <div style={styles.container}>
-        <Swiper
-          modules={[Autoplay, Pagination]}
-          spaceBetween={20}
-          autoplay={{ delay: 3000 }}
-          pagination={{ clickable: true }}
-          breakpoints={{
-            0: { slidesPerView: 1 },
-            600: { slidesPerView: 1 },
-            768: { slidesPerView: 2 },
-            1024: { slidesPerView: 3 }
-          }}
-        >
-          {newsData.map((news, i) => (
-            <SwiperSlide key={i}>
-              <div style={styles.card}>
+        {news.length === 0 ? (
+          <div style={styles.empty}>
+            <h3>No news available</h3>
+            <p>Check back later for updates</p>
+          </div>
+        ) : (
+          <Swiper
+            modules={[Autoplay, Pagination]}
+            spaceBetween={20}
+            autoplay={{ delay: 4000 }}
+            pagination={{ clickable: true }}
+            breakpoints={{
+              0: { slidesPerView: 1 },
+              600: { slidesPerView: 1.2 },
+              768: { slidesPerView: 2 },
+              1024: { slidesPerView: 3 }
+            }}
+          >
+            {news.map((item, i) => (
+              <SwiperSlide key={item._id || i}>
+                <div style={styles.card}>
+                  {/* IMAGE */}
+                  <div style={styles.imageWrapper}>
+                    <img 
+                      src={item.img || "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400"} 
+                      alt={item.title} 
+                      style={styles.image} 
+                    />
+                    <div style={styles.overlay}></div>
+                  </div>
 
-                {/* IMAGE */}
-                <div style={styles.imageWrapper}>
-                  <img src={news.img} alt="news" style={styles.image} />
-                  <div style={styles.overlay}></div>
+                  {/* CONTENT */}
+                  <div style={styles.content}>
+                    <p style={styles.title}>{item.title}</p>
+                    <p style={styles.desc}>{item.desc}</p>
+                    <p style={styles.date}>{formatDate(item.createdAt)}</p>
+                  </div>
                 </div>
-
-                {/* CONTENT */}
-                <div style={styles.content}>
-                  <p style={styles.title}>{news.title}</p>
-                  <p style={styles.desc}>{news.desc}</p>
-                  <p style={styles.date}>{news.date}</p>
-                </div>
-
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        )}
       </div>
 
       <Footer />

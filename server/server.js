@@ -13,8 +13,10 @@ const app = express();
 
 const mongoose = require('mongoose');
 
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('✅ MongoDB connected successfully'))
+mongoose.connect(process.env.MONGODB_URI, {
+  dbName: 'grampanchyat'
+})
+  .then(() => console.log('✅ MongoDB connected successfully to grampanchyat DB'))
   .catch(err => {
     console.error('❌ MongoDB connection error:', err);
     process.exit(1);
@@ -23,7 +25,7 @@ mongoose.connect(process.env.MONGODB_URI)
 // ─────────────────────────────────────────
 // MIDDLEWARE
 // ─────────────────────────────────────────
-app.use(express.json());
+app.use(express.json({ limit: '10mb' })); // Fix PayloadTooLargeError for images
 app.use(helmet());
 app.use(morgan('dev'));
 app.use(mongoSanitize());
@@ -55,12 +57,8 @@ app.get('/api/test', (req, res) => {
 // ─────────────────────────────────────────
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
-const authMiddleware = (req, res, next) => {
-  if (req.session && req.session.admin) {
-    return next();
-  }
-  res.status(401).json({ success: false, message: 'Admin access required' });
-};
+// Removed inline session auth - using middleware/auth.js
+
 
 app.use(cookieParser());
 app.use(session({
@@ -73,14 +71,14 @@ app.use(session({
 // ─────────────────────────────────────────
 // AUTH ROUTES
 // ─────────────────────────────────────────
+const jwt = require('jsonwebtoken');
+const SECRET = 'grampanchayat-admin-secret-key-change-in-prod'; // Match auth.js
+
 app.post('/api/auth/login', (req, res) => {
   const { username, password } = req.body;
   if (username === 'admin' && password === 'admin123') {
-    req.session.admin = true;
-    req.session.save(err => {
-      if (err) return res.status(500).json({ message: 'Session error' });
-      res.json({ success: true, message: 'Logged in', token: 'dummy-for-client' });
-    });
+    const token = jwt.sign({ adminId: 'admin' }, SECRET, { expiresIn: '24h' });
+    res.json({ success: true, message: 'Logged in', token });
   } else {
     res.status(401).json({ success: false, message: 'Invalid credentials' });
   }
@@ -94,16 +92,15 @@ const kunbiRoutes = require('./routes/kunbi');
 const grievanceRoutes = require('./routes/grievance');
 const logoutRoutes = require('./routes/logout');
 
-app.use('/api/logout', logoutRoutes);
-app.use('/api/grievance', (req, res, next) => {
-  if (req.method === 'GET') return authMiddleware(req, res, next);
-  next();
-}, grievanceRoutes);
+// PUBLIC: Get news (no auth) - controller direct import
+app.get('/api/news', require('./controllers/newsController').getNews);
 
-app.use('/api/news', (req, res, next) => {
-  if (['POST', 'PUT', 'DELETE'].includes(req.method)) return authMiddleware(req, res, next);
-  next();
-}, newsRoutes);
+app.use('/api/logout', logoutRoutes);
+app.use('/api/grievance', grievanceRoutes);
+
+const authMiddleware = require('./middleware/auth');
+// PROTECTED: Other news routes (admin only)
+app.use('/api/news', authMiddleware, newsRoutes);
 
 app.use('/api/kunbi', kunbiRoutes);
 
@@ -119,21 +116,19 @@ app.use((err, req, res, next) => {
 });
 
 // ─────────────────────────────────────────
-// SERVE REACT BUILD (SAFE)
+// API ROUTES FIRST (before static)
 // ─────────────────────────────────────────
-const buildPath = path.join(__dirname, 'build');
 
-app.use(express.static(buildPath));
+// ─────────────────────────────────────────
+// SERVE REACT BUILD (only non-API routes)
+// ─────────────────────────────────────────
+app.use(express.static(path.join(__dirname, '../client/build')));
 
 app.get('*', (req, res) => {
-  const indexPath = path.join(buildPath, 'index.html');
-
-  res.sendFile(indexPath, (err) => {
-    if (err) {
-      console.error("Error serving React build:", err);
-      res.status(500).send("Frontend not found");
-    }
-  });
+  if (req.path.startsWith('/api')) {
+    return res.status(404).json({ message: 'API endpoint not found' });
+  }
+  res.sendFile(path.join(__dirname, '../client/build/index.html'));
 });
 
 // ─────────────────────────────────────────

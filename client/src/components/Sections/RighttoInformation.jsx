@@ -13,15 +13,18 @@ const tableRowsData = [
   ["5", "संपत्ती कर", "2023-24", "234", "220", "14", "-"],
 ];
 
-const headers = ["अ.क्र.", "माहिती", "कालावधी", "प्रकरण", "निकाली", "बाकी", "शेरा"];
+
 
 export default function RTI() {
   const { t } = useTranslator();
   const [search, setSearch] = useState("");
 
+  const headers = Array.from({length: 7}, (_, i) => t(`rti.headers.${i}`));
+
   const filtered = tableRowsData.filter(row =>
     row.some(cell => cell.toLowerCase().includes(search.toLowerCase()))
   );
+
 
   const downloadCSV = () => {
     const csv = [headers, ...tableRowsData].map(r => r.join(",")).join("\n");
@@ -60,9 +63,10 @@ export default function RTI() {
 
         {/* SEARCH */}
         <input
-          placeholder="Search..."
+          placeholder={t('rti.search')}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+
           style={{
             padding: 10,
             width: "90%",

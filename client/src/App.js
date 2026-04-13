@@ -22,6 +22,7 @@ import ResidenceCertificate from './certificates/ResidenceCertificate.jsx';
 import ResidenceCertificateForm from './certificates/ResidenceCertificateForm.jsx';
 import AboutUs from './components/Sections/AboutUs.jsx';
 import Schemes from './pages/Schemes.jsx';
+import AdminLogin from './pages/AdminLogin.jsx';
 
 function App() {
   return (
@@ -39,7 +40,8 @@ function App() {
           <Route path="/grievance" element={<GrievanceSection />} />
           <Route path="/committee" element={<OtherCommittee />} />
           <Route path="/news" element={<News/>} />
-          <Route path="/admin" element={<AdminPanel />} />
+<Route path="/admin" element={<AdminPanel />} />
+          <Route path="/admin-login" element={<AdminLogin />} />
           <Route path="/birth" element={<BirthCertificate />} />
           <Route path="/birth-apply" element={<BirthCertificateForm />} />
           <Route path="/death" element={<DeathCertificate />} />

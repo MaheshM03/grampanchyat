@@ -29,15 +29,42 @@ export default function GrievanceSection() {
   ];
 
   const [form, setForm] = useState({
-    firstName: "",
+    fullName: "",
     mobile: "",
+    aadhaar: "",
+    email: "",
     department: "",
-    complaint: "",
+    details: "",
+    type: "complaint",
     image: ""
   });
 
+  const [errors, setErrors] = useState({});
   const [toast, setToast] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!form.fullName.trim()) newErrors.fullName = "Full name is required";
+    else if (form.fullName.length > 50) newErrors.fullName = "Name too long (max 50 chars)";
+
+    if (!form.mobile) newErrors.mobile = "Mobile is required";
+    else if (!/^\d{10}$/.test(form.mobile)) newErrors.mobile = "Enter valid 10-digit mobile";
+    
+    if (!form.aadhaar) newErrors.aadhaar = "Aadhaar is required";
+    else if (!/^\d{12}$/.test(form.aadhaar)) newErrors.aadhaar = "Enter valid 12-digit Aadhaar";
+
+    if (form.email && !/^\S+@\S+\.\S+$/.test(form.email)) newErrors.email = "Invalid email";
+
+    if (!form.department) newErrors.department = "Select department";
+
+    if (!form.details.trim()) newErrors.details = "Details required";
+    else if (form.details.length > 500) newErrors.details = "Max 500 chars";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const showToast = (msg, type = "success") => {
     setToast({ msg, type });
@@ -47,7 +74,10 @@ export default function GrievanceSection() {
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
+    if (!file.type.startsWith('image/')) {
+      showToast("Please select an image file", "error");
+      return;
+    }
     const reader = new FileReader();
     reader.onload = () => setForm({ ...form, image: reader.result });
     reader.readAsDataURL(file);
@@ -55,10 +85,7 @@ export default function GrievanceSection() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!form.firstName || !form.mobile || !form.department || !form.complaint) {
-      return showToast("Please fill all fields", "error");
-    }
+    if (!validateForm()) return showToast("Please fix errors", "error");
 
     const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
@@ -69,24 +96,19 @@ export default function GrievanceSection() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          firstName: form.firstName,
-          mobile: form.mobile,
-          department: form.department,
-          complaint: form.complaint,
-          image: form.image,
-        }),
+        body: JSON.stringify(form),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Submission failed');
+        throw new Error(data.message || 'Submission failed');
       }
 
-      const data = await response.json();
       showToast(data.message || "Submitted Successfully ✅");
       fetchGrievances();
-      setForm({ firstName: "", mobile: "", department: "", complaint: "", image: "" });
+      setForm({ fullName: "", mobile: "", aadhaar: "", email: "", department: "", details: "", type: "complaint", image: "" });
+      setErrors({});
     } catch (error) {
       console.error('Submit error:', error);
       showToast(error.message || "Error ❌", "error");
@@ -95,11 +117,13 @@ export default function GrievanceSection() {
     }
   };
 
-
   const handleAction = (item) => {
     if (item.action === "call") window.location.href = `tel:${item.value}`;
     if (item.action === "email") window.location.href = `mailto:${item.value}`;
   };
+
+  const isValidMobile = form.mobile.length === 10 && /^\d{10}$/.test(form.mobile);
+  const isValidAadhaar = form.aadhaar.length === 12 && /^\d{12}$/.test(form.aadhaar);
 
   return (
     <section style={{ background: "#f8fafc" }}>
@@ -146,14 +170,53 @@ export default function GrievanceSection() {
 
           <form onSubmit={handleSubmit}>
 
-            <input placeholder="Name" style={input} />
+            <div>
+              <input 
+                placeholder="Full Name *" 
+                style={{...input, ...(errors.fullName && inputError)}}
+                value={form.fullName}
+                onChange={(e) => setForm({...form, fullName: e.target.value})}
+                maxLength={50}
+              />
+              {errors.fullName && <p style={errorText}>{errors.fullName} ({form.fullName.length}/50)</p>}
+            </div>
 
-            <input placeholder="Mobile" style={input} />
+            <div>
+              <input 
+                placeholder="Mobile (10 digits) *" 
+                style={{...input, ...(errors.mobile && inputError)}}
+                value={form.mobile}
+                onChange={(e) => setForm({...form, mobile: e.target.value.replace(/\D/g,'')})}
+                onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
+                maxLength={10}
+              />
+              {errors.mobile ? <p style={errorText}>{errors.mobile}</p> : <p style={counterText}>{form.mobile.length}/10</p>}
+            </div>
+
+            <div>
+              <input 
+                placeholder="Aadhaar (12 digits) *" 
+                style={{...input, ...(errors.aadhaar && inputError)}}
+                value={form.aadhaar}
+                onChange={(e) => setForm({...form, aadhaar: e.target.value.replace(/\D/g,'')})}
+                maxLength={12}
+              />
+              {errors.aadhaar ? <p style={errorText}>{errors.aadhaar}</p> : <p style={counterText}>{form.aadhaar.length}/12</p>}
+            </div>
+
+            <input 
+              placeholder="Email (optional)" 
+              style={{...input, ...(errors.email && inputError)}}
+              value={form.email}
+              onChange={(e) => setForm({...form, email: e.target.value})}
+              type="email"
+            />
+            {errors.email && <p style={errorText}>{errors.email}</p>}
 
             {/* DEPARTMENT GRID */}
             <div style={{ marginBottom: 15 }}>
-              <p style={{ fontWeight: 600 }}>Select Department</p>
-
+              <p style={{ fontWeight: 600 }}>Select Department *</p>
+              {errors.department && <p style={errorText}>{errors.department}</p>}
               <div style={{
                 display: "grid",
                 gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))",
@@ -182,16 +245,47 @@ export default function GrievanceSection() {
               </div>
             </div>
 
-            <textarea placeholder="Complaint" style={{ ...input, height: 100 }} />
+            {/* TYPE SELECTOR */}
+            <div style={{marginBottom: 15}}>
+              <p style={{ fontWeight: 600 }}>Type</p>
+              <div style={{display: 'flex', gap: 10}}>
+                <label>
+                  <input 
+                    type="radio" 
+                    value="complaint" 
+                    checked={form.type === "complaint"}
+                    onChange={(e) => setForm({...form, type: e.target.value})}
+                  /> Complaint
+                </label>
+                <label>
+                  <input 
+                    type="radio" 
+                    value="suggestion" 
+                    checked={form.type === "suggestion"}
+                    onChange={(e) => setForm({...form, type: e.target.value})}
+                  /> Suggestion
+                </label>
+              </div>
+            </div>
 
-            <input type="file" onChange={handleImageUpload} style={input} />
+            <div>
+              <textarea 
+                placeholder="Details *" 
+                style={{ ...input, height: 100, ...(errors.details && inputError)}}
+                value={form.details}
+                onChange={(e) => setForm({...form, details: e.target.value})}
+                maxLength={500}
+              />
+              {errors.details ? <p style={errorText}>{errors.details}</p> : <p style={counterText}>{form.details.length}/500</p>}
+            </div>
 
+            <input type="file" onChange={handleImageUpload} style={input} accept="image/*" />
             {form.image && (
-              <img src={form.image} style={{ width: 80, borderRadius: 8 }} />
+              <img src={form.image} alt="Preview" style={{ width: 80, borderRadius: 8, margin: '10px 0' }} />
             )}
 
-            <button style={btn}>
-              {loading ? "Submitting..." : "Submit"}
+            <button type="submit" style={btn} disabled={loading}>
+              {loading ? "Submitting..." : "Submit Grievance"}
             </button>
 
           </form>
@@ -207,7 +301,7 @@ export default function GrievanceSection() {
               <div style={iconBox}>{item.icon}</div>
 
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 12 }}>{item.label}</div>
+                <div style={{ fontSize: 12, opacity: 0.8 }}>{item.label}</div>
                 <div style={{ fontWeight: 600 }}>{item.value}</div>
               </div>
 
@@ -242,24 +336,50 @@ const card = {
 
 const input = {
   width: "100%",
-  padding: 10,
-  marginBottom: 10,
+  padding: 12,
+  marginBottom: 5,
   borderRadius: 8,
-  border: "1px solid #ccc"
+  border: "1px solid #d1d5db",
+  fontSize: 14
+};
+
+const inputError = {
+  borderColor: "#ef4444 !important",
+  boxShadow: "0 0 0 3px rgba(239,68,68,0.1)"
+};
+
+const errorText = {
+  color: "#ef4444",
+  fontSize: 12,
+  margin: "-5px 0 10px 0"
+};
+
+const counterText = {
+  fontSize: 11,
+  color: "#6b7280",
+  margin: "-5px 0 10px 0",
+  fontFamily: "monospace"
 };
 
 const btn = {
   background: "#2563eb",
   color: "#fff",
-  padding: 12,
+  padding: "12px 20px",
   width: "100%",
   borderRadius: 8,
-  border: "none"
+  border: "none",
+  fontWeight: 600,
+  cursor: "pointer",
+  ":disabled": {
+    opacity: 0.7,
+    cursor: "not-allowed"
+  }
 };
 
 const heading = {
-  marginBottom: 15,
-  fontWeight: 700
+  marginBottom: 20,
+  fontWeight: 700,
+  color: "#1f2937"
 };
 
 const contactCard = {
@@ -272,25 +392,29 @@ const contactCard = {
 const contactItem = {
   display: "flex",
   alignItems: "center",
-  gap: 10,
-  marginBottom: 10
+  gap: 12,
+  marginBottom: 15,
+  paddingBottom: 15,
+  borderBottom: "1px solid #f3f4f6"
 };
 
 const iconBox = {
-  width: 35,
-  height: 35,
-  background: "#e0e7ff",
+  width: 40,
+  height: 40,
+  background: "#eff6ff",
   borderRadius: "50%",
   display: "flex",
   alignItems: "center",
-  justifyContent: "center"
+  justifyContent: "center",
+  flexShrink: 0
 };
 
 const actionBtn = {
   background: "#2563eb",
   color: "#fff",
   border: "none",
-  padding: "5px 10px",
+  padding: "6px 12px",
   borderRadius: 6,
-  cursor: "pointer"
+  cursor: "pointer",
+  fontSize: 12
 };

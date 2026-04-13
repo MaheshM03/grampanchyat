@@ -18,7 +18,11 @@ const grievanceReducer = (state, action) => {
   }
 };
 
-const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const normalizeApiBase = (baseUrl) => {
+  if (!baseUrl) return '';
+  return baseUrl.replace(/\/+$|\/api$/i, '');
+};
+const API_BASE = normalizeApiBase(process.env.REACT_APP_API_URL || 'http://localhost:5000');
 
 const safeJson = async (res) => {
   const contentType = res.headers.get('content-type');

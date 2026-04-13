@@ -16,10 +16,10 @@ const newsReducer = (state, action) => {
     case 'UPDATE_NEWS':
       return {
         ...state,
-        news: state.news.map(n => n.id === action.payload.id ? action.payload : n)
+        news: state.news.map(n => n._id === action.payload._id ? action.payload : n)
       };
     case 'DELETE_NEWS':
-      return { ...state, news: state.news.filter(n => n.id !== action.payload) };
+      return { ...state, news: state.news.filter(n => n._id !== action.payload) };
     case 'SET_LOADING':
       return { ...state, loading: action.payload };
     default:
@@ -28,7 +28,11 @@ const newsReducer = (state, action) => {
 };
 
 // API base for local/prod
-const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const normalizeApiBase = (baseUrl) => {
+  if (!baseUrl) return '';
+  return baseUrl.replace(/\/+$|\/api$/i, '');
+};
+const API_BASE = normalizeApiBase(process.env.REACT_APP_API_URL || 'http://localhost:5000');
 // Helper: safely parse a response as JSON with content-type guard
 const safeJson = async (res) => {
   const contentType = res.headers.get('content-type');
@@ -62,9 +66,15 @@ export const NewsProvider = ({ children }) => {
 
   const addNews = useCallback(async (newsData) => {
     try {
+      const token = localStorage.getItem('adminToken');
+      const headers = { 'Content-Type': 'application/json' };
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      
       const res = await fetch(`${API_BASE}/api/news`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         credentials: 'omit',
         body: JSON.stringify(newsData)
       });
@@ -84,9 +94,15 @@ export const NewsProvider = ({ children }) => {
 
   const updateNews = useCallback(async (id, newsData) => {
     try {
+      const token = localStorage.getItem('adminToken');
+      const headers = { 'Content-Type': 'application/json' };
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      
       const res = await fetch(`${API_BASE}/api/news/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify(newsData)
       });
       if (!res.ok) {
@@ -105,7 +121,16 @@ export const NewsProvider = ({ children }) => {
 
   const deleteNews = useCallback(async (id) => {
     try {
-      const res = await fetch(`${API_BASE}/api/news/${id}`, { method: 'DELETE' });
+      const token = localStorage.getItem('adminToken');
+      const headers = {};
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      
+      const res = await fetch(`${API_BASE}/api/news/${id}`, { 
+        method: 'DELETE',
+        headers
+      });
       if (!res.ok) {
         console.error('Delete news failed:', res.status);
         return;

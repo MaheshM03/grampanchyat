@@ -14,8 +14,8 @@ const translations = {
     'nav.news': 'बातम्या',
 'nav.grievance': 'तक्रार',
     'nav.aboutus': 'आमच्याबद्दल',
-    'rti.title': 'Right to Information',
-    'rti.subtitle': 'Gram Panchayat Gangavarhe-Savargaon',
+'rti.title': 'माहितीचा अधिकार',
+'rti.subtitle': 'ग्राम पंचायत गंगावऱ्हे-सावरगांव',
     'rti.findOut': 'Find out',
     'rti.sectionTitle': 'RTI Documents & Records',
     'rti.previewText': 'RTI Documents - 2023-24',
@@ -150,10 +150,19 @@ const translations = {
     'services.special': 'दर्जेदार सेवा',
 
     // Common
+    'rti.search': 'शोधा',
+    'rti.headers.0': 'अ.क्र.',
+    'rti.headers.1': 'माहिती',
+    'rti.headers.2': 'कालावधी',
+    'rti.headers.3': 'प्रकरण',
+    'rti.headers.4': 'निकाली',
+    'rti.headers.5': 'बाकी',
+    'rti.headers.6': 'शेरा',
     'lang.mr': 'मराठी',
     'lang.en': 'English',
     'switch.to': 'परिवर्तित करा'
   },
+
   en: {
     // Navbar
     'nav.home': 'Home',
@@ -301,10 +310,19 @@ const translations = {
     'services.special': 'Quality Services',
 
     // Common
+    'rti.search': 'Search',
+    'rti.headers.0': 'Sr.',
+    'rti.headers.1': 'Information',
+    'rti.headers.2': 'Period',
+    'rti.headers.3': 'Cases',
+    'rti.headers.4': 'Disposed',
+    'rti.headers.5': 'Pending',
+    'rti.headers.6': 'Remarks',
     'lang.mr': 'Marathi',
     'lang.en': 'English',
     'switch.to': 'Switch to'
   }
+
 };
 
 export const LanguageProvider = ({ children }) => {

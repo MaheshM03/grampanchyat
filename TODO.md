@@ -1,6 +1,12 @@
-# Navbar Citizen Portal Dropdown Task
+# Grampanchyat Project TODOs
 
-- [x] Step 1: Update Navbar.jsx to add Citizen Portal dropdown with Birth (/birth), Death (/death), Residence (/residence) links
-- [x] Step 2: Test navigation in browser
-- [x] Step 3: Complete task
+## Completed
+- [x] Fill one grievance (test data submitted via API)
 
+## In Progress
+- [x] Fix Grievance form validation
+  1. [x] Add controlled inputs (value/onChange) to name, mobile, complaint
+  2. [x] Add aadhaar input field (schema required)
+  3. [x] Update form state and submission body
+  4. [x] Test frontend submission
+  5. [x] Verify grievance list updates

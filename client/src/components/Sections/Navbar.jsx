@@ -228,7 +228,7 @@ const [mobileMenu, setMobileMenu] = useState(false);
 
         {/* ADMIN BUTTON */}
         <Link
-          to="/admin"
+          to="/admin-login"
           style={{
             background: "#16a34a",
             color: "#fff",
@@ -239,7 +239,7 @@ const [mobileMenu, setMobileMenu] = useState(false);
             fontWeight: "600"
           }}
         >
-          {t('nav.admin')}
+          Admin Login
         </Link>
 
         {/* MOBILE MENU */}
