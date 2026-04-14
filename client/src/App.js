@@ -14,6 +14,7 @@ import News from './components/Sections/News.jsx';
 import AdminPanel from './pages/AdminPanel.jsx';
 import { NewsProvider } from './context/NewsContext.js';
 import { GrievanceProvider } from './context/GrievanceContext.js';
+import { CertificateProvider } from './context/CertificateContext.js';
 import BirthCertificate from './certificates/BirthCertificate.jsx';
 import BirthCertificateForm from './certificates/BirthCertificateForm.jsx';
 import DeathCertificate from './certificates/DeathCertificate.jsx';
@@ -29,6 +30,7 @@ function App() {
 <LanguageProvider>
       <NewsProvider>
         <GrievanceProvider>
+          <CertificateProvider>
           <Router>
             <Routes>
           <Route path="/" element={<Home />} />
@@ -61,6 +63,7 @@ function App() {
           } />
         </Routes>
           </Router>
+        </CertificateProvider>
         </GrievanceProvider>
       </NewsProvider>
     </LanguageProvider>

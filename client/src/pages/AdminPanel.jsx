@@ -1,483 +1,638 @@
 import React, { useState, useEffect } from "react";
-import { LayoutDashboard, MessageSquare, Newspaper, Sun, Moon, Edit, Trash2 } from "lucide-react";
+import {
+  LayoutDashboard, MessageSquare, Newspaper,
+  FileText, Sun, Moon, Edit, Trash2
+} from "lucide-react";
+
 import { useNews } from "../context/NewsContext";
 import { useGrievances } from "../context/GrievanceContext";
-
+import { useCertificates } from "../context/CertificateContext";
 
 export default function AdminPanel() {
+
   const [tab, setTab] = useState("dashboard");
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+const [darkMode, setDarkMode] = useState(false);
 
-  const [darkMode, setDarkMode] = useState(false);
-  const { news, loading: newsLoading, addNews, updateNews, deleteNews, fetchNews } = useNews();
-  const { grievances, loading: grievanceLoading, fetchGrievances } = useGrievances();
-
-  const [form, setForm] = useState({ 
-    title: "", 
-    desc: "", 
-    excerpt: "", 
-    date: new Date().toISOString().split('T')[0], 
-    category: "News",
-    img: "", 
-    imageFile: null 
+  // News form state
+  const [showForm, setShowForm] = useState(false);
+  const [editingNews, setEditingNews] = useState(null);
+  const [formData, setFormData] = useState({
+    title: '',
+    category: 'News',
+    date: new Date().toISOString().split('T')[0],
+    excerpt: '',
+    content: '',
+    imageUrl: ''
   });
-  const [editingId, setEditingId] = useState(null);
-  const [toast, setToast] = useState(null);
+  const [formError, setFormError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+const { news = [], addNews, updateNews, deleteNews, fetchNews } = useNews();
+  const { grievances = [], fetchGrievances } = useGrievances();
+  const { certs = { birth: [], death: [], residence: [] }, updateCertStatus } = useCertificates();
 
   useEffect(() => {
-    // Check auth
-    const token = localStorage.getItem('adminToken');
-    if (!token) {
-      window.location.href = '/admin-login';
-      return;
-    }
-
     fetchGrievances();
-    fetchNews();
-
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const bg = darkMode ? "#0f172a" : "#f1f5f9";
-  const card = darkMode ? "#1e293b" : "white";
-  const text = darkMode ? "white" : "black";
-
-  const baseButton = {
-    border: "none",
-    borderRadius: 10,
-    cursor: "pointer",
-    transition: "all 0.2s ease",
-    fontWeight: 600
-  };
-
-  const styles = {
-    page: {
-      display: "flex",
-      minHeight: "100vh",
-      background: bg,
-      color: text,
-      fontFamily: "Inter, Arial, sans-serif"
-    },
-    toast: {
-      position: "fixed",
-      top: 20,
-      right: 20,
-      background: "#22c55e",
-      color: "white",
-      padding: "12px 20px",
-      borderRadius: 10,
-      zIndex: 1000,
-      boxShadow: "0 12px 30px rgba(0,0,0,0.18)"
-    },
-    mobileTopBar: {
-      position: "fixed",
-      top: 0,
-      left: 0,
-      right: 0,
-      background: "#0f172a",
-      color: "white",
-      padding: 12,
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      zIndex: 1000
-    },
-    sidebar: {
-      width: isMobile ? (sidebarOpen ? 240 : 0) : 240,
-      background: "#0f172a",
-      color: "white",
-      padding: isMobile ? (sidebarOpen ? "24px" : "0") : "24px",
-      overflow: "hidden",
-      transition: "width 0.25s ease, padding 0.25s ease",
-      display: "flex",
-      flexDirection: "column",
-      height: "100vh",
-      position: isMobile ? "fixed" : "relative",
-      left: 0,
-      top: 0,
-      zIndex: isMobile ? 1100 : "auto",
-      boxShadow: isMobile && sidebarOpen ? "3px 0 20px rgba(0,0,0,0.18)" : "none"
-    },
-    sidebarButton: {
-      display: "flex",
-      alignItems: "center",
-      gap: 10,
-      width: "100%",
-      background: "transparent",
-      color: "white",
-      border: "none",
-      padding: 14,
-      borderRadius: 12,
-      marginBottom: 10,
-      textAlign: "left",
-      fontSize: 14,
-      cursor: "pointer",
-      transition: "background 0.2s ease"
-    },
-    sidebarFooter: {
-      marginTop: "auto",
-      paddingTop: 20
-    },
-    card: {
-      background: card,
-      padding: 28,
-      borderRadius: 18,
-      boxShadow: "0 16px 40px rgba(15, 23, 42, 0.08)",
-      minWidth: 0
-    },
-    cardRow: {
-      display: "flex",
-      flexWrap: "wrap",
-      gap: 20
-    },
-    cardItem: {
-      flex: "1 1 280px",
-      minWidth: 260
-    },
-    cardHeader: {
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      marginBottom: 16
-    },
-    formInput: {
-      display: "block",
-      width: "100%",
-      marginBottom: 14,
-      padding: 14,
-      borderRadius: 12,
-      border: "1px solid #d1d5db",
-      background: darkMode ? "#0f172a" : "#fff",
-      color: darkMode ? "#f8fafc" : "#111827"
-    },
-    primaryBtn: {
-      ...baseButton,
-      background: "#22c55e",
-      color: "white",
-      padding: "14px 18px",
-      width: "100%"
-    },
-    secondaryBtn: {
-      ...baseButton,
-      background: "#3b82f6",
-      color: "white",
-      padding: "12px 16px"
-    },
-    dangerBtn: {
-      ...baseButton,
-      background: "#ef4444",
-      color: "white",
-      padding: "12px 16px"
-    },
-    itemCard: {
-      border: "1px solid #e5e7eb",
-      padding: 18,
-      marginBottom: 14,
-      borderRadius: 14,
-      background: darkMode ? "#111827" : "#f9fafb"
-    },
-    headerTitle: {
-      fontSize: 18,
-      fontWeight: 700,
-      margin: 0
-    }
-  };
-
-  const showToast = (msg, type = "success") => {
-    setToast({ msg, type });
-    setTimeout(() => setToast(null), 3000);
-  };
-
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => setForm({ ...form, img: reader.result, imageFile: file });
-    reader.readAsDataURL(file);
-  };
-
-  const addOrUpdateNews = async () => {
-    if (!form.title || !form.desc || !form.excerpt || !form.date || !form.category) {
-      return showToast("Please fill all required fields", "error");
-    }
-
-    const newsData = {
-      title: form.title,
-      excerpt: form.excerpt,
-      date: new Date(form.date + 'T00:00:00'),
-      category: form.category,
-      content: form.desc,
-      imageUrl: form.img,
-      hasImage: !!form.img
-    };
-
-    try {
-      if (editingId) {
-        await updateNews(editingId, newsData);
-        showToast("News updated");
-      } else {
-        await addNews(newsData);
-        showToast("News added");
-      }
-      setForm({ 
-        title: "", 
-        desc: "", 
-        excerpt: "",
-        date: new Date().toISOString().split('T')[0],
-        category: "News",
-        img: "", 
-        imageFile: null 
-      });
-      setEditingId(null);
-    } catch (err) {
-      showToast("Operation failed", "error");
-    }
-  };
-
-  const editNews = (n) => {
-    setForm({ 
-      title: n.title || "",
-      desc: n.content || "",
-      excerpt: n.excerpt || "",
-      date: n.date ? n.date.split('T')[0] : new Date().toISOString().split('T')[0],
-      category: n.category || "News",
-      img: n.imageUrl || "",
-      imageFile: null
-    });
-    setEditingId(n._id);
-  };
-
-  const updateStatus = async (id) => {
-    try {
-      const API_BASE = process.env.REACT_APP_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:5000' : 'https://grampanchyat1.onrender.com');
-      const res = await fetch(`${API_BASE}/api/grievance/${id}/status`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: 'resolved' })
-      });
-      if (res.ok) {
-        fetchGrievances();
-        showToast("Status updated to resolved");
-      } else {
-        showToast("Update failed", "error");
-      }
-    } catch (err) {
-      showToast("Update failed", "error");
-    }
-  };
-
   return (
-    <div style={styles.page}>
-
-      {/* TOAST */}
-      {toast && (
-        <div style={{ ...styles.toast, background: toast.type === "error" ? "#ef4444" : "#22c55e" }}>
-          {toast.msg}
-        </div>
-      )}
-
-      {/* MOBILE TOP BAR */}
-      {isMobile && (
-        <div style={styles.mobileTopBar}>
-          <span style={{ fontWeight: 700 }}>Admin Panel</span>
-          <button onClick={() => setSidebarOpen(!sidebarOpen)} style={{ background: "none", border: "none", color: "white", cursor: "pointer" }}>
-            {sidebarOpen ? "✕" : "☰"}
-          </button>
-        </div>
-      )}
+    <div className={darkMode ? "admin dark" : "admin"}>
 
       {/* SIDEBAR */}
-      <div style={styles.sidebar}>
-        <h2 style={{ marginBottom: 30, fontSize: 20, letterSpacing: 1, fontWeight: 700 }}>ADMIN PANEL</h2>
+      <aside className="sidebar">
+        <h2>Admin Panel</h2>
 
-        {[ 
-          { key: "dashboard", icon: <LayoutDashboard size={16} />, label: "Dashboard" },
-          { key: "grievances", icon: <MessageSquare size={16} />, label: "Grievances" },
-          { key: "news", icon: <Newspaper size={16} />, label: "News" }
-        ].map(item => (
-          <button key={item.key} onClick={() => { setTab(item.key); setSidebarOpen(false); }} 
-                  style={{ 
-                    ...styles.sidebarButton,
-                    background: tab === item.key ? "#22c55e" : "transparent",
-                    opacity: tab === item.key ? 1 : 0.88
-                  }}>
-            {item.icon} {item.label}
+        <button className={tab==="dashboard" ? "active":""} onClick={()=>setTab("dashboard")}>
+          <LayoutDashboard size={16}/> Dashboard
+        </button>
+
+        <button className={tab==="grievances" ? "active":""} onClick={()=>setTab("grievances")}>
+          <MessageSquare size={16}/> Grievances
+        </button>
+
+        <button className={tab==="news" ? "active":""} onClick={()=>setTab("news")}>
+          <Newspaper size={16}/> News
+        </button>
+
+        <button className={tab==="certificates" ? "active":""} onClick={()=>setTab("certificates")}>
+          <FileText size={16}/> Certificates
+        </button>
+
+        <div className="sidebar-bottom">
+          <button onClick={()=>setDarkMode(!darkMode)}>
+            {darkMode ? <Sun/> : <Moon/>}
           </button>
-        ))}
 
-        {/* Dark Mode Toggle */}
-        <div style={styles.sidebarFooter}>
-          <div style={{display: "flex", alignItems: "center", gap: 8, marginBottom: 12}}>
-            <button onClick={() => setDarkMode(!darkMode)} style={{ 
-              background: darkMode ? "#eab308" : "#6b7280", border: "none", padding: 10, borderRadius: "50%", cursor: "pointer" 
-            }}>
-              {darkMode ? <Sun size={16} /> : <Moon size={16} />}
-            </button>
-            <span style={{fontSize: 12}}>Dark Mode</span>
-          </div>
-
-          <button
-            onClick={async () => {
-              try {
-                const API_BASE = process.env.REACT_APP_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:5000' : 'https://grampanchyat1.onrender.com');
-                await fetch(`${API_BASE}/api/logout`, {
-                  method: 'POST',
-                  credentials: 'include'
-                });
-              } catch {}
-              localStorage.removeItem("adminToken");
-              window.location.href = '/';
-            }}
-            style={{ ...styles.dangerBtn, width: '100%', padding: '14px 0' }}
-          >
-            Logout
+          <button className="logout-btn" onClick={()=>{
+            localStorage.removeItem("adminToken");
+            window.location.href="/";
+          }}>
+            🚪 Logout
           </button>
         </div>
-      </div>
+      </aside>
 
-      {/* MAIN CONTENT */}
-      <div style={{ flex: 1, padding: isMobile ? "90px 16px 16px" : "32px", overflowY: "auto" }}>
+      {/* MAIN */}
+      <main className="content">
 
         {/* DASHBOARD */}
-        {tab === "dashboard" && (
-          <div style={styles.cardRow}>
-            <div style={{ ...styles.cardItem, ...styles.card }}>
-              <div style={styles.cardHeader}>
-                <div>
-                  <h3 style={{ margin: 0 }}>Total Grievances</h3>
-                  <p style={{ margin: 0, color: '#6b7280' }}>Overview of current cases</p>
-                </div>
-                <MessageSquare size={20} />
-              </div>
-              <p style={{ fontSize: 32, fontWeight: "bold", color: "#3b82f6", margin: "0 0 10px 0" }}>
-                {grievances.length}
-              </p>
-              <div style={{ fontSize: 13, lineHeight: 1.8 }}>
-                <div>Pending: {grievances.filter(g => g.status === 'pending').length}</div>
-                <div>Processed: {grievances.filter(g => g.status === 'processed').length}</div>
-                <div>Resolved: {grievances.filter(g => g.status === 'resolved').length}</div>
-              </div>
+        {tab==="dashboard" && (
+          <div className="dashboard-grid">
+            <div className="stat blue">
+              <h3>{grievances.length}</h3>
+              <p>Total Grievances</p>
             </div>
 
-            <div style={{ ...styles.cardItem, ...styles.card }}>
-              <div style={styles.cardHeader}>
-                <div>
-                  <h3 style={{ margin: 0 }}>News Items</h3>
-                  <p style={{ margin: 0, color: '#6b7280' }}>Published updates</p>
-                </div>
-                <Newspaper size={20} />
-              </div>
-              <p style={{ fontSize: 32, fontWeight: "bold", color: "#22c55e", margin: "0 0 10px 0" }}>
-                {news.length}
-              </p>
-              <div style={{ fontSize: 13, lineHeight: 1.8 }}>
-                <div>Loading: {newsLoading ? 'Yes' : 'No'}</div>
-              </div>
+            <div className="stat green">
+              <h3>{news.length}</h3>
+              <p>News</p>
+            </div>
+
+            <div className="stat orange">
+              <h3>{certs.birth.length}</h3>
+              <p>Birth Certificates</p>
             </div>
           </div>
         )}
 
-        {/* GRIEVANCES TAB */}
-        {tab === "grievances" && (
-          <div style={styles.card}>
-            <h3 style={{ marginBottom: 18 }}>Manage Grievances ({grievances.length})</h3>
-            {grievanceLoading ? (
-              <p>Loading grievances...</p>
-            ) : grievances.length === 0 ? (
-              <p>No grievances yet</p>
-            ) : (
-              grievances.map(g => (
-                <div key={g._id} style={styles.itemCard}>
-                  <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10, marginBottom: 10}}>
-                    <h4 style={{margin: 0, fontSize: 16}}>{g.fullName}</h4>
-                    <span style={{ 
-                      fontSize: 12, 
-                      fontWeight: 700,
-                      padding: '6px 10px',
-                      borderRadius: 999,
-                      background: g.status === 'resolved' ? '#dcfce7' : g.status === 'processed' ? '#fef3c7' : '#fee2e2',
-                      color: g.status === 'resolved' ? '#166534' : g.status === 'processed' ? '#a16207' : '#991b1b'
-                    }}>
-                      {g.status || 'pending'}
-                    </span>
-                  </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 12, marginBottom: 10 }}>
-                    <p style={{margin: 0, fontSize: 14}}><strong>Department:</strong> {g.department}</p>
-                    <p style={{margin: 0, fontSize: 14}}><strong>Mobile:</strong> {g.mobile}</p>
-                  </div>
-                  <p style={{margin: 0, color: '#6b7280', lineHeight: 1.75}}>{g.details}</p>
-                  <div style={{marginTop: 16}}>
-                    <button onClick={() => updateStatus(g._id)} style={{...styles.secondaryBtn, marginRight: 8}}>
-                      {g.status === 'resolved' ? 'Reopen' : 'Mark Resolved'}
-                    </button>
-                  </div>
+        {/* GRIEVANCES */}
+        {tab==="grievances" && (
+          <div className="card">
+            <h2>Grievances</h2>
+
+            {grievances.map(g=>(
+              <div key={g._id} className="item-card">
+                <div>
+                  <h4>{g.fullName}</h4>
+                  <p>{g.details}</p>
                 </div>
-              ))
-            )}
-          </div>
-        )}
 
-        {/* NEWS TAB */}
-        {tab === "news" && (
-          <div style={styles.card}>
-            <h3 style={{ marginBottom: 22 }}>{editingId ? "Edit News Item" : "Add New News"}</h3>
-
-            <input placeholder="Title *" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} style={styles.formInput} />
-            <textarea placeholder="Description *" value={form.desc} onChange={(e) => setForm({ ...form, desc: e.target.value })} style={{ ...styles.formInput, height: 120, resize: 'vertical' }} />
-            <input placeholder="Excerpt (short summary) *" value={form.excerpt} onChange={(e) => setForm({ ...form, excerpt: e.target.value })} style={styles.formInput} />
-            <input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} style={styles.formInput} />
-            <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} style={styles.formInput}>
-              <option value="News">News</option>
-              <option value="Public Work">Public Work</option>
-              <option value="Development works">Development works</option>
-              <option value="Antharman">Antharman</option>
-              <option value="Festival">Festival</option>
-            </select>
-            <input type="file" accept="image/*" onChange={handleImageUpload} style={styles.formInput} />
-
-            {form.img && <img src={form.img} alt="Preview" style={{ width: 140, height: 100, objectFit: 'cover', borderRadius: 12, marginTop: 10 }} />}
-
-            <button onClick={addOrUpdateNews} style={styles.primaryBtn} disabled={newsLoading}>
-              {editingId ? "Update News" : "Add News"}
-            </button>
-
-            <h4 style={{ marginTop: 32, marginBottom: 16 }}>Existing News ({news.length})</h4>
-            {news.map(n => (
-              <div key={n._id} style={styles.itemCard}>
-                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12}}>
-                  <div style={{flex: 1}}>
-                    <h4 style={{margin: '0 0 8px 0'}}>{n.title}</h4>
-                    <p style={{margin: '0 0 8px 0', color: '#6b7280'}}>{n.excerpt}</p>
-                    <div style={{fontSize: 12, color: '#9ca3af'}}>
-                      <span>Category: {n.category}</span> | <span>Date: {new Date(n.date).toLocaleDateString()}</span>
-                    </div>
-                  </div>
-                  {n.imageUrl && <img src={n.imageUrl} alt="" style={{width: 72, height: 48, objectFit: 'cover', borderRadius: 10}} />}
-                </div>
-                <div style={{marginTop: 16, display: 'flex', gap: 10, flexWrap: 'wrap'}}>
-                  <button onClick={() => editNews(n)} style={styles.secondaryBtn}>
-                    <Edit size={14} /> Edit
-                  </button>
-                  <button onClick={async () => {
-                    try {
-                      await deleteNews(n._id);
-                      showToast("News deleted", "success");
-                    } catch (err) {
-                      showToast("Delete failed", "error");
-                    }
-                  }} style={styles.dangerBtn}>
-                    <Trash2 size={14} /> Delete
-                  </button>
-                </div>
+                <span className={`status ${g.status || "pending"}`}>
+                  {g.status || "pending"}
+                </span>
               </div>
             ))}
           </div>
         )}
 
-      </div>
+        {/* NEWS */}
+{tab==="news" && (
+          <div className="card">
+            <h2>News Management</h2>
+            
+            {/* Add News Button */}
+            <button 
+              className="add-btn mb-4"
+              onClick={() => {
+                setShowForm(true);
+                setEditingNews(null);
+                setFormData({
+                  title: '',
+                  category: 'News',
+                  date: new Date().toISOString().split('T')[0],
+                  excerpt: '',
+                  content: '',
+                  imageUrl: ''
+                });
+                setFormError('');
+              }}
+            >
+              ➕ Add New News
+            </button>
+
+            {/* Add/Edit Form */}
+            {showForm && (
+              <div className="news-form">
+                <h3>{editingNews ? 'Edit News' : 'Add News'}</h3>
+                
+                {formError && (
+                  <div className="error">{formError}</div>
+                )}
+
+                <div className="form-grid">
+                  <input
+                    placeholder="News Title *"
+                    value={formData.title}
+                    onChange={(e) => setFormData({...formData, title: e.target.value})}
+                  />
+                  
+                  <select
+                    value={formData.category}
+                    onChange={(e) => setFormData({...formData, category: e.target.value})}
+                  >
+                    <option value="News">News</option>
+                    <option value="Public Work">Public Work</option>
+                    <option value="Development works">Development works</option>
+                    <option value="Antharman">Antharman</option>
+                    <option value="Festival">Festival</option>
+                  </select>
+
+                  <input
+                    type="date"
+                    value={formData.date}
+                    onChange={(e) => setFormData({...formData, date: e.target.value})}
+                  />
+
+                  <textarea
+                    placeholder="Excerpt * (short description)"
+                    rows="2"
+                    value={formData.excerpt}
+                    onChange={(e) => setFormData({...formData, excerpt: e.target.value})}
+                  />
+
+                  <textarea
+                    placeholder="Full Content"
+                    rows="4"
+                    value={formData.content}
+                    onChange={(e) => setFormData({...formData, content: e.target.value})}
+                  />
+
+                  <input
+                    placeholder="Image URL (optional)"
+                    value={formData.imageUrl}
+                    onChange={(e) => setFormData({...formData, imageUrl: e.target.value})}
+                  />
+                </div>
+
+                <div className="form-actions">
+                  <button 
+                    className="cancel-btn"
+                    onClick={() => {
+                      setShowForm(false);
+                      setEditingNews(null);
+                      setFormError('');
+                    }}
+                  >
+                    Cancel
+                  </button>
+                  
+                  <button 
+                    className="save-btn"
+                    disabled={isSubmitting}
+                    onClick={async () => {
+                      // Validation
+                      if (!formData.title || !formData.excerpt || !formData.category || !formData.date) {
+                        setFormError('Title, excerpt, category and date are required');
+                        return;
+                      }
+
+                      setIsSubmitting(true);
+                      setFormError('');
+
+                      try {
+                        const newsData = {
+                          title: formData.title,
+                          category: formData.category,
+                          date: formData.date,
+                          excerpt: formData.excerpt,
+                          content: formData.content || '',
+                          imageUrl: formData.imageUrl || '',
+                          hasImage: !!formData.imageUrl
+                        };
+
+                        let result;
+                        if (editingNews) {
+                          result = await updateNews(editingNews._id, newsData);
+                        } else {
+                          result = await addNews(newsData);
+                        }
+
+                        if (result) {
+                          await fetchNews();
+                          setShowForm(false);
+                          setEditingNews(null);
+                          setFormError('');
+                        }
+                      } catch (err) {
+                        setFormError('Failed to save news. Check console.');
+                        console.error(err);
+                      } finally {
+                        setIsSubmitting(false);
+                      }
+                    }}
+                  >
+                    {isSubmitting ? 'Saving...' : (editingNews ? 'Update' : 'Add News')}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* News List */}
+            <div className="news-list">
+              {news.length === 0 ? (
+                <p>No news yet. <button className="link-btn" onClick={() => setShowForm(true)}>Add first news</button></p>
+              ) : (
+                news.map(n => (
+                  <div key={n._id} className="news-card">
+                    <div className="news-content">
+                      <h4>{n.title}</h4>
+                      <p className="category">{n.category}</p>
+                      <p>{n.excerpt}</p>
+                      {n.content && <p className="content-preview">{n.content.substring(0, 100)}...</p>}
+                      {n.imageUrl && <img src={n.imageUrl} alt="news" className="news-thumb" />}
+                      <small>{new Date(n.date).toLocaleDateString()}</small>
+                    </div>
+
+                    <div className="news-actions">
+                      <button 
+                        className="edit-btn"
+                        onClick={() => {
+                          setEditingNews(n);
+                          setFormData({
+                            title: n.title,
+                            category: n.category,
+                            date: new Date(n.date).toISOString().split('T')[0],
+                            excerpt: n.excerpt,
+                            content: n.content || '',
+                            imageUrl: n.imageUrl || ''
+                          });
+                          setShowForm(true);
+                        }}
+                      >
+                        <Edit size={14}/>
+                      </button>
+                      <button 
+                        className="delete-btn"
+                        onClick={async () => {
+                          if (window.confirm(`Delete "${n.title}"?`)) {
+                            await deleteNews(n._id);
+                            await fetchNews();
+                          }
+                        }}
+                      >
+                        <Trash2 size={14}/>
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* CERTIFICATES */}
+        {tab==="certificates" && (
+          <div className="cert-container">
+
+            {["birth","death","residence"].map(type=>(
+              <div key={type} className="cert-column">
+
+                <h4>{type.toUpperCase()} ({certs[type].length})</h4>
+
+                {certs[type].map(cert=>(
+                  <div key={cert.id} className="cert-card">
+
+                    <div className="cert-header">
+                      <span className="token">#{cert.token}</span>
+
+                      <span className={`status ${cert.status || "pending"}`}>
+                        {cert.status || "pending"}
+                      </span>
+                    </div>
+
+                    <p className="cert-info">
+                      📱 {cert.mobile}
+                    </p>
+
+                    <button
+                      className={`cert-btn ${
+                        cert.status==="approved" ? "reopen":"approve"
+                      }`}
+                      onClick={()=>updateCertStatus(
+                        type,
+                        cert.id,
+                        cert.status==="approved"?"pending":"approved"
+                      )}
+                    >
+                      {cert.status==="approved"?"Reopen":"Approve"}
+                    </button>
+
+                  </div>
+                ))}
+
+              </div>
+            ))}
+
+          </div>
+        )}
+
+      </main>
+
+      {/* CSS */}
+      <style>{`
+
+      .admin {
+        display:flex;
+        height:100vh;
+        background:#f1f5f9;
+        font-family:Inter;
+      }
+
+      .dark { background:#0f172a; color:white; }
+
+      /* SIDEBAR */
+      .sidebar {
+        width:240px;
+        background:#0f172a;
+        color:white;
+        padding:20px;
+        display:flex;
+        flex-direction:column;
+      }
+
+      .sidebar button {
+        padding:12px;
+        border:none;
+        background:none;
+        color:white;
+        border-radius:10px;
+        margin-bottom:10px;
+        text-align:left;
+        transition:0.3s;
+      }
+
+      .sidebar button:hover {
+        background:#1e293b;
+      }
+
+      .sidebar button.active {
+        background:#2563eb;
+      }
+
+      .sidebar-bottom { margin-top:auto; }
+
+      .logout-btn {
+        background:linear-gradient(135deg,#ef4444,#dc2626);
+        padding:12px;
+        border-radius:10px;
+        color:white;
+        width:100%;
+      }
+
+      /* CONTENT */
+      .content {
+        flex:1;
+        padding:25px;
+        overflow:auto;
+      }
+
+      /* DASHBOARD */
+      .dashboard-grid {
+        display:grid;
+        grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+        gap:20px;
+      }
+
+      .stat {
+        padding:20px;
+        border-radius:16px;
+        color:white;
+        text-align:center;
+      }
+
+      .blue { background:#3b82f6; }
+      .green { background:#10b981; }
+      .orange { background:#f59e0b; }
+
+      /* CARD */
+      .card {
+        background:white;
+        padding:24px;
+        border-radius:16px;
+      }
+
+      .dark .card { background:#1e293b; }
+
+      /* NEWS FORM */
+      .news-form {
+        background:#f0f9ff;
+        padding:20px;
+        border-radius:12px;
+        margin-bottom:20px;
+        border:2px solid #0ea5e9;
+      }
+
+      .dark .news-form { background:#0c4a6e; }
+
+      .form-grid {
+        display:grid;
+        gap:12px;
+        grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+      }
+
+      .form-grid input, .form-grid select, .form-grid textarea {
+        padding:10px;
+        border:1px solid #d1d5db;
+        border-radius:8px;
+        font-size:14px;
+      }
+
+      .dark .form-grid input, .dark .form-grid select, .dark .form-grid textarea {
+        background:#1e293b;
+        color:white;
+        border-color:#475569;
+      }
+
+      .form-actions {
+        display:flex;
+        gap:10px;
+        margin-top:16px;
+      }
+
+      .save-btn, .cancel-btn {
+        padding:10px 20px;
+        border:none;
+        border-radius:8px;
+        font-weight:500;
+      }
+
+      .save-btn {
+        background:#10b981;
+        color:white;
+      }
+
+      .save-btn:hover { background:#059669; }
+      .save-btn:disabled { opacity:0.6; }
+
+      .cancel-btn {
+        background:#6b7280;
+        color:white;
+      }
+
+      .cancel-btn:hover { background:#4b5563; }
+
+      .error {
+        background:#fee2e2;
+        color:#dc2626;
+        padding:10px;
+        border-radius:8px;
+        margin-bottom:12px;
+      }
+
+      .add-btn {
+        background:#3b82f6;
+        color:white;
+        padding:12px 20px;
+        border-radius:10px;
+        border:none;
+      }
+
+      .add-btn:hover { background:#2563eb; }
+
+      .mb-4 { margin-bottom:16px; }
+
+      .news-list { min-height:200px; }
+
+      .category {
+        background:#dbeafe;
+        color:#1e40af;
+        padding:4px 8px;
+        border-radius:20px;
+        font-size:12px;
+        font-weight:600;
+        display:inline-block;
+        margin-bottom:8px;
+      }
+
+      .content-preview {
+        font-style:italic;
+        color:#64748b;
+        margin:8px 0;
+      }
+
+      .news-thumb {
+        width:60px;
+        height:40px;
+        object-fit:cover;
+        border-radius:6px;
+        margin:4px 0;
+      }
+
+      .link-btn {
+        color:#3b82f6;
+        background:none;
+        border:none;
+        cursor:pointer;
+        text-decoration:underline;
+      }
+
+      /* GRIEVANCE ITEMS */
+      .item-card {
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        padding:16px;
+        margin-bottom:12px;
+        border-radius:12px;
+        background:#f9fafb;
+      }
+
+      /* NEWS UI */
+      .news-card {
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        padding:16px;
+        margin-bottom:12px;
+        border-radius:12px;
+        background:#f9fafb;
+      }
+
+      .news-actions button {
+        margin-left:8px;
+        padding:8px;
+        border:none;
+        border-radius:8px;
+      }
+
+      .edit-btn { background:#3b82f6; color:white; }
+      .delete-btn { background:#ef4444; color:white; }
+
+      /* CERTIFICATES */
+      .cert-container {
+        display:grid;
+        gap:20px;
+      }
+
+      .cert-column {
+        background:white;
+        padding:20px;
+        border-radius:16px;
+      }
+
+      .cert-card {
+        background:#f8fafc;
+        padding:16px;
+        border-radius:12px;
+        margin-bottom:12px;
+      }
+
+      .cert-header {
+        display:flex;
+        justify-content:space-between;
+        margin-bottom:10px;
+      }
+
+      .cert-btn {
+        width:100%;
+        padding:10px;
+        border:none;
+        border-radius:8px;
+      }
+
+      .approve { background:#10b981; color:white; }
+      .reopen { background:#6b7280; color:white; }
+
+      @media(min-width:768px){
+        .cert-container {
+          grid-template-columns:repeat(3,1fr);
+        }
+      }
+
+      .status.pending { background:#fee2e2; padding:5px 10px; border-radius:10px; }
+      .status.resolved { background:#dcfce7; padding:5px 10px; border-radius:10px; }
+
+      `}</style>
     </div>
   );
 }

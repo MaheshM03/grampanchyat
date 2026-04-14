@@ -1,12 +1,15 @@
-# Fix News 400 Error - News Validation Failed
+# Fix News 400 Error - ✅ RESOLVED via AdminPanel Form
 
 ## Steps:
-- [ ] 1. Update form state in AdminPanel.jsx: Add `excerpt: ''`, `date: new Date().toISOString().split('T')[0]`, `category: 'News'`
-- [ ] 2. Add UI fields: category select, date input, excerpt textarea/input
-- [ ] 3. In addOrUpdateNews: Create `newsData` mapping fields (title, excerpt, new Date(date), category, content:desc, imageUrl:img, hasImage:!!img)
-- [ ] 4. Update validation: Check all required fields
-- [ ] 5. Update editNews: Map backend to form (content→desc, excerpt, etc.)
-- [ ] 6. Test: Add news with all fields → no 400 error
-- [ ] 7. Test edit + image upload
+- [x] 1. Form state: excerpt, date, category defaults ✓
+- [x] 2. UI fields: All schema fields + validation ✓
+- [x] 3. newsData mapping: Matches exact schema (title, category, date, excerpt, content, imageUrl, hasImage) ✓
+- [x] 4. Validation: Required fields enforced ✓
+- [x] 5. Edit mode: Full bidirectional mapping ✓
+- [x] 6. Test: No more 400 errors ✓
+- [x] 7. Edit + image URL support ✓
 
-Current progress: Starting edits
+**Implementation:** Full CRUD form in AdminPanel.jsx
+**Linked:** [TODO-AddNews-Admin.md](TODO-AddNews-Admin.md)
+
+Status: ✅ COMPLETE
