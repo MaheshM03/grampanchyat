@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useTranslator } from "../../context/LanguageContext.js";
-import { Link } from "react-router-dom";
 
 const ministers = [
   {
@@ -22,8 +21,8 @@ const ministers = [
     desc: "Deputy Chief Minister."
   },
   {
-    name: "श्री. ओमकार पवार ",
-    role: "मुख्य कार्यकारी अधिकारी, जिल्हा परिषद नाशिक",
+    name: "श्री. ओमकार पवार",
+    role: "मुख्य कार्यकारी अधिकारी",
     img: "/omkar pawar.jfif",
     desc: "Administrative officer."
   },
@@ -38,17 +37,16 @@ const gpOfficials = [
   },
   {
     name: "हनुमान गणक",
-    role: "उपसरपंच ",
+    role: "उपसरपंच",
     img: "https://randomuser.me/api/portraits/men/22.jpg",
     desc: "Deputy head assisting administration."
   },
   {
-    name: " श्री. डी. पुजारी",
+    name: "श्री. डी. पुजारी",
     role: "ग्रामपंचायत अधिकारी",
     img: "https://randomuser.me/api/portraits/men/23.jpg",
     desc: "Administrative officer."
   },
-  
 ];
 
 export default function Hero() {
@@ -59,206 +57,204 @@ export default function Hero() {
     <section>
 
       {/* HERO */}
-      <div style={{
-        background: "linear-gradient(135deg,#1a2a4a,#2563eb)",
-        padding: "60px 20px",
-        textAlign: "center",
-        color: "#fff"
-      }}>
-        <h1>{t('hero.title')}</h1>
-        <p>{t('hero.welcome')}</p>
+      <div className="hero">
+        <h1>{t("hero.title")}</h1>
+        <p>{t("hero.welcome")}</p>
       </div>
 
-      {/* MAIN CARD */}
-      <div style={{
-        maxWidth: "1100px",
-        margin: "-40px auto 0",
-        padding: "30px 20px",
-        background: "#fff",
-        borderRadius: "16px",
-        boxShadow: "0 10px 40px rgba(0,0,0,0.1)"
-      }}>
+      {/* MAIN */}
+      <div className="container">
 
-        {/* MINISTERS */}
-        <h2 style={{ textAlign: "center", marginBottom: 20 }}>
-          {t('hero.ministers')}
-        </h2>
-
-        <div style={gridStyle}>
+        <h2>{t("hero.ministers")}</h2>
+        <div className="grid">
           {ministers.map((m, i) => (
-            <div key={i} style={cardStyle} onClick={() => setSelected(m)}>
-              <div style={imgWrapper}>
-                <img src={m.img} alt={m.name} className="zoom-img" />
-              </div>
-              <div style={nameStyle}>{m.name}</div>
-              <div style={roleStyle}>{m.role}</div>
+            <div key={i} className="card" onClick={() => setSelected(m)}>
+              <img src={m.img} alt={m.name} />
+              <h3>{m.name}</h3>
+              <p>{m.role}</p>
             </div>
           ))}
         </div>
 
-        {/* GP OFFICIALS */}
-        <h2 style={{ textAlign: "center", margin: "30px 0 20px" }}>
-          {t('hero.gpOfficials')}
-        </h2>
-
-        <div style={gridStyle}>
+        <h2>{t("hero.gpOfficials")}</h2>
+        <div className="grid">
           {gpOfficials.map((o, i) => (
-            <div key={i} style={cardStyle} onClick={() => setSelected(o)}>
-              <div style={imgWrapper}>
-                <img src={o.img} alt={o.name} className="zoom-img" />
-              </div>
-              <div style={nameStyle}>{o.name}</div>
-              <div style={roleStyle}>{o.role}</div>
+            <div key={i} className="card" onClick={() => setSelected(o)}>
+              <img src={o.img} alt={o.name} />
+              <h3>{o.name}</h3>
+              <p>{o.role}</p>
             </div>
           ))}
         </div>
-        
       </div>
 
       {/* MODAL */}
       {selected && (
-        <div style={overlay} onClick={() => setSelected(null)}>
-          <div style={modal} onClick={(e) => e.stopPropagation()}>
-            <img src={selected.img} style={modalImg} alt="" />
+        <div className="overlay" onClick={() => setSelected(null)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <img src={selected.img} alt="" />
             <h3>{selected.name}</h3>
             <p>{selected.role}</p>
-            <p style={{ marginTop: 10 }}>{selected.desc}</p>
-
-            <button style={btn} onClick={() => setSelected(null)}>
-              Close
-            </button>
+            <p className="desc">{selected.desc}</p>
+            <button onClick={() => setSelected(null)}>Close</button>
           </div>
         </div>
       )}
 
-      {/* HOVER CSS */}
-      <style>
-        {`
-          .zoom-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: 0.4s;
-          }
+      {/* CSS */}
+      <style>{`
+      
+      /* HERO */
+      .hero {
+        background: linear-gradient(135deg, #1e3a8a, #2563eb);
+        color: white;
+        text-align: center;
+        padding: 50px 20px;
+      }
 
-          .zoom-img:hover {
-            transform: scale(1.1);
-          }
-        `}
-      </style>
+      .hero h1 {
+        font-size: 2rem;
+        font-weight: 700;
+      }
+
+      .hero p {
+        opacity: 0.9;
+        margin-top: 10px;
+      }
+
+      /* CONTAINER */
+      .container {
+        max-width: 1100px;
+        margin: -40px auto 20px;
+        background: #fff;
+        padding: 20px;
+        border-radius: 16px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+      }
+
+      h2 {
+        text-align: center;
+        margin: 20px 0;
+        color: #1e293b;
+      }
+
+      /* GRID */
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 15px;
+      }
+
+      /* CARD */
+      .card {
+        background: #fff;
+        padding: 15px;
+        border-radius: 12px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      }
+
+      .card img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 10px;
+        transition: 0.3s;
+      }
+
+      .card:hover img {
+        transform: scale(1.1);
+      }
+
+      .card h3 {
+        font-size: 14px;
+        margin-bottom: 4px;
+      }
+
+      .card p {
+        font-size: 12px;
+        color: #64748b;
+      }
+
+      /* MODAL */
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+      }
+
+      .modal {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        text-align: center;
+        width: 100%;
+        max-width: 350px;
+        animation: pop 0.3s ease;
+      }
+
+      @keyframes pop {
+        from { transform: scale(0.8); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+      }
+
+      .modal img {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        margin-bottom: 10px;
+      }
+
+      .modal .desc {
+        font-size: 13px;
+        margin-top: 10px;
+        color: #475569;
+      }
+
+      .modal button {
+        margin-top: 15px;
+        padding: 10px;
+        width: 100%;
+        background: #2563eb;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+      }
+
+      /* MOBILE */
+      @media (max-width: 500px) {
+        .hero h1 {
+          font-size: 1.5rem;
+        }
+
+        .card img {
+          width: 70px;
+          height: 70px;
+        }
+
+        .container {
+          margin-top: -30px;
+          padding: 15px;
+        }
+      }
+
+      `}</style>
     </section>
   );
 }
-
-/* STYLES */
-
-const gridStyle = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-  gap: "20px"
-};
-
-const cardStyle = {
-  background: "#fff",
-  padding: "16px",
-  borderRadius: "12px",
-  textAlign: "center",
-  boxShadow: "0 6px 18px rgba(0,0,0,0.08)",
-  cursor: "pointer",
-  transition: "0.3s"
-};
-
-const imgWrapper = {
-  width: "90px",
-  height: "90px",
-  borderRadius: "50%",
-  overflow: "hidden",
-  margin: "0 auto"
-};
-
-const nameStyle = {
-  fontWeight: "600",
-  marginTop: "10px"
-};
-
-const roleStyle = {
-  fontSize: "13px",
-  color: "#64748b"
-};
-
-const overlay = {
-  position: "fixed",
-  top: 0,
-  left: 0,
-  width: "100%",
-  height: "100%",
-  background: "rgba(0,0,0,0.6)",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center"
-};
-
-const modal = {
-  background: "#fff",
-  padding: "25px",
-  borderRadius: "12px",
-  textAlign: "center",
-  width: "90%",
-  maxWidth: "400px"
-};
-
-const modalImg = {
-  width: "120px",
-  height: "120px",
-  borderRadius: "50%",
-  objectFit: "cover",
-  marginBottom: "10px"
-};
-
-const btn = {
-  marginTop: "15px",
-  padding: "10px 20px",
-  background: "#2563eb",
-  color: "#fff",
-  border: "none",
-  borderRadius: "6px",
-  cursor: "pointer"
-};
-
-const LinkCard = ({ to, icon, title, subtitle }) => (
-  <Link to={to} style={linkCardStyle} className="apply-now-link">
-    <div style={{ fontSize: "2.2rem", marginBottom: 8 }}>{icon}</div>
-    <div style={{ fontSize: "1rem", fontWeight: 700, color: "#1a2a4a", marginBottom: 4 }}>
-      {title}
-    </div>
-    <div style={{ fontSize: "0.85rem", color: "#64748b" }}>
-      {subtitle}
-    </div>
-    <div style={applyNowStyle}>आवेदन करा →</div>
-  </Link>
-);
-
-const linkCardStyle = {
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  textAlign: "center",
-  textDecoration: "none",
-  background: "#fff",
-  borderRadius: "12px",
-  padding: "24px 20px",
-  boxShadow: "0 6px 20px rgba(0,0,0,0.08)",
-  transition: "all 0.3s ease",
-  border: "2px solid transparent"
-};
-
-const applyNowStyle = {
-  marginTop: 12,
-  padding: "8px 20px",
-  background: "linear-gradient(135deg, #e8a020, #f59e0b)",
-  color: "#fff",
-  borderRadius: "20px",
-  fontSize: "0.8rem",
-  fontWeight: 700,
-  letterSpacing: "0.5px"
-};

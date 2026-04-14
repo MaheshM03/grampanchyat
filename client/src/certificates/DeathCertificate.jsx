@@ -2,6 +2,7 @@ import React from "react";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navbar from "../components/Sections/Navbar";
+import Footer from "../components/Sections/Footer";
 
 export default function DeathCertificate() {    
   return (
@@ -26,24 +27,26 @@ export default function DeathCertificate() {
                     मृत्यू  प्रमाणपत्र
         </h1>
 
-        <button
-          style={{
-            marginTop: "12px",
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "6px",
-            fontSize: "14px",
-            color: "#374151",
-            backgroundColor: "#facc15",
-            padding: "6px 12px",
-            borderRadius: "999px",
-            border: "none",
-            boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-            cursor: "pointer",
-          }}
-        >
-          <ArrowLeft size={14} /> BACK TO HOME
-        </button>
+        <Link to="/" style={{ textDecoration: "none" }}>
+          <button
+            style={{
+              marginTop: "12px",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              fontSize: "14px",
+              color: "#374151",
+              backgroundColor: "#facc15",
+              padding: "6px 12px",
+              borderRadius: "999px",
+              border: "none",
+              boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+              cursor: "pointer",
+            }}
+          >
+            <ArrowLeft size={14} /> BACK TO HOME
+          </button>
+        </Link>
       </div>
 
       {/* Top Card */}
@@ -165,22 +168,25 @@ export default function DeathCertificate() {
         >
           <h4 style={{ marginBottom: "10px" }}>अर्ज करण्यासाठी तयार आहात?</h4>
 
-          <button
-            style={{
-              backgroundColor: "#facc15",
-              color: "#1f2937",
-              padding: "10px 18px",
-              borderRadius: "8px",
-              border: "none",
-              cursor: "pointer",
-              fontWeight: "600",
-            }}
-          >
-            Apply Now
-          </button>
+          <Link to="/death-apply" style={{ textDecoration: "none" }}>
+            <button
+              style={{
+                backgroundColor: "#facc15",
+                color: "#1f2937",
+                padding: "10px 18px",
+                borderRadius: "8px",
+                border: "none",
+                cursor: "pointer",
+                fontWeight: "600",
+              }}
+            >
+              Apply Now
+            </button>
+          </Link>
         </div>
       </div>
     </div>
+    <Footer />
     </>
   );
 }

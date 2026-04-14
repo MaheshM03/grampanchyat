@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Navbar from "../components/Sections/Navbar";
+import Footer from "../components/Sections/Footer";
 
 /* ── Shared Field Components ─────────────────────── */
 const Input = ({ label, marathi, name, value, onChange, type = "text", placeholder = "", required = true, disabled = false }) => (
@@ -623,6 +625,8 @@ export default function DeathCertificateForm() {
   const allData = { ...deceased, ...informant };
 
   return (
+    <>
+    <Navbar />
     <div style={s.page}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap');
@@ -695,7 +699,9 @@ export default function DeathCertificateForm() {
           </div>
         )}
       </div>
+      <Footer />
     </div>
+    </>
   );
 }
 

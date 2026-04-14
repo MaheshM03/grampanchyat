@@ -41,11 +41,150 @@ export default function AdminPanel() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Style constants inside component
-  const inputStyle = { display: "block", width: "100%", marginBottom: 10, padding: 10, borderRadius: 8, border: "1px solid #ccc" };
-  const btnStyle = { background: "#22c55e", color: "white", padding: 10, border: "none", borderRadius: 8, width: "100%" };
-  const editBtn = { background: "#3b82f6", color: "white", border: "none", padding: "6px 10px", borderRadius: 6 };
-  const delBtn = { background: "#ef4444", color: "white", border: "none", padding: "6px 10px", borderRadius: 6 };
+  const bg = darkMode ? "#0f172a" : "#f1f5f9";
+  const card = darkMode ? "#1e293b" : "white";
+  const text = darkMode ? "white" : "black";
+
+  const baseButton = {
+    border: "none",
+    borderRadius: 10,
+    cursor: "pointer",
+    transition: "all 0.2s ease",
+    fontWeight: 600
+  };
+
+  const styles = {
+    page: {
+      display: "flex",
+      minHeight: "100vh",
+      background: bg,
+      color: text,
+      fontFamily: "Inter, Arial, sans-serif"
+    },
+    toast: {
+      position: "fixed",
+      top: 20,
+      right: 20,
+      background: "#22c55e",
+      color: "white",
+      padding: "12px 20px",
+      borderRadius: 10,
+      zIndex: 1000,
+      boxShadow: "0 12px 30px rgba(0,0,0,0.18)"
+    },
+    mobileTopBar: {
+      position: "fixed",
+      top: 0,
+      left: 0,
+      right: 0,
+      background: "#0f172a",
+      color: "white",
+      padding: 12,
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      zIndex: 1000
+    },
+    sidebar: {
+      width: isMobile ? (sidebarOpen ? 240 : 0) : 240,
+      background: "#0f172a",
+      color: "white",
+      padding: isMobile ? (sidebarOpen ? "24px" : "0") : "24px",
+      overflow: "hidden",
+      transition: "width 0.25s ease, padding 0.25s ease",
+      display: "flex",
+      flexDirection: "column",
+      height: "100vh",
+      position: isMobile ? "fixed" : "relative",
+      left: 0,
+      top: 0,
+      zIndex: isMobile ? 1100 : "auto",
+      boxShadow: isMobile && sidebarOpen ? "3px 0 20px rgba(0,0,0,0.18)" : "none"
+    },
+    sidebarButton: {
+      display: "flex",
+      alignItems: "center",
+      gap: 10,
+      width: "100%",
+      background: "transparent",
+      color: "white",
+      border: "none",
+      padding: 14,
+      borderRadius: 12,
+      marginBottom: 10,
+      textAlign: "left",
+      fontSize: 14,
+      cursor: "pointer",
+      transition: "background 0.2s ease"
+    },
+    sidebarFooter: {
+      marginTop: "auto",
+      paddingTop: 20
+    },
+    card: {
+      background: card,
+      padding: 28,
+      borderRadius: 18,
+      boxShadow: "0 16px 40px rgba(15, 23, 42, 0.08)",
+      minWidth: 0
+    },
+    cardRow: {
+      display: "flex",
+      flexWrap: "wrap",
+      gap: 20
+    },
+    cardItem: {
+      flex: "1 1 280px",
+      minWidth: 260
+    },
+    cardHeader: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: 16
+    },
+    formInput: {
+      display: "block",
+      width: "100%",
+      marginBottom: 14,
+      padding: 14,
+      borderRadius: 12,
+      border: "1px solid #d1d5db",
+      background: darkMode ? "#0f172a" : "#fff",
+      color: darkMode ? "#f8fafc" : "#111827"
+    },
+    primaryBtn: {
+      ...baseButton,
+      background: "#22c55e",
+      color: "white",
+      padding: "14px 18px",
+      width: "100%"
+    },
+    secondaryBtn: {
+      ...baseButton,
+      background: "#3b82f6",
+      color: "white",
+      padding: "12px 16px"
+    },
+    dangerBtn: {
+      ...baseButton,
+      background: "#ef4444",
+      color: "white",
+      padding: "12px 16px"
+    },
+    itemCard: {
+      border: "1px solid #e5e7eb",
+      padding: 18,
+      marginBottom: 14,
+      borderRadius: 14,
+      background: darkMode ? "#111827" : "#f9fafb"
+    },
+    headerTitle: {
+      fontSize: 18,
+      fontWeight: 700,
+      margin: 0
+    }
+  };
 
   const showToast = (msg, type = "success") => {
     setToast({ msg, type });
@@ -130,65 +269,50 @@ export default function AdminPanel() {
     }
   };
 
-  const bg = darkMode ? "#0f172a" : "#f1f5f9";
-  const card = darkMode ? "#1e293b" : "white";
-  const text = darkMode ? "white" : "black";
-
   return (
-    <div style={{ display: "flex", minHeight: "100vh", background: bg, color: text }}>
+    <div style={styles.page}>
 
       {/* TOAST */}
       {toast && (
-        <div style={{ position: "fixed", top: 20, right: 20, background: toast.type === "error" ? "#ef4444" : "#22c55e", color: "white", padding: "10px 20px", borderRadius: 8, zIndex: 1000 }}>
+        <div style={{ ...styles.toast, background: toast.type === "error" ? "#ef4444" : "#22c55e" }}>
           {toast.msg}
         </div>
       )}
 
       {/* MOBILE TOP BAR */}
       {isMobile && (
-        <div style={{ position: "fixed", top: 0, left: 0, right: 0, background: "#0f172a", color: "white", padding: 12, display: "flex", justifyContent: "space-between", zIndex: 1000 }}>
-          <span>Admin Panel</span>
-          <button onClick={() => setSidebarOpen(!sidebarOpen)} style={{ background: "none", border: "none", color: "white" }}>
-            {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
+        <div style={styles.mobileTopBar}>
+          <span style={{ fontWeight: 700 }}>Admin Panel</span>
+          <button onClick={() => setSidebarOpen(!sidebarOpen)} style={{ background: "none", border: "none", color: "white", cursor: "pointer" }}>
+            {sidebarOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
       )}
 
       {/* SIDEBAR */}
-      <div style={{
-        width: isMobile ? (sidebarOpen ? "200px" : "0") : "220px",
-        background: "#0f172a",
-        color: "white",
-        padding: isMobile ? (sidebarOpen ? "20px" : "0") : "20px",
-        overflow: "hidden",
-        transition: "0.3s",
-        display: "flex",
-        flexDirection: "column",
-        height: "100vh"
-      }}>
-        <h2 style={{marginBottom: 30}}>ADMIN PANEL</h2>
+      <div style={styles.sidebar}>
+        <h2 style={{ marginBottom: 30, fontSize: 20, letterSpacing: 1, fontWeight: 700 }}>ADMIN PANEL</h2>
 
-        {[
+        {[ 
           { key: "dashboard", icon: <LayoutDashboard size={16} />, label: "Dashboard" },
           { key: "grievances", icon: <MessageSquare size={16} />, label: "Grievances" },
           { key: "news", icon: <Newspaper size={16} />, label: "News" }
         ].map(item => (
           <button key={item.key} onClick={() => { setTab(item.key); setSidebarOpen(false); }} 
                   style={{ 
-                    display: "flex", alignItems: "center", gap: 8, width: "100%", 
-                    background: tab === item.key ? "#22c55e" : "transparent", 
-                    color: "white", border: "none", padding: 12, borderRadius: 8, marginBottom: 10,
-                    textAlign: "left", fontSize: 14
+                    ...styles.sidebarButton,
+                    background: tab === item.key ? "#22c55e" : "transparent",
+                    opacity: tab === item.key ? 1 : 0.88
                   }}>
             {item.icon} {item.label}
           </button>
         ))}
 
         {/* Dark Mode Toggle */}
-        <div style={{marginTop: "auto", paddingTop: 20}}>
-          <div style={{display: "flex", alignItems: "center", gap: 8, marginBottom: 10}}>
+        <div style={styles.sidebarFooter}>
+          <div style={{display: "flex", alignItems: "center", gap: 8, marginBottom: 12}}>
             <button onClick={() => setDarkMode(!darkMode)} style={{ 
-              background: darkMode ? "#eab308" : "#6b7280", border: "none", padding: 8, borderRadius: "50%", cursor: "pointer" 
+              background: darkMode ? "#eab308" : "#6b7280", border: "none", padding: 10, borderRadius: "50%", cursor: "pointer" 
             }}>
               {darkMode ? <Sun size={16} /> : <Moon size={16} />}
             </button>
@@ -207,7 +331,7 @@ export default function AdminPanel() {
               localStorage.removeItem("adminToken");
               window.location.href = '/';
             }}
-            style={{ width: "100%", background: "#ef4444", color: "white", border: "none", padding: 12, borderRadius: 8, fontWeight: 500 }}
+            style={{ ...styles.dangerBtn, width: '100%', padding: '14px 0' }}
           >
             Logout
           </button>
@@ -215,80 +339,78 @@ export default function AdminPanel() {
       </div>
 
       {/* MAIN CONTENT */}
-      <div style={{ flex: 1, padding: isMobile ? "80px 15px 15px" : "30px", overflowY: "auto" }}>
+      <div style={{ flex: 1, padding: isMobile ? "90px 16px 16px" : "32px", overflowY: "auto" }}>
 
         {/* DASHBOARD */}
         {tab === "dashboard" && (
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 20 }}>
-            
-            {/* Grievances Card */}
-            <div style={{ flex: "1 1 250px", minWidth: 220, background: card, padding: 25, borderRadius: 12, boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 15 }}>
-                <h3 style={{margin: 0}}>Grievances ({grievances.length})</h3>
+          <div style={styles.cardRow}>
+            <div style={{ ...styles.cardItem, ...styles.card }}>
+              <div style={styles.cardHeader}>
+                <div>
+                  <h3 style={{ margin: 0 }}>Total Grievances</h3>
+                  <p style={{ margin: 0, color: '#6b7280' }}>Overview of current cases</p>
+                </div>
                 <MessageSquare size={20} />
               </div>
               <p style={{ fontSize: 32, fontWeight: "bold", color: "#3b82f6", margin: "0 0 10px 0" }}>
                 {grievances.length}
               </p>
-              <div style={{ fontSize: 13 }}>
+              <div style={{ fontSize: 13, lineHeight: 1.8 }}>
                 <div>Pending: {grievances.filter(g => g.status === 'pending').length}</div>
                 <div>Processed: {grievances.filter(g => g.status === 'processed').length}</div>
                 <div>Resolved: {grievances.filter(g => g.status === 'resolved').length}</div>
               </div>
             </div>
 
-            {/* News Card */}
-            <div style={{ flex: "1 1 250px", minWidth: 220, background: card, padding: 25, borderRadius: 12, boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 15 }}>
-                <h3 style={{margin: 0}}>News Items</h3>
+            <div style={{ ...styles.cardItem, ...styles.card }}>
+              <div style={styles.cardHeader}>
+                <div>
+                  <h3 style={{ margin: 0 }}>News Items</h3>
+                  <p style={{ margin: 0, color: '#6b7280' }}>Published updates</p>
+                </div>
                 <Newspaper size={20} />
               </div>
               <p style={{ fontSize: 32, fontWeight: "bold", color: "#22c55e", margin: "0 0 10px 0" }}>
                 {news.length}
               </p>
-              <div style={{ fontSize: 13 }}>
+              <div style={{ fontSize: 13, lineHeight: 1.8 }}>
                 <div>Loading: {newsLoading ? 'Yes' : 'No'}</div>
               </div>
             </div>
-
           </div>
         )}
 
         {/* GRIEVANCES TAB */}
         {tab === "grievances" && (
-          <div style={{ background: card, padding: 25, borderRadius: 12, boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}>
-            <h3>Manage Grievances ({grievances.length})</h3>
+          <div style={styles.card}>
+            <h3 style={{ marginBottom: 18 }}>Manage Grievances ({grievances.length})</h3>
             {grievanceLoading ? (
               <p>Loading grievances...</p>
             ) : grievances.length === 0 ? (
               <p>No grievances yet</p>
             ) : (
               grievances.map(g => (
-                <div key={g._id} style={{ 
-                  border: "1px solid #e5e7eb", 
-                  padding: 15, 
-                  marginBottom: 12, 
-                  borderRadius: 8,
-                  background: text === 'white' ? '#f9fafb' : '#334155'
-                }}>
-                  <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8}}>
+                <div key={g._id} style={styles.itemCard}>
+                  <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10, marginBottom: 10}}>
                     <h4 style={{margin: 0, fontSize: 16}}>{g.fullName}</h4>
                     <span style={{ 
                       fontSize: 12, 
-                      fontWeight: 'bold',
-                      padding: '4px 8px',
-                      borderRadius: 12,
+                      fontWeight: 700,
+                      padding: '6px 10px',
+                      borderRadius: 999,
                       background: g.status === 'resolved' ? '#dcfce7' : g.status === 'processed' ? '#fef3c7' : '#fee2e2',
                       color: g.status === 'resolved' ? '#166534' : g.status === 'processed' ? '#a16207' : '#991b1b'
                     }}>
                       {g.status || 'pending'}
                     </span>
                   </div>
-                  <p style={{margin: '4px 0', fontSize: 14}}><strong>Department:</strong> {g.department}</p>
-                  <p style={{margin: '4px 0', fontSize: 14}}><strong>Mobile:</strong> {g.mobile}</p>
-                  <p style={{margin: 0, color: '#6b7280'}}>{g.details}</p>
-                  <div style={{marginTop: 12}}>
-                    <button onClick={() => updateStatus(g._id)} style={{...editBtn, marginRight: 8}}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 12, marginBottom: 10 }}>
+                    <p style={{margin: 0, fontSize: 14}}><strong>Department:</strong> {g.department}</p>
+                    <p style={{margin: 0, fontSize: 14}}><strong>Mobile:</strong> {g.mobile}</p>
+                  </div>
+                  <p style={{margin: 0, color: '#6b7280', lineHeight: 1.75}}>{g.details}</p>
+                  <div style={{marginTop: 16}}>
+                    <button onClick={() => updateStatus(g._id)} style={{...styles.secondaryBtn, marginRight: 8}}>
                       {g.status === 'resolved' ? 'Reopen' : 'Mark Resolved'}
                     </button>
                   </div>
@@ -300,57 +422,32 @@ export default function AdminPanel() {
 
         {/* NEWS TAB */}
         {tab === "news" && (
-          <div style={{ background: card, padding: 25, borderRadius: 12, boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}>
-            <h3>{editingId ? "Edit News Item" : "Add New News"}</h3>
+          <div style={styles.card}>
+            <h3 style={{ marginBottom: 22 }}>{editingId ? "Edit News Item" : "Add New News"}</h3>
 
-            <input placeholder="Title *" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} style={inputStyle} />
-            <textarea placeholder="Description *" value={form.desc} onChange={(e) => setForm({ ...form, desc: e.target.value })} style={{ ...inputStyle, height: 100 }} />
-            
-            <input 
-              placeholder="Excerpt (short summary) *" 
-              value={form.excerpt} 
-              onChange={(e) => setForm({ ...form, excerpt: e.target.value })} 
-              style={inputStyle} 
-            />
-            
-            <input 
-              type="date" 
-              value={form.date} 
-              onChange={(e) => setForm({ ...form, date: e.target.value })} 
-              style={inputStyle} 
-            />
-            
-            <select 
-              value={form.category} 
-              onChange={(e) => setForm({ ...form, category: e.target.value })} 
-              style={inputStyle}
-            >
+            <input placeholder="Title *" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} style={styles.formInput} />
+            <textarea placeholder="Description *" value={form.desc} onChange={(e) => setForm({ ...form, desc: e.target.value })} style={{ ...styles.formInput, height: 120, resize: 'vertical' }} />
+            <input placeholder="Excerpt (short summary) *" value={form.excerpt} onChange={(e) => setForm({ ...form, excerpt: e.target.value })} style={styles.formInput} />
+            <input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} style={styles.formInput} />
+            <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} style={styles.formInput}>
               <option value="News">News</option>
               <option value="Public Work">Public Work</option>
               <option value="Development works">Development works</option>
               <option value="Antharman">Antharman</option>
               <option value="Festival">Festival</option>
             </select>
-            
-            <input type="file" accept="image/*" onChange={handleImageUpload} style={inputStyle} />
+            <input type="file" accept="image/*" onChange={handleImageUpload} style={styles.formInput} />
 
-            {form.img && <img src={form.img} alt="Preview" style={{ width: 120, height: 80, objectFit: 'cover', borderRadius: 8, marginTop: 10 }} />}
+            {form.img && <img src={form.img} alt="Preview" style={{ width: 140, height: 100, objectFit: 'cover', borderRadius: 12, marginTop: 10 }} />}
 
-            <button onClick={addOrUpdateNews} style={btnStyle} disabled={newsLoading}>
+            <button onClick={addOrUpdateNews} style={styles.primaryBtn} disabled={newsLoading}>
               {editingId ? "Update News" : "Add News"}
             </button>
 
-            <h4 style={{marginTop: 30, marginBottom: 15}}>Existing News ({news.length})</h4>
-            
+            <h4 style={{ marginTop: 32, marginBottom: 16 }}>Existing News ({news.length})</h4>
             {news.map(n => (
-              <div key={n._id} style={{ 
-                border: "1px solid #e5e7eb", 
-                padding: 15, 
-                marginBottom: 12, 
-                borderRadius: 8,
-                background: text === 'white' ? '#f9fafb' : '#334155'
-              }}>
-                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
+              <div key={n._id} style={styles.itemCard}>
+                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12}}>
                   <div style={{flex: 1}}>
                     <h4 style={{margin: '0 0 8px 0'}}>{n.title}</h4>
                     <p style={{margin: '0 0 8px 0', color: '#6b7280'}}>{n.excerpt}</p>
@@ -358,10 +455,10 @@ export default function AdminPanel() {
                       <span>Category: {n.category}</span> | <span>Date: {new Date(n.date).toLocaleDateString()}</span>
                     </div>
                   </div>
-                  {n.imageUrl && <img src={n.imageUrl} alt="" style={{width: 60, height: 40, objectFit: 'cover', borderRadius: 4, marginLeft: 12}} />}
+                  {n.imageUrl && <img src={n.imageUrl} alt="" style={{width: 72, height: 48, objectFit: 'cover', borderRadius: 10}} />}
                 </div>
-                <div style={{marginTop: 12, display: 'flex', gap: 8}}>
-                  <button onClick={() => editNews(n)} style={editBtn}>
+                <div style={{marginTop: 16, display: 'flex', gap: 10, flexWrap: 'wrap'}}>
+                  <button onClick={() => editNews(n)} style={styles.secondaryBtn}>
                     <Edit size={14} /> Edit
                   </button>
                   <button onClick={async () => {
@@ -371,7 +468,7 @@ export default function AdminPanel() {
                     } catch (err) {
                       showToast("Delete failed", "error");
                     }
-                  }} style={delBtn}>
+                  }} style={styles.dangerBtn}>
                     <Trash2 size={14} /> Delete
                   </button>
                 </div>

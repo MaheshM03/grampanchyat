@@ -14,32 +14,65 @@ export default function Footer() {
 
       {/* MAIN FOOTER */}
       <div style={{
-        background: "#1a2a4a",
+        background: "linear-gradient(135deg, #0f172a, #1e3a8a)",
         color: "#e2e8f0",
-        padding: "40px 16px"
+        padding: "50px 16px"
       }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
 
           {/* TOP TEXT */}
           <div style={{ marginBottom: 30, textAlign: "center" }}>
             <h3 style={{
-              fontSize: "22px",
+              fontSize: "24px",
               fontWeight: "700",
               color: "#fff",
               marginBottom: 10
             }}>
-              आपल्या विकासासाठी, आपल्या सेवेसाठी – ग्रामपंचायत गंगावरहे-सावरगांव
+              आपल्या विकासासाठी, आपल्या सेवेसाठी – ग्रामपंचायत गंगावऱ्हे-सावरगाव
             </h3>
 
             <p style={{
-              fontSize: "13px",
-              color: "#94a3b8",
-              maxWidth: "600px",
+              fontSize: "14px",
+              color: "#cbd5e1",
+              maxWidth: "640px",
               margin: "0 auto",
-              lineHeight: "1.6"
+              lineHeight: "1.75"
             }}>
-              ग्रामपंचायत गंगावरहे-सावरगांव अधिकृत वेबसाईट – नागरिकांसाठी माहिती, योजना आणि डिजिटल सुविधा.
+              ग्रामपंचायत गंगावऱ्हे-सावरगाव अधिकृत वेबसाईट – नागरिकांसाठी माहिती, योजना आणि डिजिटल सुविधा.
             </p>
+          </div>
+
+          <div className="footer-cta" style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: "18px",
+            marginBottom: "32px",
+            padding: "24px 24px",
+            borderRadius: "24px",
+            background: "rgba(255,255,255,0.08)",
+            border: "1px solid rgba(255,255,255,0.14)"
+          }}>
+            <div>
+              <h4 style={{ margin: 0, fontSize: "1.15rem", color: "#fff" }}>
+                त्वरित मदत आणि माहिती मिळवा
+              </h4>
+              <p style={{ margin: 0, color: "#cbd5e1", lineHeight: 1.7, maxWidth: "540px" }}>
+                प्रमाणपत्र, तक्रार किंवा योजना संबंधी मदतीसाठी आमच्याशी आजच संपर्क साधा.
+              </p>
+            </div>
+            <a href="mailto:contact@grampanchayat.com" style={{
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "12px 22px",
+              background: "#eab308",
+              color: "#0f172a",
+              borderRadius: "999px",
+              fontWeight: 700
+            }}>
+              आम्हाला ईमेल करा
+            </a>
           </div>
 
           {/* GRID */}
@@ -138,6 +171,11 @@ export default function Footer() {
           a {
             display: block;
             margin-bottom: 8px;
+            color: #cbd5e1;
+          }
+
+          .footer-cta a {
+            display: inline-flex;
           }
 
           @media (max-width: 992px) {
@@ -154,6 +192,11 @@ export default function Footer() {
 
             .footer-sponsors {
               justify-content: center !important;
+            }
+
+            .footer-cta {
+              flex-direction: column;
+              text-align: center;
             }
           }
         `}

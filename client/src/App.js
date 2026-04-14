@@ -43,10 +43,13 @@ function App() {
 <Route path="/admin" element={<AdminPanel />} />
           <Route path="/admin-login" element={<AdminLogin />} />
           <Route path="/birth" element={<BirthCertificate />} />
+          <Route path="/birth-certificate" element={<BirthCertificate />} />
           <Route path="/birth-apply" element={<BirthCertificateForm />} />
           <Route path="/death" element={<DeathCertificate />} />
+          <Route path="/death-certificate" element={<DeathCertificate />} />
           <Route path="/death-apply" element={<DeathCertificateForm />} />
           <Route path="/residence" element={<ResidenceCertificate />} />
+          <Route path="/residence-certificate" element={<ResidenceCertificate />} />
           <Route path="/residence-apply" element={<ResidenceCertificateForm />} />
           <Route path="/aboutus" element={<AboutUs />} />
           <Route path="/schemes" element={<Schemes />} />

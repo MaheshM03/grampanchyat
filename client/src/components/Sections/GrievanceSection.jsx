@@ -23,9 +23,9 @@ export default function GrievanceSection() {
   ];
 
   const contactInfo = [
-    { icon: <MapPin size={18} />, label: "Location", value: "Gangavarhe, Nashik - 422222" },
-    { icon: <Phone size={18} />, label: "Phone", value: "+917620068056", action: "call" },
-    { icon: <Mail size={18} />, label: "Email", value: "nsk.gangavarhe@gmail.com", action: "email" }
+    { icon: <MapPin size={20} />, label: "Location", value: "Gangavarhe, Nashik - 422222" },
+    { icon: <Phone size={20} />, label: "Phone", value: "+917620068056", action: "call" },
+    { icon: <Mail size={20} />, label: "Email", value: "nsk.gangavarhe@gmail.com", action: "email" }
   ];
 
   const [form, setForm] = useState({
@@ -34,36 +34,21 @@ export default function GrievanceSection() {
     aadhaar: "",
     email: "",
     department: "",
-    details: "",
-    type: "complaint",
-    image: ""
+    details: ""
   });
 
   const [errors, setErrors] = useState({});
   const [toast, setToast] = useState(null);
-  const [loading, setLoading] = useState(false);
 
   const validateForm = () => {
-    const newErrors = {};
-
-    if (!form.fullName.trim()) newErrors.fullName = "Full name is required";
-    else if (form.fullName.length > 50) newErrors.fullName = "Name too long (max 50 chars)";
-
-    if (!form.mobile) newErrors.mobile = "Mobile is required";
-    else if (!/^\d{10}$/.test(form.mobile)) newErrors.mobile = "Enter valid 10-digit mobile";
-    
-    if (!form.aadhaar) newErrors.aadhaar = "Aadhaar is required";
-    else if (!/^\d{12}$/.test(form.aadhaar)) newErrors.aadhaar = "Enter valid 12-digit Aadhaar";
-
-    if (form.email && !/^\S+@\S+\.\S+$/.test(form.email)) newErrors.email = "Invalid email";
-
-    if (!form.department) newErrors.department = "Select department";
-
-    if (!form.details.trim()) newErrors.details = "Details required";
-    else if (form.details.length > 500) newErrors.details = "Max 500 chars";
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    const e = {};
+    if (!form.fullName) e.fullName = "Required";
+    if (!/^\d{10}$/.test(form.mobile)) e.mobile = "Invalid mobile";
+    if (!/^\d{12}$/.test(form.aadhaar)) e.aadhaar = "Invalid Aadhaar";
+    if (!form.department) e.department = "Select department";
+    if (!form.details) e.details = "Required";
+    setErrors(e);
+    return Object.keys(e).length === 0;
   };
 
   const showToast = (msg, type = "success") => {
@@ -71,50 +56,18 @@ export default function GrievanceSection() {
     setTimeout(() => setToast(null), 3000);
   };
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    if (!file.type.startsWith('image/')) {
-      showToast("Please select an image file", "error");
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = () => setForm({ ...form, image: reader.result });
-    reader.readAsDataURL(file);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validateForm()) return showToast("Please fix errors", "error");
+    if (!validateForm()) return showToast("Fix errors", "error");
 
-    const API_BASE = process.env.REACT_APP_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:5000' : 'https://grampanchyat1.onrender.com');
+    await fetch("https://grampanchyat1.onrender.com/api/grievance", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(form)
+    });
 
-    setLoading(true);
-    try {
-      const response = await fetch(`${API_BASE}/api/grievance`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(form),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Submission failed');
-      }
-
-      showToast(data.message || "Submitted Successfully ✅");
-      fetchGrievances();
-      setForm({ fullName: "", mobile: "", aadhaar: "", email: "", department: "", details: "", type: "complaint", image: "" });
-      setErrors({});
-    } catch (error) {
-      console.error('Submit error:', error);
-      showToast(error.message || "Error ❌", "error");
-    } finally {
-      setLoading(false);
-    }
+    showToast("Submitted Successfully ✅");
+    fetchGrievances();
   };
 
   const handleAction = (item) => {
@@ -122,299 +75,277 @@ export default function GrievanceSection() {
     if (item.action === "email") window.location.href = `mailto:${item.value}`;
   };
 
-  const isValidMobile = form.mobile.length === 10 && /^\d{10}$/.test(form.mobile);
-  const isValidAadhaar = form.aadhaar.length === 12 && /^\d{12}$/.test(form.aadhaar);
-
   return (
-    <section style={{ background: "#f8fafc" }}>
+    <section className="page">
       <Navbar />
 
-      {/* TOAST */}
-      {toast && (
-        <div style={{
-          position: "fixed",
-          top: 20,
-          right: 20,
-          background: toast.type === "error" ? "#ef4444" : "#16a34a",
-          color: "#fff",
-          padding: "10px 18px",
-          borderRadius: 8
-        }}>
-          {toast.msg}
-        </div>
-      )}
+      {toast && <div className={`toast ${toast.type}`}>{toast.msg}</div>}
 
       {/* HERO */}
-      <div style={{
-        background: "linear-gradient(135deg,#0f172a,#1e3a8a,#2563eb)",
-        padding: 50,
-        textAlign: "center",
-        color: "#fff"
-      }}>
-        <h2 style={{ fontWeight: 800 }}>Grievance Portal</h2>
+      <div className="hero">
+        <h2>Grievance Portal</h2>
+        <p>Submit your complaint easily</p>
       </div>
 
       {/* MAIN */}
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))",
-        gap: 25,
-        maxWidth: 1100,
-        margin: "40px auto",
-        padding: 20
-      }}>
+      <div className="main-grid">
 
         {/* FORM */}
-        <div style={card}>
-          <h3 style={heading}>Submit Complaint</h3>
+        <div className="card">
+          <h3>Submit Complaint</h3>
 
           <form onSubmit={handleSubmit}>
 
-            <div>
-              <input 
-                placeholder="Full Name *" 
-                style={{...input, ...(errors.fullName && inputError)}}
-                value={form.fullName}
-                onChange={(e) => setForm({...form, fullName: e.target.value})}
-                maxLength={50}
-              />
-              {errors.fullName && <p style={errorText}>{errors.fullName} ({form.fullName.length}/50)</p>}
-            </div>
-
-            <div>
-              <input 
-                placeholder="Mobile (10 digits) *" 
-                style={{...input, ...(errors.mobile && inputError)}}
-                value={form.mobile}
-                onChange={(e) => setForm({...form, mobile: e.target.value.replace(/\D/g,'')})}
-                onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
-                maxLength={10}
-              />
-              {errors.mobile ? <p style={errorText}>{errors.mobile}</p> : <p style={counterText}>{form.mobile.length}/10</p>}
-            </div>
-
-            <div>
-              <input 
-                placeholder="Aadhaar (12 digits) *" 
-                style={{...input, ...(errors.aadhaar && inputError)}}
-                value={form.aadhaar}
-                onChange={(e) => setForm({...form, aadhaar: e.target.value.replace(/\D/g,'')})}
-                maxLength={12}
-              />
-              {errors.aadhaar ? <p style={errorText}>{errors.aadhaar}</p> : <p style={counterText}>{form.aadhaar.length}/12</p>}
-            </div>
-
-            <input 
-              placeholder="Email (optional)" 
-              style={{...input, ...(errors.email && inputError)}}
-              value={form.email}
-              onChange={(e) => setForm({...form, email: e.target.value})}
-              type="email"
+            <input placeholder="Full Name"
+              value={form.fullName}
+              onChange={(e) => setForm({ ...form, fullName: e.target.value })}
             />
-            {errors.email && <p style={errorText}>{errors.email}</p>}
+            {errors.fullName && <p className="error">{errors.fullName}</p>}
 
-            {/* DEPARTMENT GRID */}
-            <div style={{ marginBottom: 15 }}>
-              <p style={{ fontWeight: 600 }}>Select Department *</p>
-              {errors.department && <p style={errorText}>{errors.department}</p>}
-              <div style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))",
-                gap: 10
-              }}>
-                {departments.map((d, i) => (
-                  <div
-                    key={i}
-                    onClick={() => setForm({ ...form, department: d.name })}
-                    style={{
-                      padding: 10,
-                      borderRadius: 10,
-                      cursor: "pointer",
-                      display: "flex",
-                      gap: 8,
-                      alignItems: "center",
-                      border: form.department === d.name
-                        ? "2px solid #2563eb"
-                        : "1px solid #ccc"
-                    }}
-                  >
-                    {d.icon}
-                    <span style={{ fontSize: 12 }}>{d.name}</span>
-                  </div>
-                ))}
-              </div>
+            <input placeholder="Mobile"
+              value={form.mobile}
+              onChange={(e) => setForm({ ...form, mobile: e.target.value.replace(/\D/g, '') })}
+            />
+            {errors.mobile && <p className="error">{errors.mobile}</p>}
+
+            <input placeholder="Aadhaar"
+              value={form.aadhaar}
+              onChange={(e) => setForm({ ...form, aadhaar: e.target.value.replace(/\D/g, '') })}
+            />
+            {errors.aadhaar && <p className="error">{errors.aadhaar}</p>}
+
+            <input placeholder="Email (optional)"
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+            />
+
+            {/* DEPARTMENT */}
+            <p className="label">Select Department</p>
+            <div className="dept-grid">
+              {departments.map((d, i) => (
+                <div key={i}
+                  className={`dept ${form.department === d.name ? "active" : ""}`}
+                  onClick={() => setForm({ ...form, department: d.name })}
+                >
+                  {d.icon}
+                  <span>{d.name}</span>
+                </div>
+              ))}
             </div>
+            {errors.department && <p className="error">{errors.department}</p>}
 
-            {/* TYPE SELECTOR */}
-            <div style={{marginBottom: 15}}>
-              <p style={{ fontWeight: 600 }}>Type</p>
-              <div style={{display: 'flex', gap: 10}}>
-                <label>
-                  <input 
-                    type="radio" 
-                    value="complaint" 
-                    checked={form.type === "complaint"}
-                    onChange={(e) => setForm({...form, type: e.target.value})}
-                  /> Complaint
-                </label>
-                <label>
-                  <input 
-                    type="radio" 
-                    value="suggestion" 
-                    checked={form.type === "suggestion"}
-                    onChange={(e) => setForm({...form, type: e.target.value})}
-                  /> Suggestion
-                </label>
-              </div>
-            </div>
+            <textarea placeholder="Details"
+              value={form.details}
+              onChange={(e) => setForm({ ...form, details: e.target.value })}
+            />
+            {errors.details && <p className="error">{errors.details}</p>}
 
-            <div>
-              <textarea 
-                placeholder="Details *" 
-                style={{ ...input, height: 100, ...(errors.details && inputError)}}
-                value={form.details}
-                onChange={(e) => setForm({...form, details: e.target.value})}
-                maxLength={500}
-              />
-              {errors.details ? <p style={errorText}>{errors.details}</p> : <p style={counterText}>{form.details.length}/500</p>}
-            </div>
-
-            <input type="file" onChange={handleImageUpload} style={input} accept="image/*" />
-            {form.image && (
-              <img src={form.image} alt="Preview" style={{ width: 80, borderRadius: 8, margin: '10px 0' }} />
-            )}
-
-            <button type="submit" style={btn} disabled={loading}>
-              {loading ? "Submitting..." : "Submit Grievance"}
-            </button>
-
+            <button className="submit-btn">Submit Grievance</button>
           </form>
         </div>
 
-        {/* CONTACT */}
-        <div style={contactCard}>
-          <h3 style={heading}>Contact Office</h3>
+        {/* CONTACT OFFICE */}
+        <div className="contact">
+          <h3 className="contact-title">📍 Contact Office</h3>
 
-          {contactInfo.map((item, i) => (
-            <div key={i} style={contactItem}>
+          <div className="contact-grid">
+            {contactInfo.map((item, i) => (
+              <div key={i} className="contact-card">
 
-              <div style={iconBox}>{item.icon}</div>
+                <div className="contact-left">
+                  <div className="contact-icon">{item.icon}</div>
 
-              <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 12, opacity: 0.8 }}>{item.label}</div>
-                <div style={{ fontWeight: 600 }}>{item.value}</div>
+                  <div className="contact-content">
+                    <span className="label">{item.label}</span>
+                    <span className="value">{item.value}</span>
+                  </div>
+                </div>
+
+                {item.action && (
+                  <button
+                    className="contact-btn"
+                    onClick={() => handleAction(item)}
+                  >
+                    {item.action === "call" ? "Call" : "Email"}
+                  </button>
+                )}
+
               </div>
-
-              {item.action && (
-                <button
-                  onClick={() => handleAction(item)}
-                  style={actionBtn}
-                >
-                  {item.action === "call" ? "Call" : "Email"}
-                </button>
-              )}
-
-            </div>
-          ))}
-
+            ))}
+          </div>
         </div>
 
       </div>
 
       <Footer />
+
+      {/* CSS */}
+      <style>{`
+
+      .page { background:#f8fafc; padding-bottom:40px; }
+
+      .hero {
+        background: linear-gradient(135deg,#1e3a8a,#2563eb);
+        color:#fff;
+        text-align:center;
+        padding:50px 20px;
+      }
+
+      .main-grid {
+        display:grid;
+        grid-template-columns:1fr;
+        gap:25px;
+        max-width:1100px;
+        margin:30px auto;
+        padding:0 16px;
+      }
+
+      @media(min-width:768px){
+        .main-grid { grid-template-columns:1fr 1fr; }
+      }
+
+      .card, .contact {
+        background:#fff;
+        padding:24px;
+        border-radius:16px;
+        box-shadow:0 10px 25px rgba(0,0,0,0.08);
+      }
+
+      h3 { margin-bottom:20px; }
+
+      input, textarea {
+        width:100%;
+        padding:14px;
+        margin-bottom:12px;
+        border-radius:10px;
+        border:1px solid #e2e8f0;
+      }
+
+      input:focus, textarea:focus {
+        border-color:#2563eb;
+        box-shadow:0 0 0 3px rgba(37,99,235,0.15);
+        outline:none;
+      }
+
+      .label {
+        margin:10px 0 8px;
+        font-weight:600;
+      }
+
+      .dept-grid {
+        display:grid;
+        grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+        gap:12px;
+        margin-bottom:15px;
+      }
+
+      .dept {
+        padding:14px;
+        border-radius:12px;
+        text-align:center;
+        border:1px solid #ddd;
+        cursor:pointer;
+      }
+
+      .dept.active {
+        border:2px solid #2563eb;
+        background:#eff6ff;
+      }
+
+      textarea { height:110px; }
+
+      .submit-btn {
+        width:100%;
+        padding:14px;
+        margin-top:10px;
+        background:#2563eb;
+        color:#fff;
+        border:none;
+        border-radius:10px;
+        font-weight:600;
+      }
+
+      @media(max-width:600px){
+        .submit-btn { position:sticky; bottom:10px; }
+      }
+
+      /* CONTACT */
+      .contact-grid {
+        display:flex;
+        flex-direction:column;
+        gap:15px;
+      }
+
+      .contact-card {
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        padding:16px 18px;
+        border-radius:14px;
+        background:linear-gradient(135deg,#eef2f7,#e2ecf7);
+      }
+
+      .contact-left {
+        display:flex;
+        align-items:center;
+        gap:14px;
+      }
+
+      .contact-icon {
+        width:44px;
+        height:44px;
+        background:#2563eb;
+        color:#fff;
+        border-radius:50%;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+      }
+
+      .contact-content .label {
+        font-size:12px;
+        color:#64748b;
+      }
+
+      .contact-content .value {
+        font-weight:600;
+      }
+
+      .contact-btn {
+        padding:8px 14px;
+        background:#2563eb;
+        color:#fff;
+        border:none;
+        border-radius:8px;
+      }
+
+      @media(max-width:600px){
+        .contact-card {
+          flex-direction:column;
+          align-items:flex-start;
+          gap:10px;
+        }
+
+        .contact-btn {
+          width:100%;
+        }
+      }
+
+      .error { color:#ef4444; font-size:12px; }
+
+      .toast {
+        position:fixed;
+        top:20px;
+        right:20px;
+        padding:12px;
+        color:#fff;
+        border-radius:8px;
+      }
+
+      .toast.success { background:#16a34a; }
+      .toast.error { background:#ef4444; }
+
+      `}</style>
     </section>
   );
 }
-
-/* STYLES */
-const card = {
-  background: "#fff",
-  padding: 20,
-  borderRadius: 16,
-  boxShadow: "0 10px 25px rgba(0,0,0,0.08)"
-};
-
-const input = {
-  width: "100%",
-  padding: 12,
-  marginBottom: 5,
-  borderRadius: 8,
-  border: "1px solid #d1d5db",
-  fontSize: 14
-};
-
-const inputError = {
-  borderColor: "#ef4444 !important",
-  boxShadow: "0 0 0 3px rgba(239,68,68,0.1)"
-};
-
-const errorText = {
-  color: "#ef4444",
-  fontSize: 12,
-  margin: "-5px 0 10px 0"
-};
-
-const counterText = {
-  fontSize: 11,
-  color: "#6b7280",
-  margin: "-5px 0 10px 0",
-  fontFamily: "monospace"
-};
-
-const btn = {
-  background: "#2563eb",
-  color: "#fff",
-  padding: "12px 20px",
-  width: "100%",
-  borderRadius: 8,
-  border: "none",
-  fontWeight: 600,
-  cursor: "pointer",
-  ":disabled": {
-    opacity: 0.7,
-    cursor: "not-allowed"
-  }
-};
-
-const heading = {
-  marginBottom: 20,
-  fontWeight: 700,
-  color: "#1f2937"
-};
-
-const contactCard = {
-  background: "#fff",
-  padding: 20,
-  borderRadius: 16,
-  boxShadow: "0 10px 25px rgba(0,0,0,0.08)"
-};
-
-const contactItem = {
-  display: "flex",
-  alignItems: "center",
-  gap: 12,
-  marginBottom: 15,
-  paddingBottom: 15,
-  borderBottom: "1px solid #f3f4f6"
-};
-
-const iconBox = {
-  width: 40,
-  height: 40,
-  background: "#eff6ff",
-  borderRadius: "50%",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  flexShrink: 0
-};
-
-const actionBtn = {
-  background: "#2563eb",
-  color: "#fff",
-  border: "none",
-  padding: "6px 12px",
-  borderRadius: 6,
-  cursor: "pointer",
-  fontSize: 12
-};

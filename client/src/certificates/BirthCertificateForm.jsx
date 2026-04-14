@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Navbar from "../components/Sections/Navbar";
+import Footer from "../components/Sections/Footer";
+
 
 /* ── shared helpers ─────────────────────────────── */
 const Input = ({ label, marathi, name, value, onChange, type = "text", placeholder = "", required = true, disabled = false }) => (
@@ -567,6 +570,8 @@ export default function BirthCertificateForm() {
   const allData = { ...child, ...parents };
 
   return (
+    <>
+    <Navbar />
     <div style={s.page}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap');
@@ -617,6 +622,8 @@ export default function BirthCertificateForm() {
         )}
       </div>
     </div>
+    <Footer />
+    </>
   );
 }
 

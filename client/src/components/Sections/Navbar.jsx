@@ -13,31 +13,54 @@ const [mobileMenu, setMobileMenu] = useState(false);
     { key: "nav.adminCommittee", name: "Admin Committee", to: "/admin-committee" },
     { key: "nav.otherCommittee", name: "Other Committee", to: "/committee" },
     { key: "nav.citizenPortal", name: "Citizen Portal", to: "/citizen-portal" },
-    // Citizen Portal dropdown handled separately
     { key: "nav.smartVillage", name: "Smart Village", to: "/smart-village" },
     { key: "nav.rti", name: "RTI", to: "/rti" },
     { key: "nav.news", name: "News", to: "/news" },
     { key: "nav.grievance", name: "Grievance", to: "/grievance" },
-{ key: "nav.aboutus", name: "About Us", to: "/aboutus" }
+    { key: "nav.aboutus", name: "About Us", to: "/aboutus" },
   ];
 
+  const portalIndex = navLinks.findIndex(link => link.key === "nav.citizenPortal");
+  const beforeLinks = portalIndex >= 0 ? navLinks.slice(0, portalIndex) : navLinks;
+  const afterLinks = portalIndex >= 0 ? navLinks.slice(portalIndex + 1) : [];
+
+  const desktopLinkStyle = {
+    color: "#e2e8f0",
+    padding: "8px 10px",
+    fontSize: "13px",
+    textDecoration: "none",
+    borderBottom: "2px solid transparent",
+    transition: "all 0.2s ease",
+    display: "inline-flex",
+    alignItems: "center"
+  };
+
+  const mobileLinkStyle = {
+    padding: "12px",
+    color: "#fff",
+    borderTop: "1px solid #2c3e50",
+    textDecoration: "none",
+    transition: "background 0.2s ease"
+  };
+
   return (
-    <header style={{ fontFamily: "Arial, sans-serif", boxShadow: "0 2px 12px rgba(0,0,0,0.08)" }}>
+    <header style={{ fontFamily: "Arial, sans-serif", boxShadow: "0 12px 35px rgba(0,0,0,0.08)", position: "sticky", top: 0, zIndex: 999, background: "rgba(250,250,255,0.96)", backdropFilter: "blur(15px)" }}>
       
       {/* TOP BAR */}
       <div style={{
-        background: "#1a2a4a",
+        background: "linear-gradient(90deg, rgba(26,42,74,0.98), rgba(37,99,235,0.96))",
         color: "#fff",
-        padding: "6px 16px",
+        padding: "8px 16px",
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
         fontSize: "12px",
-        flexWrap: "wrap"
+        flexWrap: "wrap",
+        gap: "10px"
       }}>
-        <div style={{ display: "flex", gap: "15px" }}>
+        <div style={{ display: "flex", gap: "15px", flexWrap: "wrap", alignItems: "center" }}>
           <span>{t('navbar.phone') || '📞 +91 9876543210'}</span>
-'📧 info@gpgangavarhe.com'
+          <span>📧 info@gpgangavarhe.com</span>
         </div>
 
         <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
@@ -103,12 +126,14 @@ const [mobileMenu, setMobileMenu] = useState(false);
 
       {/* NAVBAR */}
       <nav style={{
-        background: "#1a2a4a",
+        background: "rgba(15,23,42,0.94)",
         padding: "10px 16px",
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        position: "relative"
+        position: "relative",
+        borderBottom: "1px solid rgba(255,255,255,0.08)",
+        backdropFilter: "blur(14px)"
       }}>
 
         {/* HAMBURGER */}
@@ -131,26 +156,12 @@ const [mobileMenu, setMobileMenu] = useState(false);
           gap: "12px",
           flexWrap: "wrap"
         }}>
-          {navLinks.filter(link => link.key !== "nav.citizenPortal").map((link, i) => (
+          {beforeLinks.map((link, i) => (
             <Link
               key={i}
               to={link.to}
-              style={{
-                color: "#e2e8f0",
-                padding: "8px 10px",
-                fontSize: "13px",
-                textDecoration: "none",
-                borderBottom: "2px solid transparent",
-                transition: "0.2s"
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.background = "#2563eb";
-                e.target.style.borderBottom = "2px solid #e8a020";
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.background = "transparent";
-                e.target.style.borderBottom = "2px solid transparent";
-              }}
+              className="nav-link"
+              style={desktopLinkStyle}
             >
               {t(link.key) || link.name}
             </Link>
@@ -162,14 +173,8 @@ const [mobileMenu, setMobileMenu] = useState(false);
                onMouseLeave={() => setCitizenOpen(false)}>
             <Link
               to="/citizen-portal"
-              style={{
-                color: "#e2e8f0",
-                padding: "8px 10px",
-                fontSize: "13px",
-                textDecoration: "none",
-                borderBottom: "2px solid transparent",
-                transition: "0.2s"
-              }}
+              className="nav-link"
+              style={desktopLinkStyle}
             >
               {t('nav.citizenPortal') || "Citizen Portal"}
             </Link>
@@ -185,7 +190,7 @@ const [mobileMenu, setMobileMenu] = useState(false);
                 zIndex: 1001,
                 borderTop: "2px solid #e8a020"
               }}>
-                <Link to="/birth" style={{
+                <Link to="/birth-certificate" style={{
                   display: "block",
                   padding: "12px 16px",
                   color: "#e2e8f0",
@@ -194,7 +199,7 @@ const [mobileMenu, setMobileMenu] = useState(false);
                 }}>
                   👶 Birth Certificate
                 </Link>
-                <Link to="/death" style={{
+                <Link to="/death-certificate" style={{
                   display: "block",
                   padding: "12px 16px",
                   color: "#e2e8f0",
@@ -203,7 +208,7 @@ const [mobileMenu, setMobileMenu] = useState(false);
                 }}>
                   ☠️ Death Certificate
                 </Link>
-                <Link to="/residence" style={{
+                <Link to="/residence-certificate" style={{
                   display: "block",
                   padding: "12px 16px",
                   color: "#e2e8f0",
@@ -224,6 +229,17 @@ const [mobileMenu, setMobileMenu] = useState(false);
               </div>
             )}
           </div>
+
+          {afterLinks.map((link, i) => (
+            <Link
+              key={`after-${i}`}
+              to={link.to}
+              className="nav-link"
+              style={desktopLinkStyle}
+            >
+              {t(link.key) || link.name}
+            </Link>
+          ))}
         </div>
 
         {/* ADMIN BUTTON */}
@@ -254,17 +270,13 @@ const [mobileMenu, setMobileMenu] = useState(false);
             flexDirection: "column",
             zIndex: 1000
           }}>
-            {navLinks.filter(link => link.key !== "nav.citizenPortal").map((link, i) => (
+            {beforeLinks.map((link, i) => (
               <Link
                 key={i}
                 to={link.to}
                 onClick={() => setMobileMenu(false)}
-                style={{
-                  padding: "12px",
-                  color: "#fff",
-                  borderTop: "1px solid #2c3e50",
-                  textDecoration: "none"
-                }}
+                className="mobile-nav-link"
+                style={mobileLinkStyle}
               >
                 {t(link.key) || link.name}
               </Link>
@@ -327,6 +339,18 @@ const [mobileMenu, setMobileMenu] = useState(false);
                 </div>
               )}
             </div>
+
+            {afterLinks.map((link, i) => (
+              <Link
+                key={`mobile-after-${i}`}
+                to={link.to}
+                onClick={() => setMobileMenu(false)}
+                className="mobile-nav-link"
+                style={mobileLinkStyle}
+              >
+                {t(link.key) || link.name}
+              </Link>
+            ))}
           </div>
         )}
       </nav>
@@ -342,6 +366,27 @@ const [mobileMenu, setMobileMenu] = useState(false);
             .nav-links {
               display: none !important;
             }
+          }
+
+          .nav-link {
+            color: #e2e8f0;
+            padding: 8px 10px;
+            font-size: 13px;
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+          }
+
+          .nav-link:hover {
+            background: rgba(59,130,246,0.18);
+            border-bottom: 2px solid #eab308;
+            border-radius: 12px;
+          }
+
+          .mobile-nav-link:hover {
+            background: rgba(255,255,255,0.08);
           }
         `}
       </style>

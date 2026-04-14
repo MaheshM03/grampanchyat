@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Navbar from "../components/Sections/Navbar";
+import Footer from "../components/Sections/Footer";
 
 /* ─────────────────────────────────────────────────────
    Shared Field Components
@@ -809,6 +811,8 @@ export default function ResidenceCertificateForm() {
   const allData = { ...personal, ...residence };
 
   return (
+    <>
+    <Navbar />
     <div style={s.page}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap');
@@ -894,7 +898,9 @@ export default function ResidenceCertificateForm() {
           </div>
         )}
       </div>
+      <Footer />
     </div>
+    </>
   );
 }
 
