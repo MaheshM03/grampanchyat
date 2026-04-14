@@ -1,16 +1,17 @@
 import { useTranslator } from '../../context/LanguageContext.js';
 import { Link } from 'react-router-dom';
+import { FileText, Skull, Home, AlertCircle, Newspaper, CreditCard } from 'lucide-react';
 
 export default function OnlineServices() {
   const { t, currentLanguage } = useTranslator();
 
 const serviceKeys = [
-{ icon: "📜", titleKey: 'services.birth.title', descKey: 'services.birth.desc', to: '/birth' },
-    { icon: "⚰️", titleKey: 'services.death.title', descKey: 'services.death.desc', to: '/death' },
-    { icon: "🏠", titleKey: 'services.residence.title', descKey: 'services.residence.desc', to: '/residence' },
-    { icon: "📢", titleKey: 'services.grievance.title', descKey: 'services.grievance.desc', to: '/grievance' },
-    { icon: "📰", titleKey: 'services.news.title', descKey: 'services.news.desc', to: '/news' },
-    { icon: "💳", titleKey: 'services.payment.title', descKey: 'services.payment.desc', to: '/payment' }
+{ icon: <FileText size={28} />, titleKey: 'services.birth.title', descKey: 'services.birth.desc', to: '/birth' },
+    { icon: <Skull size={28} />, titleKey: 'services.death.title', descKey: 'services.death.desc', to: '/death' },
+    { icon: <Home size={28} />, titleKey: 'services.residence.title', descKey: 'services.residence.desc', to: '/residence' },
+    { icon: <AlertCircle size={28} />, titleKey: 'services.grievance.title', descKey: 'services.grievance.desc', to: '/grievance' },
+    { icon: <Newspaper size={28} />, titleKey: 'services.news.title', descKey: 'services.news.desc', to: '/news' },
+    { icon: <CreditCard size={28} />, titleKey: 'services.payment.title', descKey: 'services.payment.desc', to: '/payment' }
   ];
 
   const services = serviceKeys.map(s => ({

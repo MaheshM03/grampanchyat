@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslator } from "../../context/LanguageContext.js";
+import { Phone, Mail, Baby, Skull, Home, ListChecks } from "lucide-react";
 
 export default function Navbar() {
 const [mobileMenu, setMobileMenu] = useState(false);
@@ -59,8 +60,8 @@ const [mobileMenu, setMobileMenu] = useState(false);
         gap: "10px"
       }}>
         <div style={{ display: "flex", gap: "15px", flexWrap: "wrap", alignItems: "center" }}>
-          <span>{t('navbar.phone') || '📞 +91 9876543210'}</span>
-          <span>📧 info@gpgangavarhe.com</span>
+          <span style={{ display: "flex", alignItems: "center", gap: "6px" }}><Phone size={14} /> {t('navbar.phone') || '+91 9876543210'}</span>
+          <span style={{ display: "flex", alignItems: "center", gap: "6px" }}><Mail size={14} /> info@gpgangavarhe.com</span>
         </div>
 
         <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
@@ -191,40 +192,48 @@ const [mobileMenu, setMobileMenu] = useState(false);
                 borderTop: "2px solid #e8a020"
               }}>
                 <Link to="/birth-certificate" style={{
-                  display: "block",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
                   padding: "12px 16px",
                   color: "#e2e8f0",
                   textDecoration: "none",
                   fontSize: "13px"
                 }}>
-                  👶 Birth Certificate
+                  <Baby size={16} /> Birth Certificate
                 </Link>
                 <Link to="/death-certificate" style={{
-                  display: "block",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
                   padding: "12px 16px",
                   color: "#e2e8f0",
                   textDecoration: "none",
                   fontSize: "13px"
                 }}>
-                  ☠️ Death Certificate
+                  <Skull size={16} /> Death Certificate
                 </Link>
                 <Link to="/residence-certificate" style={{
-                  display: "block",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
                   padding: "12px 16px",
                   color: "#e2e8f0",
                   textDecoration: "none",
                   fontSize: "13px"
                 }}>
-                  🏠 Residence Certificate
+                  <Home size={16} /> Residence Certificate
                 </Link>
                 <Link to="/schemes" style={{
-                  display: "block",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
                   padding: "12px 16px",
                   color: "#e2e8f0",
                   textDecoration: "none",
                   fontSize: "13px"
                 }}>
-                  📋 Schemes
+                  <ListChecks size={16} /> Schemes
                 </Link>
               </div>
             )}
@@ -298,43 +307,51 @@ const [mobileMenu, setMobileMenu] = useState(false);
               {mobileCitizenOpen && (
                 <div>
                   <Link to="/birth" style={{
-                    display: "block",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
                     padding: "12px 24px",
                     color: "#e2e8f0",
                     textDecoration: "none",
                     fontSize: "13px",
                     borderTop: "1px solid #2c3e50"
                   }} onClick={() => setMobileMenu(false)}>
-                  🍼 Birth Certificate
+                  <Baby size={16} /> Birth Certificate
                   </Link>
                   <Link to="/death" style={{
-                    display: "block",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
                     padding: "12px 24px",
                     color: "#e2e8f0",
                     textDecoration: "none",
                     fontSize: "13px",
                     borderTop: "1px solid #2c3e50"
                   }} onClick={() => setMobileMenu(false)}>
-                  ⚰️ Death Certificate
+                  <Skull size={16} /> Death Certificate
                   </Link>
                   <Link to="/residence" style={{
-                    display: "block",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
                     padding: "12px 24px",
                     color: "#e2e8f0",
                     textDecoration: "none",
                     fontSize: "13px"
                   }} onClick={() => setMobileMenu(false)}>
-                  🏠 Residence Certificate
+                  <Home size={16} /> Residence Certificate
                   </Link>
                   <Link to="/schemes" style={{
-                    display: "block",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
                     padding: "12px 24px",
                     color: "#e2e8f0",
                     textDecoration: "none",
                     fontSize: "13px",
                     borderTop: "1px solid #2c3e50"
                   }} onClick={() => setMobileMenu(false)}>
-                    📋 Schemes
+                    <ListChecks size={16} /> Schemes
                   </Link>
                 </div>
               )}

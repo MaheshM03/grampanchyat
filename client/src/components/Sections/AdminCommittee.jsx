@@ -4,11 +4,12 @@ import Navbar from "./Navbar.jsx";
 import { motion } from "framer-motion";
 
 const adminMembersData = [
-  { name: "श्री. सतीश सयाजीराव देशमुख", role: "सार्वजनिक नियुक्त सरपंच", img: "https://i.pravatar.cc/150?img=1", enName: "Mr. Satish Sayajirao Deshmukh", enRole: "Publicly appointed Sarpanch" },
-  { name: "श्री. हनुमान गणपती गरुडा", role: "उप सरपंच", img: "https://i.pravatar.cc/150?img=2", enName: "Mr. Hanuman Ganpati Garuda", enRole: "Sub-Sarpanch" },
-  { name: "श्री. अनिल बापूसो यादव", role: "सभासद", img: "https://i.pravatar.cc/150?img=3", enName: "Mr. Anil Bapuso Yadav", enRole: "Member" },
-  { name: "सौ. वैशाली पृथ्वीराज यादव", role: "सभासद", img: "https://i.pravatar.cc/150?img=5", enName: "Mrs. Vaishali Prithviraj Yadav", enRole: "Member" }
+  { name: "श्री. सतीश सयाजीराव देशमुख", role: "सार्वजनिक नियुक्त सरपंच", img: "/human.jfif", enName: "Mr. Satish Sayajirao Deshmukh", enRole: "Publicly appointed Sarpanch" },
+  { name: "श्री. हनुमान गणपती गरुडा", role: "उप सरपंच", img: "/human.jfif", enName: "Mr. Hanuman Ganpati Garuda", enRole: "Sub-Sarpanch" },
+  { name: "श्री. अनिल बापूसो यादव", role: "सभासद", img: "/human.jfif", enName: "Mr. Anil Bapuso Yadav", enRole: "Member" },
+  { name: "सौ. वैशाली पृथ्वीराज यादव", role: "सभासद", img: "/human.jfif", enName: "Mrs. Vaishali Prithviraj Yadav", enRole: "Member" }
 ];
+
 
 export default function AdminCommittee() {
   const { t, currentLanguage } = useTranslator();

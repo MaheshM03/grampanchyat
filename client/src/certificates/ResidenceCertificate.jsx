@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Navbar from "../components/Sections/Navbar";
 import Footer from "../components/Sections/Footer";
 
+
 export default function ResidenceCertificate() {    
   return (
     <>
@@ -43,7 +44,7 @@ export default function ResidenceCertificate() {
               cursor: "pointer",
             }}
           >
-            <ArrowLeft size={14} /> BACK TO HOME
+            ← BACK TO HOME
           </button>
         </Link>
       </div>

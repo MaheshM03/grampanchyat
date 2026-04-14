@@ -160,7 +160,75 @@ const translations = {
     'rti.headers.6': 'टिप्पणी',
     'lang.mr': 'मराठी',
     'lang.en': 'English',
-    'switch.to': 'परिवर्तित करा'
+    'switch.to': 'परिवर्तित करा',
+
+    // Grievance Page
+    'grievance.title': 'तक्रार पोर्टल',
+    'grievance.subtitle': 'आपली तक्रार सहजपणे सबमिट करा',
+    'grievance.form.title': 'तक्रार दाखल करा',
+    'grievance.form.fullName': 'पूर्ण नाव',
+    'grievance.form.mobile': 'मोबाईल नंबर',
+    'grievance.form.aadhaar': 'आधार क्रमांक',
+    'grievance.form.email': 'ईमेल',
+    'grievance.form.department': 'विभाग निवडा',
+    'grievance.form.details': 'तक्रारीचे तपशील',
+    'grievance.form.submit': 'सबमिट करा',
+    'grievance.form.required': 'आवश्यक',
+    'grievance.form.invalidMobile': 'अमान्य मोबाईल',
+    'grievance.form.invalidAadhaar': 'अमान्य आधार',
+    'grievance.form.selectDept': 'विभाग निवडा',
+    'grievance.contact.location': 'स्थान',
+    'grievance.contact.phone': 'फोन',
+    'grievance.contact.email': 'ईमेल',
+    'grievance.dept.water': 'जल पुरवठा',
+    'grievance.dept.road': 'रस्ते व रचना',
+    'grievance.dept.health': 'आरोग्य विभाग',
+    'grievance.dept.education': 'शिक्षा',
+    'grievance.dept.agriculture': 'कृषी',
+    'grievance.dept.revenue': 'राजस्व',
+    'grievance.dept.sanitation': 'स्वच्छता',
+    'grievance.dept.electricity': 'विद्युत',
+
+    // News Page
+    'news.title': 'ग्राम बातम्या व घोषणा',
+    'news.subtitle': 'सर्वशेष बातम्या आणि महत्वाची माहिती',
+    'news.noNews': 'सध्या कोणती बातमी उपलब्ध नाही',
+    'news.loading': 'लोडिंग...',
+
+    // Citizen Portal
+    'citizenPortal.title': 'नागरिक सेवा सुविधा केंद्र',
+    'citizenPortal.subtitle': 'आपली सेवा सहजपणे खोजा',
+    'citizenPortal.search': 'आपली सेवा खोजा...',
+    'citizenPortal.findOut': 'जाणून घ्या',
+    'citizenPortal.category': 'श्रेणी',
+    'citizenPortal.scheme': 'योजना',
+    'citizenPortal.department': 'विभाग',
+    'citizenPortal.service': 'सेवा',
+    'citizenPortal.portal': 'पोर्टल',
+    'citizenPortal.website': 'वेबसाइट',
+
+    // Hero Descriptions
+    'hero.minister1.name': 'देवेंद्र फडणवीस',
+    'hero.minister1.role': 'मा. मुख्यमंत्री',
+    'hero.minister1.desc': 'महाराष्ट्राचे मुख्यमंत्री.',
+    'hero.minister2.name': 'एकनाथ शिंदे',
+    'hero.minister2.role': 'मा. उपमुख्यमंत्री',
+    'hero.minister2.desc': 'उपमुख्यमंत्री.',
+    'hero.minister3.name': 'सुनेत्रा अजित पवार',
+    'hero.minister3.role': 'मा. उपमुख्यमंत्री',
+    'hero.minister3.desc': 'उपमुख्यमंत्री.',
+    'hero.minister4.name': 'श्री. ओमकार पवार',
+    'hero.minister4.role': 'मुख्य कार्यकारी अधिकारी',
+    'hero.minister4.desc': 'प्रशासकीय अधिकारी.',
+    'hero.official1.name': 'हरिदास गणक',
+    'hero.official1.role': 'सरपंच',
+    'hero.official1.desc': 'गाव शासनासाठी जबाबदार गाव प्रमुख.',
+    'hero.official2.name': 'हनुमान गणक',
+    'hero.official2.role': 'उपसरपंच',
+    'hero.official2.desc': 'प्रशासन सहाय्य करणारा उप प्रमुख.',
+    'hero.official3.name': 'श्री. डी. पुजारी',
+    'hero.official3.role': 'ग्रामपंचायत अधिकारी',
+    'hero.official3.desc': 'प्रशासकीय अधिकारी.'
   },
 
   en: {
@@ -320,10 +388,81 @@ const translations = {
     'rti.headers.6': 'Remarks',
     'lang.mr': 'Marathi',
     'lang.en': 'English',
-    'switch.to': 'Switch to'
-  }
+    'switch.to': 'Switch to',
 
+    // Grievance Page
+    'grievance.title': 'Grievance Portal',
+    'grievance.subtitle': 'Submit Your Complaint Easily',
+    'grievance.form.title': 'Submit Complaint',
+    'grievance.form.fullName': 'Full Name',
+    'grievance.form.mobile': 'Mobile Number',
+    'grievance.form.aadhaar': 'Aadhaar Number',
+    'grievance.form.email': 'Email',
+    'grievance.form.department': 'Select Department',
+    'grievance.form.details': 'Complaint Details',
+    'grievance.form.submit': 'Submit',
+    'grievance.form.required': 'Required',
+    'grievance.form.invalidMobile': 'Invalid Mobile',
+    'grievance.form.invalidAadhaar': 'Invalid Aadhaar',
+    'grievance.form.selectDept': 'Select Department',
+    'grievance.contact.location': 'Location',
+    'grievance.contact.phone': 'Phone',
+    'grievance.contact.email': 'Email',
+    'grievance.dept.water': 'Water Supply',
+    'grievance.dept.road': 'Road & Infrastructure',
+    'grievance.dept.health': 'Health Department',
+    'grievance.dept.education': 'Education',
+    'grievance.dept.agriculture': 'Agriculture',
+    'grievance.dept.revenue': 'Revenue',
+    'grievance.dept.sanitation': 'Sanitation',
+    'grievance.dept.electricity': 'Electricity',
+
+    // News Page
+    'news.title': 'Village News & Announcements',
+    'news.subtitle': 'Latest News and Important Information',
+    'news.noNews': 'No News Available Currently',
+    'news.loading': 'Loading...',
+
+    // Citizen Portal
+    'citizenPortal.title': 'Citizen Service Facility Center',
+    'citizenPortal.subtitle': 'Find Your Service Easily',
+    'citizenPortal.search': 'Find Your Service...',
+    'citizenPortal.findOut': 'Find Out',
+    'citizenPortal.category': 'Category',
+    'citizenPortal.scheme': 'Scheme',
+    'citizenPortal.department': 'Department',
+    'citizenPortal.service': 'Service',
+    'citizenPortal.portal': 'Portal',
+    'citizenPortal.website': 'Website',
+
+    // Hero Descriptions
+    'hero.minister1.name': 'Devendra Fadnavis',
+    'hero.minister1.role': 'Chief Minister',
+    'hero.minister1.desc': 'Chief Minister of Maharashtra.',
+    'hero.minister2.name': 'Eknath Shinde',
+    'hero.minister2.role': 'Deputy Chief Minister',
+    'hero.minister2.desc': 'Deputy Chief Minister.',
+    'hero.minister3.name': 'Sunetra Ajit Pawar',
+    'hero.minister3.role': 'Deputy Chief Minister',
+    'hero.minister3.desc': 'Deputy Chief Minister.',
+    'hero.minister4.name': 'Omkar Pawar',
+    'hero.minister4.role': 'Chief Executive Officer',
+    'hero.minister4.desc': 'Administrative Officer.',
+    'hero.official1.name': 'Haridas Ganak',
+    'hero.official1.role': 'Sarpanch',
+    'hero.official1.desc': 'Village Head Responsible for Governance.',
+    'hero.official2.name': 'Hanuman Ganak',
+    'hero.official2.role': 'Deputy Sarpanch',
+    'hero.official2.desc': 'Deputy Head Assisting Administration.',
+    'hero.official3.name': 'D. Pujari',
+    'hero.official3.role': 'Gram Panchayat Officer',
+    'hero.official3.desc': 'Administrative Officer.',
+
+    // Modal
+    'modal.close': 'Close'
+  }
 };
+
 
 export const LanguageProvider = ({ children }) => {
   const [currentLanguage, setCurrentLanguage] = useState('mr');

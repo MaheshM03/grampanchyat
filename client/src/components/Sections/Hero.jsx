@@ -1,57 +1,57 @@
 import { useState } from "react";
 import { useTranslator } from "../../context/LanguageContext.js";
 
-const ministers = [
-  {
-    name: "देवेंद्र फडणवीस",
-    role: "मा. मुख्यमंत्री",
-    img: "/devndra fadanvis.jfif",
-    desc: "Chief Minister of Maharashtra."
-  },
-  {
-    name: "एकनाथ शिंदे",
-    role: "मा. उपमुख्यमंत्री",
-    img: "/eknath shinde.avif",
-    desc: "Deputy Chief Minister."
-  },
-  {
-    name: "सुनेत्रा अजित पवार",
-    role: "मा. उपमुख्यमंत्री",
-    img: "/sunetra ajit pawar.jfif",
-    desc: "Deputy Chief Minister."
-  },
-  {
-    name: "श्री. ओमकार पवार",
-    role: "मुख्य कार्यकारी अधिकारी",
-    img: "/omkar pawar.jfif",
-    desc: "Administrative officer."
-  },
-];
-
-const gpOfficials = [
-  {
-    name: "हरिदास गणक",
-    role: "सरपंच",
-    img: "https://randomuser.me/api/portraits/men/21.jpg",
-    desc: "Village head responsible for governance."
-  },
-  {
-    name: "हनुमान गणक",
-    role: "उपसरपंच",
-    img: "https://randomuser.me/api/portraits/men/22.jpg",
-    desc: "Deputy head assisting administration."
-  },
-  {
-    name: "श्री. डी. पुजारी",
-    role: "ग्रामपंचायत अधिकारी",
-    img: "https://randomuser.me/api/portraits/men/23.jpg",
-    desc: "Administrative officer."
-  },
-];
-
 export default function Hero() {
-  const { t } = useTranslator();
+  const { t, currentLanguage } = useTranslator();
   const [selected, setSelected] = useState(null);
+
+  const ministers = [
+    {
+      nameKey: "hero.minister1.name",
+      roleKey: "hero.minister1.role",
+      img: "/devndra fadanvis.jfif",
+      descKey: "hero.minister1.desc"
+    },
+    {
+      nameKey: "hero.minister2.name",
+      roleKey: "hero.minister2.role",
+      img: "/eknath shinde.avif",
+      descKey: "hero.minister2.desc"
+    },
+    {
+      nameKey: "hero.minister3.name",
+      roleKey: "hero.minister3.role",
+      img: "/sunetra ajit pawar.jfif",
+      descKey: "hero.minister3.desc"
+    },
+    {
+      nameKey: "hero.minister4.name",
+      roleKey: "hero.minister4.role",
+      img: "/omkar pawar.jfif",
+      descKey: "hero.minister4.desc"
+    },
+  ];
+
+  const gpOfficials = [
+    {
+      nameKey: "hero.official1.name",
+      roleKey: "hero.official1.role",
+      icon: "🏛️",
+      descKey: "hero.official1.desc"
+    },
+    {
+      nameKey: "hero.official2.name",
+      roleKey: "hero.official2.role",
+      icon: "🏛️",
+      descKey: "hero.official2.desc"
+    },
+    {
+      nameKey: "hero.official3.name",
+      roleKey: "hero.official3.role",
+      icon: "📋",
+      descKey: "hero.official3.desc"
+    },
+  ];
 
   return (
     <section>
@@ -68,10 +68,11 @@ export default function Hero() {
         <h2>{t("hero.ministers")}</h2>
         <div className="grid">
           {ministers.map((m, i) => (
-            <div key={i} className="card" onClick={() => setSelected(m)}>
-              <img src={m.img} alt={m.name} />
-              <h3>{m.name}</h3>
-              <p>{m.role}</p>
+            <div key={i} className="card" onClick={() => setSelected({...m, isOfficial: false})}>
+              <img src={m.img || "/devndra fadanvis.jfif"} alt={t(m.nameKey)} style={{ width: 80, height: 80, borderRadius: "50%", objectFit: "cover", marginBottom: 10 }} />
+
+              <h3>{t(m.nameKey)}</h3>
+              <p>{t(m.roleKey)}</p>
             </div>
           ))}
         </div>
@@ -79,10 +80,12 @@ export default function Hero() {
         <h2>{t("hero.gpOfficials")}</h2>
         <div className="grid">
           {gpOfficials.map((o, i) => (
-            <div key={i} className="card" onClick={() => setSelected(o)}>
-              <img src={o.img} alt={o.name} />
-              <h3>{o.name}</h3>
-              <p>{o.role}</p>
+            <div key={i} className="card" onClick={() => setSelected({...o, isOfficial: true})}>
+              <img src="/human.jfif" alt={o.name} style={{ width: 80, height: 80, borderRadius: "50%", objectFit: "cover", marginBottom: 10 }} />
+
+
+              <h3>{t(o.nameKey)}</h3>
+              <p>{t(o.roleKey)}</p>
             </div>
           ))}
         </div>
@@ -92,11 +95,13 @@ export default function Hero() {
       {selected && (
         <div className="overlay" onClick={() => setSelected(null)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <img src={selected.img} alt="" />
-            <h3>{selected.name}</h3>
-            <p>{selected.role}</p>
-            <p className="desc">{selected.desc}</p>
-            <button onClick={() => setSelected(null)}>Close</button>
+            {selected.isOfficial && <div style={{ fontSize: "64px", marginBottom: 15 }}>{selected.icon}</div>}
+            {!selected.isOfficial && <img src={selected.img} alt={t(selected.nameKey)} style={{ width: 100, height: 100, borderRadius: "50%", marginBottom: 15, objectFit: "cover" }} />}
+
+            <h3>{t(selected.nameKey)}</h3>
+            <p>{t(selected.roleKey)}</p>
+            <p className="desc">{t(selected.descKey)}</p>
+            <button onClick={() => setSelected(null)}>{t('modal.close') || 'Close'}</button>
           </div>
         </div>
       )}

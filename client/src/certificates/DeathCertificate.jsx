@@ -2,6 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../components/Sections/Navbar";
 import Footer from "../components/Sections/Footer";
+import { ArrowLeft } from "lucide-react";
+
 
 export default function DeathCertificate() {    
   return (
@@ -43,7 +45,7 @@ export default function DeathCertificate() {
               cursor: "pointer",
             }}
           >
-            <ArrowLeft size={14} /> BACK TO HOME
+            ← BACK TO HOME
           </button>
         </Link>
       </div>

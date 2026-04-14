@@ -3,35 +3,36 @@ import { useTranslator } from "../../context/LanguageContext.js";
 import Footer from "./Footer.jsx";
 import Navbar from "./Navbar.jsx";
 import { motion } from "framer-motion";
+import { Droplet, Building2, Gem, Zap, BookOpen } from "lucide-react";
 
 
 const pillars = [
   {
-    icon: "💧",
+    icon: Droplet,
     titleKey: "smart.pillars.water",
     descKey: "smart.waterDesc",
     color: "#0891b2",
   },
   {
-    icon: "🏢",
+    icon: Building2,
     titleKey: "smart.pillars.management",
     descKey: "smart.managementDesc",
     color: "#7c3aed",
   },
   {
-    icon: "✨",
+    icon: Gem,
     titleKey: "smart.pillars.liability",
     descKey: "smart.liabilityDesc",
     color: "#16a34a",
   },
   {
-    icon: "⚡",
+    icon: Zap,
     titleKey: "smart.pillars.energy",
     descKey: "smart.energyDesc",
     color: "#d97706",
   },
   {
-    icon: "📚",
+    icon: BookOpen,
     titleKey: "smart.pillars.education",
     descKey: "smart.educationDesc",
     color: "#dc2626",
@@ -165,7 +166,6 @@ export default function SmartVillage() {
           }}
         >
           {pillars.map((p, i) => {
-            const Icon = p.icon;
             return (
               <motion.div
                 key={i}
@@ -191,7 +191,7 @@ export default function SmartVillage() {
                     marginBottom: 15,
                   }}
                 >
-                  <Icon size={28} color={p.color} />
+                  <p.icon size={28} color={p.color} />
                 </div>
 
                 <h4

@@ -147,31 +147,31 @@ export default function AboutUs() {
         {/* POPULATION */}
         <div className="section">
           <div className="section-title">
-            👥 लोकसंख्या माहिती (2011)
+            <Users size={20} style={{display: "inline", marginRight: "8px", verticalAlign: "middle"}} /> लोकसंख्या माहिती (2011)
           </div>
 
           <div className="card">
             <div className="grid">
               <div className="stat-box">
-                👥
+                <Users size={28} style={{marginBottom: "8px", color: "#2563eb"}} />
                 <p>एकूण</p>
                 <b>2103</b>
               </div>
 
               <div className="stat-box">
-                👤
+                <User size={28} style={{marginBottom: "8px", color: "#2563eb"}} />
                 <p>पुरुष</p>
                 <b>1132</b>
               </div>
 
               <div className="stat-box">
-                👤
+                <User size={28} style={{marginBottom: "8px", color: "#2563eb"}} />
                 <p>स्त्री</p>
                 <b>971</b>
               </div>
 
               <div className="stat-box">
-                🏠
+                <Home size={28} style={{marginBottom: "8px", color: "#2563eb"}} />
                 <p>कुटुंब</p>
                 <b>347</b>
               </div>
@@ -192,13 +192,13 @@ export default function AboutUs() {
         {/* EDUCATION */}
         <div className="section">
           <div className="section-title">
-            🎓 शैक्षणिक माहिती
+            <GraduationCap size={20} style={{display: "inline", marginRight: "8px", verticalAlign: "middle"}} /> शैक्षणिक माहिती
           </div>
 
           <div className="grid">
 
             <div className="card">
-              <b>🏫 माध्यमिक शाळा</b>
+              <b><School size={18} style={{display: "inline", marginRight: "8px", verticalAlign: "middle"}} /> माध्यमिक शाळा</b>
               <p>सर्वज्ञ माध्यमिक विद्यालय</p>
 
               <div style={infoRow}><span className="label">शाळा</span><span>०१</span></div>
@@ -208,7 +208,7 @@ export default function AboutUs() {
             </div>
 
             <div className="card">
-              <b><Baby size={16}/> अंगणवाडी</b>
+              <b><Baby size={18} style={{display: "inline", marginRight: "8px", verticalAlign: "middle"}} /> अंगणवाडी</b>
 
               <div style={infoRow}><span className="label">एकूण</span><span>०२</span></div>
               <div style={infoRow}><span className="label">गंगावऱ्हे</span><span>०१</span></div>
@@ -217,7 +217,7 @@ export default function AboutUs() {
             </div>
 
             <div className="card">
-              <b>प्राथमिक शाळा</b>
+              <b><School size={18} style={{display: "inline", marginRight: "8px", verticalAlign: "middle"}} /> प्राथमिक शाळा</b>
 
               <div style={infoRow}><span className="label">शाळा</span><span>२</span></div>
               <div style={infoRow}><span className="label">शिक्षक</span><span>१२</span></div>

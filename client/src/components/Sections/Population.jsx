@@ -1,9 +1,11 @@
+import { Users, Vote, BarChart3, ListChecks } from 'lucide-react';
+
 export default function StatsSection() {
   const stats = [
-    { label: "एकूण लोकसंख्या", value: "5,735", icon: "👥" },
-    { label: "निवडणूक लोकसंख्या", value: "4,332", icon: "🗳️" },
-    { label: "अनुसूचित लोकसंख्या", value: "1,403", icon: "📊" },
-    { label: "अनुसूचित लोकसंख्या", value: "2,493", icon: "📋" },
+    { label: "एकूण लोकसंख्या", value: "5,735", icon: <Users size={24} color="#2563eb" /> },
+    { label: "निवडणूक लोकसंख्या", value: "4,332", icon: <Vote size={24} color="#2563eb" /> },
+    { label: "अनुसूचित लोकसंख्या", value: "1,403", icon: <BarChart3 size={24} color="#2563eb" /> },
+    { label: "अनुसूचित लोकसंख्या", value: "2,493", icon: <ListChecks size={24} color="#2563eb" /> },
   ];
 
   return (
