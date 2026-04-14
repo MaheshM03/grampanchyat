@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { LayoutDashboard, MessageSquare, Newspaper, Sun, Moon, Edit, Trash2 } from "lucide-react";
 import { useNews } from "../context/NewsContext";
 import { useGrievances } from "../context/GrievanceContext";
 
-import { Menu, X, Newspaper, MessageSquare, LayoutDashboard, Trash2, Edit, Sun, Moon } from "lucide-react";
 
 export default function AdminPanel() {
   const [tab, setTab] = useState("dashboard");
@@ -284,7 +284,7 @@ export default function AdminPanel() {
         <div style={styles.mobileTopBar}>
           <span style={{ fontWeight: 700 }}>Admin Panel</span>
           <button onClick={() => setSidebarOpen(!sidebarOpen)} style={{ background: "none", border: "none", color: "white", cursor: "pointer" }}>
-            {sidebarOpen ? <X size={22} /> : <Menu size={22} />}
+            {sidebarOpen ? "✕" : "☰"}
           </button>
         </div>
       )}
@@ -294,8 +294,8 @@ export default function AdminPanel() {
         <h2 style={{ marginBottom: 30, fontSize: 20, letterSpacing: 1, fontWeight: 700 }}>ADMIN PANEL</h2>
 
         {[ 
-          { key: "dashboard", icon: <LayoutDashboard size={16} />, label: "Dashboard" },
-          { key: "grievances", icon: <MessageSquare size={16} />, label: "Grievances" },
+          { key: "dashboard", icon: "📊", label: "Dashboard" },
+          { key: "grievances", icon: "💬", label: "Grievances" },
           { key: "news", icon: <Newspaper size={16} />, label: "News" }
         ].map(item => (
           <button key={item.key} onClick={() => { setTab(item.key); setSidebarOpen(false); }} 
@@ -368,7 +368,7 @@ export default function AdminPanel() {
                   <h3 style={{ margin: 0 }}>News Items</h3>
                   <p style={{ margin: 0, color: '#6b7280' }}>Published updates</p>
                 </div>
-                <Newspaper size={20} />
+                📰
               </div>
               <p style={{ fontSize: 32, fontWeight: "bold", color: "#22c55e", margin: "0 0 10px 0" }}>
                 {news.length}

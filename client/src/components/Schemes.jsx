@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Search } from "lucide-react";
+
 
 // ================= HERO =================
 function Hero() {
@@ -56,7 +56,7 @@ function Hero() {
           width: "90%",
           maxWidth: 400
         }}>
-          <Search size={16} />
+          🔍
           <input
             placeholder="योजना शोधा..."
             style={{ border: "none", outline: "none", marginLeft: 8, width: "100%" }}

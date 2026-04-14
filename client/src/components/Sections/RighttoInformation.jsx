@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
 import { useTranslator } from "../../context/LanguageContext.js";
-import { Search, Download, Printer, Share2, FileText } from "lucide-react";
 import { motion } from "framer-motion";
+import { FileText, Download, Printer, Share2 } from "lucide-react";
+
 
 const tableRowsData = [
   ["1", "जन्म दाखले", "2023-24", "45", "42", "3", "-"],
@@ -114,7 +115,7 @@ export default function RTI() {
 
           {/* TOOLBAR */}
           <div style={{ display: "flex", justifyContent: "center", gap: 10, marginTop: 20 }}>
-            <IconBtn><Search size={16} /></IconBtn>
+            <IconBtn>🔍</IconBtn>
             <IconBtn><FileText size={16} /></IconBtn>
             <IconBtn onClick={downloadCSV}><Download size={16} /></IconBtn>
             <IconBtn onClick={printPage}><Printer size={16} /></IconBtn>

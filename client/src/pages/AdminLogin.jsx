@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Lock, Mail } from 'lucide-react';
 
 export default function AdminLogin() {
   const [form, setForm] = useState({ username: '', password: '' });
@@ -62,7 +61,7 @@ export default function AdminLogin() {
           <div style={{ marginBottom: 20 }}>
             <label style={{ display: 'block', marginBottom: 8, fontWeight: 500, color: '#374151' }}>Username</label>
             <div style={{ display: 'flex', border: '1px solid #d1d5db', borderRadius: 8, padding: 12 }}>
-              <Mail size={20} style={{ color: '#6b7280', marginRight: 12 }} />
+              <span style={{ color: '#6b7280', marginRight: 12, fontSize: 18 }}>✉️</span>
               <input 
                 type="text" 
                 value={form.username}
@@ -77,7 +76,7 @@ export default function AdminLogin() {
           <div style={{ marginBottom: 24 }}>
             <label style={{ display: 'block', marginBottom: 8, fontWeight: 500, color: '#374151' }}>Password</label>
             <div style={{ display: 'flex', border: '1px solid #d1d5db', borderRadius: 8, padding: 12 }}>
-              <Lock size={20} style={{ color: '#6b7280', marginRight: 12 }} />
+              <span style={{ color: '#6b7280', marginRight: 12, fontSize: 18 }}>🔒</span>
               <input 
                 type="password" 
                 value={form.password}

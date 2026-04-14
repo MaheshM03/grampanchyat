@@ -2,30 +2,26 @@ import { useState } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { useGrievances } from "../../context/GrievanceContext";
-import {
-  Droplet, Road, Hospital, BookOpen,
-  Wheat, BarChart3, Trash2, Zap, MapPin, Phone, Mail
-} from "lucide-react";
 
 export default function GrievanceSection() {
 
   const { fetchGrievances } = useGrievances();
 
   const departments = [
-    { name: "Water Supply", icon: <Droplet size={18} /> },
-    { name: "Road & Infrastructure", icon: <Road size={18} /> },
-    { name: "Health Department", icon: <Hospital size={18} /> },
-    { name: "Education", icon: <BookOpen size={18} /> },
-    { name: "Agriculture", icon: <Wheat size={18} /> },
-    { name: "Revenue", icon: <BarChart3 size={18} /> },
-    { name: "Sanitation", icon: <Trash2 size={18} /> },
-    { name: "Electricity", icon: <Zap size={18} /> }
+    { name: "Water Supply", icon: "💧" },
+    { name: "Road & Infrastructure", icon: "🛣️" },
+    { name: "Health Department", icon: "🏥" },
+    { name: "Education", icon: "📖" },
+    { name: "Agriculture", icon: "🌾" },
+    { name: "Revenue", icon: "📊" },
+    { name: "Sanitation", icon: "🗑️" },
+    { name: "Electricity", icon: "⚡" }
   ];
 
   const contactInfo = [
-    { icon: <MapPin size={20} />, label: "Location", value: "Gangavarhe, Nashik - 422222" },
-    { icon: <Phone size={20} />, label: "Phone", value: "+917620068056", action: "call" },
-    { icon: <Mail size={20} />, label: "Email", value: "nsk.gangavarhe@gmail.com", action: "email" }
+    { icon: "📍", label: "Location", value: "Gangavarhe, Nashik - 422222" },
+    { icon: "📞", label: "Phone", value: "+917620068056", action: "call" },
+    { icon: "✉️", label: "Email", value: "nsk.gangavarhe@gmail.com", action: "email" }
   ];
 
   const [form, setForm] = useState({

@@ -1,8 +1,9 @@
 import React from "react";
-import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 import Navbar from "../components/Sections/Navbar";
 import Footer from "../components/Sections/Footer";
+
 
 export default function BirthCertificate() {
   return (

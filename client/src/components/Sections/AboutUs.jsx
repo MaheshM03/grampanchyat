@@ -1,6 +1,8 @@
 import Navbar from "./Navbar";
 import { Users, User, Home, GraduationCap, School, Baby } from "lucide-react";
 
+
+
 export default function AboutUs() {
 
   const infoRow = {
@@ -145,31 +147,31 @@ export default function AboutUs() {
         {/* POPULATION */}
         <div className="section">
           <div className="section-title">
-            <Users size={18}/> लोकसंख्या माहिती (2011)
+            👥 लोकसंख्या माहिती (2011)
           </div>
 
           <div className="card">
             <div className="grid">
               <div className="stat-box">
-                <Users size={20}/>
+                👥
                 <p>एकूण</p>
                 <b>2103</b>
               </div>
 
               <div className="stat-box">
-                <User size={20}/>
+                👤
                 <p>पुरुष</p>
                 <b>1132</b>
               </div>
 
               <div className="stat-box">
-                <User size={20}/>
+                👤
                 <p>स्त्री</p>
                 <b>971</b>
               </div>
 
               <div className="stat-box">
-                <Home size={20}/>
+                🏠
                 <p>कुटुंब</p>
                 <b>347</b>
               </div>
@@ -190,13 +192,13 @@ export default function AboutUs() {
         {/* EDUCATION */}
         <div className="section">
           <div className="section-title">
-            <GraduationCap size={18}/> शैक्षणिक माहिती
+            🎓 शैक्षणिक माहिती
           </div>
 
           <div className="grid">
 
             <div className="card">
-              <b><School size={16}/> माध्यमिक शाळा</b>
+              <b>🏫 माध्यमिक शाळा</b>
               <p>सर्वज्ञ माध्यमिक विद्यालय</p>
 
               <div style={infoRow}><span className="label">शाळा</span><span>०१</span></div>

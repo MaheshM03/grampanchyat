@@ -3,35 +3,35 @@ import { useTranslator } from "../../context/LanguageContext.js";
 import Footer from "./Footer.jsx";
 import Navbar from "./Navbar.jsx";
 import { motion } from "framer-motion";
-import { Droplet, Building2, Gem, Zap, BookOpen } from "lucide-react";
+
 
 const pillars = [
   {
-    icon: Droplet,
+    icon: "💧",
     titleKey: "smart.pillars.water",
     descKey: "smart.waterDesc",
     color: "#0891b2",
   },
   {
-    icon: Building2,
+    icon: "🏢",
     titleKey: "smart.pillars.management",
     descKey: "smart.managementDesc",
     color: "#7c3aed",
   },
   {
-    icon: Gem,
+    icon: "✨",
     titleKey: "smart.pillars.liability",
     descKey: "smart.liabilityDesc",
     color: "#16a34a",
   },
   {
-    icon: Zap,
+    icon: "⚡",
     titleKey: "smart.pillars.energy",
     descKey: "smart.energyDesc",
     color: "#d97706",
   },
   {
-    icon: BookOpen,
+    icon: "📚",
     titleKey: "smart.pillars.education",
     descKey: "smart.educationDesc",
     color: "#dc2626",
