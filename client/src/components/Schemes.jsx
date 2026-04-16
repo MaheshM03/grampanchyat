@@ -1,8 +1,9 @@
 import React, { useState } from "react";
+import Navbar from "./Sections/Navbar";
 
 
 // ================= HERO =================
-function Hero() {
+function Hero({ searchTerm, setSearchTerm }) {
   return (
     <div style={{
       background: "linear-gradient(135deg,#1f4e5f,#2c7da0)",
@@ -57,8 +58,10 @@ function Hero() {
           maxWidth: 400
         }}>
           🔍
-          <input
+        <input
             placeholder="योजना शोधा..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
             style={{ border: "none", outline: "none", marginLeft: 8, width: "100%" }}
           />
         </div>
@@ -165,54 +168,116 @@ function Section({ title, children }) {
 // ================= MAIN =================
 export default function Schemes() {
   const [active, setActive] = useState("सर्व योजना");
+  const [searchTerm, setSearchTerm] = useState(""); // Added search state
+
+  // schemesData matching hardcoded structure
+  const schemesData = [
+    {
+      category: "अर्थ सहाय्य",
+      title: "१. विशेष अर्थ सहाय्य योजना",
+      cards: [
+        { title: "संजय गांधी योजना", color: "#8e44ad", data: ["₹1500 मदत","वृद्ध लाभ","आधार आवश्यक"] },
+        { title: "श्रावण बाळ योजना", color: "#9b59b6", data: ["ज्येष्ठ नागरिक","₹1500","ओळखपत्र"] },
+        { title: "राष्ट्रीय वृद्ध योजना", color: "#8e44ad", data: ["BPL","वृद्ध लाभ","आधार"] }
+      ]
+    },
+    {
+      category: "आवास",
+      title: "२. आवास योजना",
+      cards: [
+        { title: "PMAY-G", color: "#3498db", data: ["₹1.2 लाख","ग्रामीण घर"] },
+        { title: "शहरी आवास", color: "#2980b9", data: ["₹2.5 लाख","शहरी"] },
+        { title: "आदिवासी आवास", color: "#3498db", data: ["₹1.2 लाख","ST लाभ"] }
+      ]
+    },
+    {
+      category: "आरोग्य",
+      title: "३. आरोग्य योजना",
+      cards: [
+        { title: "PMJAY", color: "#e74c3c", data: ["₹5 लाख","फ्री उपचार"] }
+      ]
+    },
+    {
+      category: "कृषी",
+      title: "४. कृषी योजना",
+      cards: [
+        { title: "पीक विमा", color: "#27ae60", data: ["विमा","नुकसान भरपाई"] },
+        { title: "PM-KISAN", color: "#2ecc71", data: ["₹6000","DBT"] },
+        { title: "महाडीबीटी", color: "#27ae60", data: ["अनुदान","शेतकरी"] }
+      ]
+    },
+    {
+      category: "पशुपालन",
+      title: "५. पशुपालन योजना",
+      cards: [
+        { title: "दुध योजना", color: "#6d4c41", data: ["अनुदान","जनावर"] },
+        { title: "शेळी योजना", color: "#795548", data: ["शेळी","अनुदान"] }
+      ]
+    },
+    {
+      category: "ऊर्जा",
+      title: "६. ऊर्जा योजना",
+      cards: [
+        { title: "सोलर योजना", color: "#f39c12", data: ["सौर पंप","अनुदान"] }
+      ]
+    },
+    {
+      category: "महिला व बाल",
+      title: "७. महिला व बाल",
+      cards: [
+        { title: "माझी लाडकी", color: "#e91e63", data: ["महिला","₹1500"] },
+        { title: "मातृत्व योजना", color: "#d81b60", data: ["गर्भवती","अनुदान"] }
+      ]
+    },
+    {
+      category: "रोजगार",
+      title: "८. रोजगार योजना",
+      cards: [
+        { title: "मनरेगा", color: "#f57c00", data: ["100 दिवस काम","रोजगार"] }
+      ]
+    }
+  ];
+
+  // Filter logic
+  const filteredSchemes = schemesData
+    .filter(section => active === "सर्व योजना" || section.category === active)
+    .map(section => ({
+      ...section,
+      cards: section.cards.filter(card => {
+        const matchesSearch = searchTerm === "" || 
+          card.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          card.data.some(d => d.toLowerCase().includes(searchTerm.toLowerCase()));
+        return matchesSearch;
+      })
+    }))
+    .filter(section => section.cards.length > 0); // Hide empty sections
 
   return (
+    <>  
+    <Navbar/>
     <div style={{ background: "#f1f5f9" }}>
 
-      <Hero />
+      <Hero searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+
 
       <Tabs active={active} setActive={setActive} />
 
-      <Section title="१. विशेष अर्थ सहाय्य योजना">
-        <Card title="संजय गांधी योजना" color="#8e44ad" data={["₹1500 मदत","वृद्ध लाभ","आधार आवश्यक"]} />
-        <Card title="श्रावण बाळ योजना" color="#9b59b6" data={["ज्येष्ठ नागरिक","₹1500","ओळखपत्र"]} />
-        <Card title="राष्ट्रीय वृद्ध योजना" color="#8e44ad" data={["BPL","वृद्ध लाभ","आधार"]} />
-      </Section>
-
-      <Section title="२. आवास योजना">
-        <Card title="PMAY-G" color="#3498db" data={["₹1.2 लाख","ग्रामीण घर"]} />
-        <Card title="शहरी आवास" color="#2980b9" data={["₹2.5 लाख","शहरी"]} />
-        <Card title="आदिवासी आवास" color="#3498db" data={["₹1.2 लाख","ST लाभ"]} />
-      </Section>
-
-      <Section title="३. आरोग्य योजना">
-        <Card title="PMJAY" color="#e74c3c" data={["₹5 लाख","फ्री उपचार"]} />
-      </Section>
-
-      <Section title="४. कृषी योजना">
-        <Card title="पीक विमा" color="#27ae60" data={["विमा","नुकसान भरपाई"]} />
-        <Card title="PM-KISAN" color="#2ecc71" data={["₹6000","DBT"]} />
-        <Card title="महाडीबीटी" color="#27ae60" data={["अनुदान","शेतकरी"]} />
-      </Section>
-
-      <Section title="५. पशुपालन योजना">
-        <Card title="दुध योजना" color="#6d4c41" data={["अनुदान","जनावर"]} />
-        <Card title="शेळी योजना" color="#795548" data={["शेळी","अनुदान"]} />
-      </Section>
-
-      <Section title="६. ऊर्जा योजना">
-        <Card title="सोलर योजना" color="#f39c12" data={["सौर पंप","अनुदान"]} />
-      </Section>
-
-      <Section title="७. महिला व बाल">
-        <Card title="माझी लाडकी" color="#e91e63" data={["महिला","₹1500"]} />
-        <Card title="मातृत्व योजना" color="#d81b60" data={["गर्भवती","अनुदान"]} />
-      </Section>
-
-      <Section title="८. रोजगार योजना">
-        <Card title="मनरेगा" color="#f57c00" data={["100 दिवस काम","रोजगार"]} />
-      </Section>
+      {filteredSchemes.length === 0 ? (
+        <div style={{ textAlign: "center", padding: 40, color: "#666" }}>
+          <h3>कोणतीही योजना सापडली नाही</h3>
+          <p>वेगळे शब्द किंवा विभाग वापरा</p>
+        </div>
+      ) : (
+        filteredSchemes.map((section, i) => (
+          <Section key={i} title={section.title}>
+            {section.cards.map((card, j) => (
+              <Card key={j} title={card.title} color={card.color} data={card.data} />
+            ))}
+          </Section>
+        ))
+      )}
 
     </div>
+    </>
   );
 }

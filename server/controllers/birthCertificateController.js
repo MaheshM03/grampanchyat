@@ -1,43 +1,21 @@
-// In-memory store - resets on server restart
-let birthData = [];
-
-const generateToken = () => {
-  return 'BP' + Date.now().toString().slice(-6) + Math.floor(Math.random() * 1000);
-};
-
-// Helper functions
-const getBirthById = (id) => birthData.find(cert => cert.id === id);
-const getBirthByTokenOrMobile = (tokenOrMobile) => {
-  return birthData.find(cert => cert.token === tokenOrMobile || cert.mobile === tokenOrMobile);
-};
-const addBirthCert = (certData) => {
-  const cert = { ...certData, id: Date.now().toString() };
-  birthData.unshift(cert);
-  return cert;
-};
-const updateBirthCert = (id, updates) => {
-  const index = birthData.findIndex(cert => cert.id === id);
-  if (index > -1) {
-    birthData[index] = { ...birthData[index], ...updates };
-    return birthData[index];
-  }
-  return null;
-};
-
-// Import payment verification
+// Import model
+const BirthCertificate = require('../models/BirthCertificate');
 const { verifyPayment } = require('./paymentController');
+
+// Generate token
+const generateToken = () => 'BP' + Date.now().toString().slice(-6) + Math.floor(Math.random() * 1000);
 
 // @desc Create new birth certificate application
 // @route POST /api/birth-certificates
-const createBirthCertificate = async (req, res) => {
+exports.createBirthCertificate = async (req, res) => {
   try {
-    const { mobile, childDetails, fatherDetails, motherDetails, documents, payment } = req.body;
+    const { mobile, childDetails, fatherDetails, motherDetails, documents: docMetadata, payment } = req.body;
 
     // Validate Razorpay payment
     if (!payment || !payment.razorpay_payment_id || !payment.razorpay_order_id || !payment.razorpay_signature) {
       return res.status(400).json({
         success: false,
-        message: 'Valid Razorpay payment details required (payment_id, order_id, signature)'
+        message: 'Valid Razorpay payment details required'
       });
     }
 
@@ -52,54 +30,52 @@ const createBirthCertificate = async (req, res) => {
     if (!verifyResult.success) {
       return res.status(400).json({
         success: false,
-        message: 'Payment verification failed. Please try again.'
+        message: 'Payment verification failed'
       });
     }
-
-    // Payment verified, proceed
 
     const token = generateToken();
     
     const birthCertData = {
       token,
       mobile,
-      childDetails,
-      fatherDetails,
-      motherDetails,
-      documents,
-      payment,
-      status: 'pending',
-      submittedAt: new Date()
+      childDetails: JSON.parse(childDetails),
+      fatherDetails: JSON.parse(fatherDetails),
+      motherDetails: JSON.parse(motherDetails),
+      address: req.body.address,
+      documents: JSON.parse(docMetadata), // metadata for now
+      payment: JSON.parse(payment),
+      status: 'pending'
     };
 
-    const savedCert = addBirthCert(birthCertData);
+    const savedCert = await BirthCertificate.create(birthCertData);
 
     res.status(201).json({
       success: true,
       message: 'Application submitted successfully',
       data: {
         token,
-        applicationId: savedCert.id,
-        status: 'pending',
-        submittedAt: savedCert.submittedAt
+        applicationId: savedCert._id,
+        status: 'pending'
       }
     });
   } catch (error) {
     console.error('Create birth cert error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error submitting application'
+      message: 'Server error'
     });
   }
 };
 
-// @desc Get birth certificate by token/mobile
-// @route GET /api/birth-certificates/:tokenOrMobile
-const getBirthCertificate = async (req, res) => {
+// @desc Get by token/mobile
+exports.getBirthCertificate = async (req, res) => {
   try {
     const { tokenOrMobile } = req.params;
     
-    const birthCert = getBirthByTokenOrMobile(tokenOrMobile);
+    const birthCert = await BirthCertificate.findOne({
+      $or: [{ token: tokenOrMobile }, { mobile: tokenOrMobile }]
+    }).lean();
 
     if (!birthCert) {
       return res.status(404).json({
@@ -116,29 +92,47 @@ const getBirthCertificate = async (req, res) => {
     console.error('Get birth cert error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error fetching application'
+      message: 'Server error'
     });
   }
 };
 
-// @desc Update application status (admin)
-const updateStatus = async (req, res) => {
+// @desc Get all (admin)
+exports.getAllBirthCertificates = async (req, res) => {
+  try {
+    const certificates = await BirthCertificate.find({}).sort({ submittedAt: -1 }).lean();
+    res.json({
+      success: true,
+      data: certificates,
+      count: certificates.length
+    });
+  } catch (error) {
+    console.error('Get all birth certs error:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
+// @desc Update status (admin)
+exports.updateStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const { status, approvedBy } = req.body;
 
-    const birthCert = getBirthById(id);
+    const updates = { status };
+    if (status === 'approved') {
+      updates.approvedAt = new Date();
+      updates.approvedBy = approvedBy;
+    }
+
+    const birthCert = await BirthCertificate.findByIdAndUpdate(
+      id,
+      updates,
+      { new: true, runValidators: true }
+    ).lean();
+
     if (!birthCert) {
       return res.status(404).json({ success: false, message: 'Application not found' });
     }
-
-    birthCert.status = status;
-    if (status === 'approved') {
-      birthCert.approvedAt = new Date();
-      birthCert.approvedBy = approvedBy;
-    }
-
-    updateBirthCert(id, { status, approvedAt: birthCert.approvedAt, approvedBy });
 
     res.json({
       success: true,
@@ -148,24 +142,4 @@ const updateStatus = async (req, res) => {
     console.error('Update status error:', error);
     res.status(500).json({ success: false, message: 'Server error' });
   }
-};
-
-const getAllBirthCertificates = async (req, res) => {
-  try {
-    res.json({
-      success: true,
-      data: birthData.slice(),
-      count: birthData.length
-    });
-  } catch (error) {
-    console.error('Get all birth certs error:', error);
-    res.status(500).json({ success: false, message: 'Server error fetching certificates' });
-  }
-};
-
-module.exports = {
-  createBirthCertificate,
-  getBirthCertificate,
-  updateStatus,
-  getAllBirthCertificates
 };

@@ -1,1 +1,15 @@
-{"short_name":"GramPanchayat","name":"Kadepur Gram Panchayat","icons":[],"start_url":".","display":"standalone","theme_color":"#2d8a6e","background_color":"#edf5f2"}
+{
+  "short_name": "GramPanchayat",
+  "name": "Kadepur Gram Panchayat",
+  "icons": [
+    {
+      "src": "favicon.jpg",
+      "sizes": "any",
+      "type": "image/jpeg"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#2d8a6e",
+  "background_color": "#edf5f2"
+}

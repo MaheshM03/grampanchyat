@@ -1,14 +1,12 @@
 import Navbar from "./Navbar";
 import { Users, User, Home, GraduationCap, School, Baby } from "lucide-react";
 
-
-
 export default function AboutUs() {
 
   const infoRow = {
     display: "flex",
     justifyContent: "space-between",
-    padding: "10px 0",
+    padding: "8px 0",
     borderBottom: "1px solid #e5e7eb",
     fontSize: "14px"
   };
@@ -19,21 +17,19 @@ export default function AboutUs() {
 
       <style>{`
         body {
-          background: #f8fafc;
-          font-family: Inter, sans-serif;
-          color: #0f172a;
+          background: #f1f5f9;
+          font-family: 'Inter', sans-serif;
         }
 
-        /* HEADER */
         .header {
-          background: linear-gradient(135deg,#020617,#1e3a8a,#2563eb);
+          background: linear-gradient(135deg,#1e3a8a,#2563eb);
           color: white;
           padding: 30px 15px;
           text-align: center;
-          font-size: clamp(18px,4vw,24px);
+          font-size: clamp(20px,4vw,28px);
           font-weight: 800;
-          border-radius: 0 0 30px 30px;
-          box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+          border-radius: 0 0 25px 25px;
+          box-shadow: 0 8px 20px rgba(0,0,0,0.2);
         }
 
         .container {
@@ -43,101 +39,81 @@ export default function AboutUs() {
         }
 
         .section {
-          margin: 35px 0;
+          margin-top: 35px;
         }
 
-        /* SECTION TITLE */
         .section-title {
-          background: linear-gradient(135deg,#1e3a8a,#2563eb);
+          background: #1e293b;
           color: #fff;
           padding: 12px 16px;
-          font-size: 15px;
+          font-size: 16px;
           font-weight: 700;
-          border-radius: 10px;
+          border-radius: 8px;
           display: flex;
           align-items: center;
           gap: 10px;
-          box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+          margin-bottom: 10px;
         }
 
-        /* CARD */
         .card {
-          background: #ffffff;
-          border-radius: 16px;
+          background: #fff;
+          border-radius: 14px;
           padding: 18px;
-          margin-top: 12px;
-          box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-          border: 1px solid #e2e8f0;
+          box-shadow: 0 6px 18px rgba(0,0,0,0.08);
           transition: 0.3s;
         }
 
         .card:hover {
-          transform: translateY(-3px);
-          box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+          transform: translateY(-4px);
+          box-shadow: 0 10px 25px rgba(0,0,0,0.12);
         }
 
-        /* GRID */
         .grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
           gap: 16px;
         }
 
-        /* STAT BOX */
         .stat-box {
-          background: linear-gradient(135deg,#f1f5f9,#e2e8f0);
-          padding: 18px;
+          background: linear-gradient(135deg,#eef2ff,#e0e7ff);
+          padding: 16px;
+          border-radius: 12px;
           text-align: center;
-          border-radius: 14px;
-          border: 1px solid #e2e8f0;
-          transition: 0.3s;
-        }
-
-        .stat-box:hover {
-          transform: scale(1.03);
-          background: #e0e7ff;
+          border: 1px solid #c7d2fe;
         }
 
         .stat-box p {
-          margin: 5px 0;
-          font-size: 14px;
-          color: #475569;
+          font-size: 13px;
         }
 
         .stat-box b {
-          font-size: 18px;
-          color: #1e293b;
+          font-size: 20px;
         }
 
-        .label {
-          color: #64748b;
+        .village-header {
+          display: flex;
+          justify-content: space-between;
+          background: linear-gradient(135deg,#2563eb,#1e40af);
+          color: white;
+          padding: 12px;
+          border-radius: 10px;
+          margin-bottom: 10px;
         }
 
-        /* TEXT */
+        .highlight {
+          background: #f8fafc;
+          padding: 12px;
+          border-radius: 10px;
+          margin-top: 10px;
+          text-align: center;
+        }
+
         .text {
           line-height: 1.8;
           font-size: 14px;
-          color: #334155;
-        }
-
-        /* MOBILE */
-        @media (max-width: 600px) {
-          .container {
-            padding: 15px;
-          }
-
-          .card {
-            padding: 14px;
-          }
-
-          .section-title {
-            font-size: 14px;
-            padding: 10px;
-          }
         }
       `}</style>
 
-      {/* HEADER */}
       <div className="header">
         ग्रामपंचायत गंगावऱ्हे - सावरगाव
       </div>
@@ -147,81 +123,103 @@ export default function AboutUs() {
         {/* POPULATION */}
         <div className="section">
           <div className="section-title">
-            <Users size={20} style={{display: "inline", marginRight: "8px", verticalAlign: "middle"}} /> लोकसंख्या माहिती (2011)
+            <Users size={18}/> लोकसंख्या माहिती (2011)
           </div>
 
           <div className="card">
-            <div className="grid">
-              <div className="stat-box">
-                <Users size={28} style={{marginBottom: "8px", color: "#2563eb"}} />
-                <p>एकूण</p>
-                <b>2103</b>
+
+            {/* गंगावऱ्हे */}
+            <div style={{marginBottom: "25px"}}>
+              <div className="village-header">
+                <h3>गंगावऱ्हे</h3>
+                <b>१३८१</b>
               </div>
 
-              <div className="stat-box">
-                <User size={28} style={{marginBottom: "8px", color: "#2563eb"}} />
-                <p>पुरुष</p>
-                <b>1132</b>
+              <div className="grid">
+                <div className="stat-box"><p>पुरुष</p><b>७५०</b></div>
+                <div className="stat-box"><p>स्त्री</p><b>६३१</b></div>
               </div>
 
-              <div className="stat-box">
-                <User size={28} style={{marginBottom: "8px", color: "#2563eb"}} />
-                <p>स्त्री</p>
-                <b>971</b>
+              <div className="grid">
+                <div className="stat-box"><p>SC</p><b>१६७</b><p>८७ / ८०</p></div>
+                <div className="stat-box"><p>ST</p><b>९५०</b><p>५१४ / ४३६</p></div>
+                <div className="stat-box"><p>इतर</p><b>२६४</b><p>१४९ / ११५</p></div>
               </div>
 
-              <div className="stat-box">
-                <Home size={28} style={{marginBottom: "8px", color: "#2563eb"}} />
-                <p>कुटुंब</p>
-                <b>347</b>
+              <div className="highlight">
+                <Home/> कुटुंब: <b>२३२</b>
               </div>
             </div>
+
+            {/* सावरगाव */}
+            <div>
+              <div className="village-header">
+                <h3>सावरगाव</h3>
+                <b>७२२</b>
+              </div>
+
+              <div className="grid">
+                <div className="stat-box"><p>पुरुष</p><b>३८२</b></div>
+                <div className="stat-box"><p>स्त्री</p><b>३४०</b></div>
+              </div>
+
+              <div className="grid">
+                <div className="stat-box"><p>SC</p><b>१५</b><p>०८ / ०७</p></div>
+                <div className="stat-box"><p>ST</p><b>६९५</b><p>३६८ / ३२७</p></div>
+                <div className="stat-box"><p>इतर</p><b>१२</b><p>०६ / ०६</p></div>
+              </div>
+
+              <div className="highlight">
+                <Home/> कुटुंब: <b>११५</b>
+              </div>
+            </div>
+
           </div>
         </div>
 
         {/* VILLAGE INFO */}
         <div className="section">
           <div className="section-title">गावाची माहिती</div>
-
           <div className="card text">
-            {/* YOUR ORIGINAL TEXT SAME */}
-            गोदावरी नदी व गंगापूर धरणाच्या पश्चिमेस वसलेले गंगावऱ्हे व सावरगाव...
+            गोदावरी नदी व गंगापूर धरणाच्या पश्चिमेस वसलेले गंगावऱ्हे व सावरगाव ही दोन्ही गाव पुनर्वसित असून प्राचीन वारसा असलेली आदिवासी बहुल गावे आहेत.
           </div>
         </div>
 
         {/* EDUCATION */}
         <div className="section">
           <div className="section-title">
-            <GraduationCap size={20} style={{display: "inline", marginRight: "8px", verticalAlign: "middle"}} /> शैक्षणिक माहिती
+            <GraduationCap size={18}/> शैक्षणिक माहिती
           </div>
 
           <div className="grid">
 
+            {/* माध्यमिक */}
             <div className="card">
-              <b><School size={18} style={{display: "inline", marginRight: "8px", verticalAlign: "middle"}} /> माध्यमिक शाळा</b>
+              <b><School size={18}/> माध्यमिक शाळा</b>
               <p>सर्वज्ञ माध्यमिक विद्यालय</p>
 
-              <div style={infoRow}><span className="label">शाळा</span><span>०१</span></div>
-              <div style={infoRow}><span className="label">शिक्षक</span><span>०३</span></div>
-              <div style={infoRow}><span className="label">विद्यार्थी</span><span>१३३</span></div>
-              <div style={infoRow}><span className="label">वर्ग</span><span>८ ते १०</span></div>
+              <div style={infoRow}><span>शाळा</span><span>०१</span></div>
+              <div style={infoRow}><span>शिक्षक</span><span>०३</span></div>
+              <div style={infoRow}><span>विद्यार्थी</span><span>१३३</span></div>
+              <div style={infoRow}><span>शौचालय</span><span>०२</span></div>
+              <div style={infoRow}><span>मुतारी</span><span>०३</span></div>
             </div>
 
+            {/* अंगणवाडी */}
             <div className="card">
-              <b><Baby size={18} style={{display: "inline", marginRight: "8px", verticalAlign: "middle"}} /> अंगणवाडी</b>
+              <b><Baby size={18}/> अंगणवाडी</b>
 
-              <div style={infoRow}><span className="label">एकूण</span><span>०२</span></div>
-              <div style={infoRow}><span className="label">गंगावऱ्हे</span><span>०१</span></div>
-              <div style={infoRow}><span className="label">सावरगाव</span><span>०१</span></div>
-              <div style={infoRow}><span className="label">लाभार्थी</span><span>१५४</span></div>
+              <div style={infoRow}><span>एकूण</span><span>०२</span></div>
+              <div style={infoRow}><span>लाभार्थी</span><span>१५४</span></div>
             </div>
 
+            {/* प्राथमिक */}
             <div className="card">
-              <b><School size={18} style={{display: "inline", marginRight: "8px", verticalAlign: "middle"}} /> प्राथमिक शाळा</b>
+              <b><School size={18}/> प्राथमिक शाळा</b>
 
-              <div style={infoRow}><span className="label">शाळा</span><span>२</span></div>
-              <div style={infoRow}><span className="label">शिक्षक</span><span>१२</span></div>
-              <div style={infoRow}><span className="label">विद्यार्थी</span><span>३३९</span></div>
+              <div style={infoRow}><span>शाळा</span><span>२</span></div>
+              <div style={infoRow}><span>शिक्षक</span><span>१२</span></div>
+              <div style={infoRow}><span>विद्यार्थी</span><span>३३९</span></div>
             </div>
 
           </div>

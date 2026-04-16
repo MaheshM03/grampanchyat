@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslator } from "../../context/LanguageContext.js";
-import { Phone, Mail, Baby, Skull, Home, ListChecks } from "lucide-react";
+import { Phone, Mail, Baby, Skull, Home, ListChecks, Share2, Image, Video, MessageCircle } from "lucide-react";
 
 export default function Navbar() {
 const [mobileMenu, setMobileMenu] = useState(false);
@@ -18,6 +18,7 @@ const [mobileMenu, setMobileMenu] = useState(false);
     { key: "nav.rti", name: "RTI", to: "/rti" },
     { key: "nav.news", name: "News", to: "/news" },
     { key: "nav.grievance", name: "Grievance", to: "/grievance" },
+    { key: "nav.activity", name: "Activity", to: "/activity" },
     { key: "nav.aboutus", name: "About Us", to: "/aboutus" },
   ];
 
@@ -89,8 +90,11 @@ const [mobileMenu, setMobileMenu] = useState(false);
           >
             🌐 {t('lang.en')}
           </span>
-          <span style={{ cursor: "pointer" }}>📷</span>
-          <span style={{ cursor: "pointer" }}>f</span>
+<Share2 size={16} style={{ cursor: "pointer", color: "#e2e8f0", transition: "all 0.2s ease" }} onClick={() => window.open('https://facebook.com/gpgangavarhe', '_blank')} />
+<Image size={16} style={{ cursor: "pointer", color: "#e2e8f0", transition: "all 0.2s ease" }} onClick={() => window.open('https://instagram.com/gpgangavarhe', '_blank')} />
+<Video size={16} style={{ cursor: "pointer", color: "#e2e8f0", transition: "all 0.2s ease" }} onClick={() => window.open('https://youtube.com/@gpgangavarhe', '_blank')} />
+<MessageCircle size={16} style={{ cursor: "pointer", color: "#e2e8f0", transition: "all 0.2s ease" }} onClick={() => window.open('https://twitter.com/gpgangavarhe', '_blank')} />
+<Phone size={16} style={{ cursor: "pointer", color: "#e2e8f0", transition: "all 0.2s ease" }} onClick={() => window.open('https://wa.me/919876543210', '_blank')} />
         </div>
       </div>
 
@@ -105,7 +109,7 @@ const [mobileMenu, setMobileMenu] = useState(false);
       }}>
         <div style={{ textAlign: "center", display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
           <img 
-            src="/panchayat emblem.jfif" 
+            src="/favicon.jpg" 
             alt="Panchayat Emblem" 
             style={{ width: "40px", height: "40px", borderRadius: "50%" }}
           />

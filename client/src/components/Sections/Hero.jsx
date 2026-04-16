@@ -68,9 +68,11 @@ export default function Hero() {
         <h2>{t("hero.ministers")}</h2>
         <div className="grid">
           {ministers.map((m, i) => (
-            <div key={i} className="card" onClick={() => setSelected({...m, isOfficial: false})}>
-              <img src={m.img || "/devndra fadanvis.jfif"} alt={t(m.nameKey)} style={{ width: 80, height: 80, borderRadius: "50%", objectFit: "cover", marginBottom: 10 }} />
-
+            <div key={i} className="card" onClick={() => setSelected({ ...m, isOfficial: false })}>
+              <img
+                src={m.img || "/devndra fadanvis.jfif"}
+                alt={t(m.nameKey)}
+              />
               <h3>{t(m.nameKey)}</h3>
               <p>{t(m.roleKey)}</p>
             </div>
@@ -80,81 +82,90 @@ export default function Hero() {
         <h2>{t("hero.gpOfficials")}</h2>
         <div className="grid">
           {gpOfficials.map((o, i) => (
-            <div key={i} className="card" onClick={() => setSelected({...o, isOfficial: true})}>
-              <img src="/human.jfif" alt={o.name} style={{ width: 80, height: 80, borderRadius: "50%", objectFit: "cover", marginBottom: 10 }} />
-
-
+            <div key={i} className="card" onClick={() => setSelected({ ...o, isOfficial: true })}>
+              <img src="/human.jfif" alt={t(o.nameKey)} />
               <h3>{t(o.nameKey)}</h3>
               <p>{t(o.roleKey)}</p>
             </div>
           ))}
         </div>
+
       </div>
 
       {/* MODAL */}
       {selected && (
         <div className="overlay" onClick={() => setSelected(null)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
-            {selected.isOfficial && <div style={{ fontSize: "64px", marginBottom: 15 }}>{selected.icon}</div>}
-            {!selected.isOfficial && <img src={selected.img} alt={t(selected.nameKey)} style={{ width: 100, height: 100, borderRadius: "50%", marginBottom: 15, objectFit: "cover" }} />}
+
+            {selected.isOfficial ? (
+              <div className="icon">{selected.icon}</div>
+            ) : (
+              <img src={selected.img} alt={t(selected.nameKey)} />
+            )}
 
             <h3>{t(selected.nameKey)}</h3>
             <p>{t(selected.roleKey)}</p>
             <p className="desc">{t(selected.descKey)}</p>
-            <button onClick={() => setSelected(null)}>{t('modal.close') || 'Close'}</button>
+
+            <button onClick={() => setSelected(null)}>
+              {t("modal.close") || "Close"}
+            </button>
+
           </div>
         </div>
       )}
 
       {/* CSS */}
       <style>{`
-      
+
       /* HERO */
       .hero {
         background: linear-gradient(135deg, #1e3a8a, #2563eb);
         color: white;
         text-align: center;
-        padding: 50px 20px;
+        padding: 60px 20px;
       }
 
       .hero h1 {
-        font-size: 2rem;
+        font-size: 2.2rem;
         font-weight: 700;
       }
 
       .hero p {
-        opacity: 0.9;
         margin-top: 10px;
+        opacity: 0.9;
+        font-size: 1rem;
       }
 
       /* CONTAINER */
       .container {
         max-width: 1100px;
-        margin: -40px auto 20px;
+        margin: -50px auto 20px;
         background: #fff;
-        padding: 20px;
+        padding: 25px;
         border-radius: 16px;
         box-shadow: 0 10px 40px rgba(0,0,0,0.1);
       }
 
       h2 {
         text-align: center;
-        margin: 20px 0;
+        margin: 25px 0 15px;
         color: #1e293b;
+        font-size: 1.4rem;
       }
 
       /* GRID */
       .grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-        gap: 15px;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 20px;
       }
 
       /* CARD */
       .card {
         background: #fff;
-        padding: 15px;
-        border-radius: 12px;
+        padding: 18px;
+        border-radius: 14px;
         text-align: center;
         cursor: pointer;
         transition: all 0.3s ease;
@@ -167,11 +178,11 @@ export default function Hero() {
       }
 
       .card img {
-        width: 80px;
-        height: 80px;
+        width: 85px;
+        height: 85px;
         border-radius: 50%;
         object-fit: cover;
-        margin-bottom: 10px;
+        margin-bottom: 12px;
         transition: 0.3s;
       }
 
@@ -180,12 +191,12 @@ export default function Hero() {
       }
 
       .card h3 {
-        font-size: 14px;
-        margin-bottom: 4px;
+        font-size: 15px;
+        margin-bottom: 5px;
       }
 
       .card p {
-        font-size: 12px;
+        font-size: 13px;
         color: #64748b;
       }
 
@@ -200,17 +211,22 @@ export default function Hero() {
         display: flex;
         justify-content: center;
         align-items: center;
-        padding: 10px;
+        padding: 15px;
       }
 
       .modal {
         background: white;
-        padding: 20px;
-        border-radius: 12px;
+        padding: 22px;
+        border-radius: 14px;
         text-align: center;
         width: 100%;
-        max-width: 350px;
+        max-width: 360px;
         animation: pop 0.3s ease;
+      }
+
+      .icon {
+        font-size: 60px;
+        margin-bottom: 10px;
       }
 
       @keyframes pop {
@@ -223,29 +239,54 @@ export default function Hero() {
         height: 100px;
         border-radius: 50%;
         margin-bottom: 10px;
+        object-fit: cover;
       }
 
       .modal .desc {
-        font-size: 13px;
+        font-size: 14px;
         margin-top: 10px;
         color: #475569;
       }
 
       .modal button {
         margin-top: 15px;
-        padding: 10px;
+        padding: 12px;
         width: 100%;
         background: #2563eb;
         color: white;
         border: none;
-        border-radius: 8px;
+        border-radius: 10px;
         font-weight: 600;
       }
 
+      /* TABLET */
+      @media (max-width: 768px) {
+        .grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .hero h1 {
+          font-size: 1.8rem;
+        }
+      }
+
       /* MOBILE */
-      @media (max-width: 500px) {
+      @media (max-width: 480px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+
+        .hero {
+          padding: 40px 10px;
+        }
+
         .hero h1 {
           font-size: 1.5rem;
+        }
+
+        .container {
+          padding: 15px;
+          margin-top: -30px;
         }
 
         .card img {
@@ -253,13 +294,19 @@ export default function Hero() {
           height: 70px;
         }
 
-        .container {
-          margin-top: -30px;
-          padding: 15px;
+        .modal {
+          max-width: 95%;
+          padding: 18px;
+        }
+
+        .modal img {
+          width: 85px;
+          height: 85px;
         }
       }
 
       `}</style>
+
     </section>
   );
 }

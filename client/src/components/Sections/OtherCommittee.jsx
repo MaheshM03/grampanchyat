@@ -2,134 +2,173 @@ import Navbar from "./Navbar";
 import { useTranslator } from "../../context/LanguageContext.js";
 
 const conflictFreeMembers = [
-  { sr: 1, position: "Elected by the Gram Sabha", name: "Mr. Vinay Ramchandra Yadav", role: "Secretary" },
-  { sr: 2, position: "Sarpanch", name: "Mr. Satish Sayajirao Deshmukh", role: "Member" },
-  { sr: 3, position: "Sub-Sarpanch", name: "Mr. Namajirao Nimaji Yadav", role: "Member" },
-  { sr: 4, position: "Gram Daftar Sub-Committee", name: "Mr. Abhijit Prabhat Yadav", role: "Member" },
-  { sr: 5, position: "Nirman Committee Correspondent", name: "Mr. Vaibhav Pandurang Yadav", role: "Member" },
-  { sr: 6, position: "Gram Panchayat P and VC Committee Correspondent", name: "Mr. Deepak Ramchandra Pardeshi", role: "Member" },
-  { sr: 7, position: "Prof. Education Committee Representative", name: "Mr. Umar Akhtar Yadav", role: "Member" },
-  { sr: 8, position: "Fix employment representative", name: "Mr. Rushikumar Gyaru Yadav", role: "Member" },
+  {
+    sr: 1,
+    position: "Sarpanch",
+    positionMr: "सरपंच",
+    name: "Shri. Laxman Jagannath Bendkule",
+    role: "Sarpanch",
+    roleMr: "सरपंच"
+  },
+  {
+    sr: 2,
+    position: "Up-Sarpanch",
+    positionMr: "उपसरपंच",
+    name: "Smt. Rohini Vinayak Gade",
+    role: "Up-Sarpanch",
+    roleMr: "उपसरपंच"
+  },
+  {
+    sr: 3,
+    position: "Member",
+    positionMr: "सदस्य",
+    name: "Shri. Raja Rajaram Dhongade",
+    role: "Member",
+    roleMr: "सदस्य"
+  },
+  {
+    sr: 4,
+    position: "Member",
+    positionMr: "सदस्य",
+    name: "Shri. Nitin Chhagan Dhongade",
+    role: "Member",
+    roleMr: "सदस्य"
+  },
+  {
+    sr: 5,
+    position: "Member",
+    positionMr: "सदस्या",
+    name: "Smt. Archana Vijay Dande",
+    role: "Member",
+    roleMr: "सदस्या"
+  },
+  {
+    sr: 6,
+    position: "Member",
+    positionMr: "सदस्य",
+    name: "Shri. Prakash Tanajirao Dhongade",
+    role: "Member",
+    roleMr: "सदस्य"
+  },
+  {
+    sr: 7,
+    position: "Member",
+    positionMr: "सदस्य",
+    name: "Shri. Sanjay Hiraman Gotarne",
+    role: "Member",
+    roleMr: "सदस्य"
+  },
+  {
+    sr: 8,
+    position: "Member",
+    positionMr: "सदस्या",
+    name: "Smt. Anjana Deepak Bendkule",
+    role: "Member",
+    roleMr: "सदस्या"
+  },
+  {
+    sr: 9,
+    position: "Member",
+    positionMr: "सदस्या",
+    name: "Smt. Rupali Satish More",
+    role: "Member",
+    roleMr: "सदस्या"
+  },
+  {
+    sr: 10,
+    position: "Member",
+    positionMr: "सदस्या",
+    name: "Smt. Usha Rohidas Gotarne",
+    role: "Member",
+    roleMr: "सदस्या"
+  },
+  {
+    sr: 11,
+    position: "Gram Panchayat Officer",
+    positionMr: "ग्रामपंचायत अधिकारी",
+    name: "Shri. Prashant Bankat Kanade",
+    role: "Officer",
+    roleMr: "अधिकारी"
+  },
+  {
+    sr: 12,
+    position: "Tax Clerk",
+    positionMr: "वसुली लिपिक",
+    name: "Shri. Motiram Damu Bendkule",
+    role: "Clerk",
+    roleMr: "लिपिक"
+  },
+  {
+    sr: 13,
+    position: "Staff",
+    positionMr: "पाणी पुरवठा कर्मचारी",
+    name: "Shri. Vinod Chandu Gotarne",
+    role: "Employee",
+    roleMr: "कर्मचारी"
+  },
+  {
+    sr: 14,
+    position: "Staff",
+    positionMr: "पाणी पुरवठा कर्मचारी",
+    name: "Shri. Dhananjay Ramu Bendkule",
+    role: "Employee",
+    roleMr: "कर्मचारी"
+  }
 ];
 
 export default function OtherCommittee() {
-  const { t, currentLanguage } = useTranslator();
+  const { currentLanguage } = useTranslator();
 
   return (
-    <section style={{ background: "#f8fafc" }}>
+    <section className="section">
       <Navbar />
 
       {/* HERO */}
-      <div style={{
-        background: "linear-gradient(135deg,#1e3a8a,#2563eb,#1d4ed8)",
-        padding: "60px 20px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        flexWrap: "wrap",
-        borderRadius: "0 0 30px 30px"
-      }}>
-        <div style={{ maxWidth: 600 }}>
-          <span style={{
-            background: "rgba(255,255,255,0.2)",
-            color: "#e0f2fe",
-            padding: "6px 14px",
-            borderRadius: 20,
-            fontSize: 12,
-            fontWeight: 600
-          }}>
-            {t('otherCommittee.badge')}
-          </span>
-
-          <h2 style={{
-            color: "#fff",
-            fontSize: "clamp(22px,5vw,32px)",
-            marginTop: 15,
-            fontWeight: 800
-          }}>
-            {t('otherCommittee.heroTitle')}
-          </h2>
-
-          <p style={{
-            color: "#c7d2fe",
-            marginTop: 10,
-            lineHeight: 1.6
-          }}>
-            {t('otherCommittee.heroDesc')}
-          </p>
-
-          <button style={{
-            marginTop: 20,
-            background: "#facc15",
-            color: "#1e293b",
-            padding: "10px 20px",
-            borderRadius: 8,
-            border: "none",
-            fontWeight: 600,
-            cursor: "pointer"
-          }}>
-            {t('otherCommittee.search')}
-          </button>
+      <div className="hero">
+        <div className="heroContent">
+          <h2>Other Committee Members</h2>
+          <p>Gram Panchayat Executive Committee Details</p>
         </div>
-
-        <div style={{ fontSize: 80 }}>🏛️</div>
+        <div className="heroIcon">🏛️</div>
       </div>
 
-      {/* TABLE TITLE */}
-      <h3 style={{
-        textAlign: "center",
-        fontSize: "1.6rem",
-        fontWeight: 700,
-        color: "#1e3a8a",
-        margin: "30px 0"
-      }}>
-        {t('otherCommittee.tableTitle')}
+      {/* TITLE */}
+      <h3 className="title">
+        {currentLanguage === "mr"
+          ? "ग्रामपंचायत कार्यकारी मंडळ"
+          : "Gram Panchayat Executive Committee"}
       </h3>
 
-      {/* TABLE CARD */}
-      <div style={{
-        maxWidth: 1000,
-        margin: "0 auto 40px",
-        background: "#fff",
-        borderRadius: 16,
-        boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
-        overflowX: "auto"
-      }}>
-        <table style={{ width: "100%", borderCollapse: "collapse" }}>
+      {/* TABLE */}
+      <div className="tableWrapper">
+        <table className="table">
           <thead>
-            <tr style={{ background: "#1e3a8a", color: "#fff" }}>
-              {[t('otherCommittee.headers.0'), t('otherCommittee.headers.1'), t('otherCommittee.headers.2'), t('otherCommittee.headers.3')].map(h => (
-                <th key={h} style={{ padding: 14, textAlign: "left" }}>{h}</th>
-              ))}
+            <tr>
+              <th>Sr No</th>
+              <th>{currentLanguage === "mr" ? "पद" : "Position"}</th>
+              <th>{currentLanguage === "mr" ? "नाव" : "Name"}</th>
+              <th>{currentLanguage === "mr" ? "भूमिका" : "Role"}</th>
             </tr>
           </thead>
 
           <tbody>
             {conflictFreeMembers.map((m, i) => (
-              <tr key={i} style={{
-                background: i % 2 === 0 ? "#fff" : "#f1f5f9",
-                transition: "0.2s"
-              }}>
-                <td style={tdStyle}>{m.sr}</td>
+              <tr key={i}>
+                <td>{m.sr}</td>
 
-                <td style={tdStyle}>
-                  {currentLanguage === 'mr' ? (m.positionMr || m.position) : m.position}
+                <td>
+                  {currentLanguage === "mr"
+                    ? m.positionMr
+                    : m.position}
                 </td>
 
-                <td style={{ ...tdStyle, fontWeight: 600 }}>
-                  {m.name}
-                </td>
+                <td className="name">{m.name}</td>
 
-                <td style={tdStyle}>
-                  <span style={{
-                    background: "#dbeafe",
-                    color: "#1d4ed8",
-                    padding: "4px 12px",
-                    borderRadius: 20,
-                    fontSize: 12,
-                    fontWeight: 600
-                  }}>
-                    {currentLanguage === 'mr' ? (m.roleMr || m.role) : m.role}
+                <td>
+                  <span className="badge">
+                    {currentLanguage === "mr"
+                      ? m.roleMr
+                      : m.role}
                   </span>
                 </td>
               </tr>
@@ -137,12 +176,108 @@ export default function OtherCommittee() {
           </tbody>
         </table>
       </div>
+
+      {/* CSS */}
+      <style>{`
+
+      .section {
+        background: #f8fafc;
+        min-height: 100vh;
+      }
+
+      .hero {
+        background: linear-gradient(135deg,#1e3a8a,#2563eb);
+        color: white;
+        padding: 50px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .heroContent h2 {
+        font-size: 2rem;
+      }
+
+      .heroContent p {
+        opacity: 0.9;
+        margin-top: 8px;
+      }
+
+      .heroIcon {
+        font-size: 60px;
+      }
+
+      .title {
+        text-align: center;
+        margin: 25px 0;
+        color: #1e3a8a;
+      }
+
+      .tableWrapper {
+        max-width: 1000px;
+        margin: auto;
+        background: white;
+        border-radius: 12px;
+        overflow-x: auto;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      }
+
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 600px;
+      }
+
+      .table th {
+        background: #1e3a8a;
+        color: white;
+        padding: 12px;
+        text-align: left;
+      }
+
+      .table td {
+        padding: 12px;
+        border-bottom: 1px solid #e5e7eb;
+      }
+
+      .table tr:nth-child(even) {
+        background: #f1f5f9;
+      }
+
+      .name {
+        font-weight: 600;
+      }
+
+      .badge {
+        background: #dbeafe;
+        color: #1d4ed8;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+      }
+
+      /* MOBILE */
+      @media (max-width: 600px) {
+        .hero {
+          flex-direction: column;
+          text-align: center;
+        }
+
+        .heroIcon {
+          margin-top: 10px;
+        }
+
+        .heroContent h2 {
+          font-size: 1.5rem;
+        }
+
+        .table {
+          min-width: 500px;
+        }
+      }
+
+      `}</style>
     </section>
   );
 }
-
-const tdStyle = {
-  padding: "14px",
-  borderBottom: "1px solid #e5e7eb",
-  fontSize: 14,
-};

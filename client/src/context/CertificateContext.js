@@ -16,6 +16,7 @@ export const CertificateProvider = ({ children }) => {
     death: [],
     residence: []
   });
+  const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const API_BASE = process.env.REACT_APP_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:5000' : 'https://grampanchyat1.onrender.com');
@@ -40,16 +41,40 @@ export const CertificateProvider = ({ children }) => {
     await Promise.all(['birth', 'death', 'residence'].map(fetchCertificates));
   }, [fetchCertificates]);
 
+  const fetchDocuments = useCallback(async () => {
+    try {
+      const token = localStorage.getItem('adminToken');
+      if (!token) throw new Error('No admin token');
+      const res = await fetch(`${API_BASE}/api/admin/certificates`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setDocuments(data.data || []);
+      } else {
+        console.error('Fetch documents error:', res.status);
+      }
+    } catch (err) {
+      console.error('Fetch documents error:', err);
+    }
+  }, [API_BASE]);
+
   const updateCertStatus = useCallback(async (type, id, status) => {
     if (!['birth', 'death', 'residence'].includes(type)) return;
     try {
+      const token = localStorage.getItem('adminToken');
       const res = await fetch(`${API_BASE}/api/${type}-certificates/${id}/status`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({ status, approvedBy: localStorage.getItem('adminName') || 'Admin' })
       });
       if (res.ok) {
-        // Refresh list
         await fetchCertificates(type);
         return true;
       }
@@ -62,13 +87,14 @@ export const CertificateProvider = ({ children }) => {
   return (
     <CertificateContext.Provider value={{
       certs,
+      documents,
       loading,
       fetchCertificates,
       fetchAllCertificates,
+      fetchDocuments,
       updateCertStatus
     }}>
       {children}
     </CertificateContext.Provider>
   );
 };
-

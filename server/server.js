@@ -8,6 +8,13 @@ const rateLimit = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 
+const multer = require('multer');
+const path = require('path');
+
+const birthCertRoutes = require('./routes/birthCertificate');
+const deathCertRoutes = require('./routes/deathCertificate');
+const residenceCertRoutes = require('./routes/residenceCertificate');
+
 const app = express();
 const mongoose = require('mongoose');
 
@@ -25,6 +32,26 @@ mongoose.connect(mongoUri, {
     console.error('❌ MongoDB connection error:', err);
     process.exit(1);
   });
+
+// Multer for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, 'uploads/'),
+  filename: (req, file, cb) => {
+    const uniqueName = Date.now() + '-' + Math.round(Math.random() * 1E9) + path.extname(file.originalname);
+    cb(null, uniqueName);
+  }
+});
+const upload = multer({ 
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith('image/') || file.mimetype === 'application/pdf') {
+      cb(null, true);
+    } else {
+      cb(new Error('Only images and PDF allowed'), false);
+    }
+  }
+});
 
 // ─────────────────────────────────────────
 // MIDDLEWARE
@@ -117,6 +144,17 @@ const authMiddleware = require('./middleware/auth');
 app.use('/api/news', authMiddleware, newsRoutes);
 
 app.use('/api/kunbi', kunbiRoutes);
+
+// Certificate routes
+app.use('/api/birth-certificates', birthCertRoutes);
+app.use('/api/death-certificates', deathCertRoutes);
+app.use('/api/residence-certificates', residenceCertRoutes);
+
+// Admin routes (protected)
+app.use('/api/admin', authMiddleware, require('./routes/admin'));
+
+// Serve uploaded files
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // ─────────────────────────────────────────
 // ERROR HANDLER
