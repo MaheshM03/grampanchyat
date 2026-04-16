@@ -147,7 +147,7 @@ export default function Population() {
             {
               title: "सौर पोल",
               desc: "ऊर्जा बचत व प्रकाश व्यवस्था",
-              img: "/sp.webp"
+              img: "/sp.webp",
             }
           ].map((item, i) => (
             <div key={i} style={{

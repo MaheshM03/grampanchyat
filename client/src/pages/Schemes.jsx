@@ -198,7 +198,7 @@ function Card({ title, color, data }) {
         justifyContent: "space-between",
         alignItems: "center"
       }}>
-        <span style={{ fontSize: 12 }}>mahaonline.gov.in</span>
+<a href="https://cscservices.mahaonline.gov.in/" target="_blank" rel="noopener noreferrer" style={{ textDecoration: "underline", color: "#1f4e5f" }}><span style={{ fontSize: 12 }}>mahaonline.gov.in</span></a>
         <div style={{ width: 40, height: 40, background: "#ddd" }}></div>
       </div>
     </div>

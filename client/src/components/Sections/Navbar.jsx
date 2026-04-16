@@ -46,7 +46,7 @@ const [mobileMenu, setMobileMenu] = useState(false);
   };
 
   return (
-    <header style={{ fontFamily: "Arial, sans-serif", boxShadow: "0 12px 35px rgba(0,0,0,0.08)", position: "sticky", top: 0, zIndex: 999, background: "rgba(250,250,255,0.96)", backdropFilter: "blur(15px)" }}>
+    <header style={{ fontFamily: "Arial, sans-serif", boxShadow: "0 12px 35px rgba(0,0,0,0.08)", zIndex: 999, background: "rgba(250,250,255,0.96)", backdropFilter: "blur(15px)" }}>
       
       {/* TOP BAR */}
       <div style={{

@@ -1,23 +1,18 @@
 import { useTranslator } from "../../context/LanguageContext.js";
-import Footer from "./Footer.jsx";
 import Navbar from "./Navbar.jsx";
+import Footer from "./Footer.jsx";
 import { motion } from "framer-motion";
 
-const adminMembersData = [
-  { name: "श्री. सतीश सयाजीराव देशमुख", role: "सार्वजनिक नियुक्त सरपंच", img: "/human.jfif", enName: "Mr. Satish Sayajirao Deshmukh", enRole: "Publicly appointed Sarpanch" },
-  { name: "श्री. हनुमान गणपती गरुडा", role: "उप सरपंच", img: "/human.jfif", enName: "Mr. Hanuman Ganpati Garuda", enRole: "Sub-Sarpanch" },
-  { name: "श्री. अनिल बापूसो यादव", role: "सभासद", img: "/human.jfif", enName: "Mr. Anil Bapuso Yadav", enRole: "Member" },
-  { name: "सौ. वैशाली पृथ्वीराज यादव", role: "सभासद", img: "/human.jfif", enName: "Mrs. Vaishali Prithviraj Yadav", enRole: "Member" }
-];
-
-
 export default function AdminCommittee() {
-  const { t, currentLanguage } = useTranslator();
+  const { t, currentLanguage, translations } = useTranslator();
 
-  const adminMembers = adminMembersData.map(m => ({
-    name: currentLanguage === 'mr' ? m.name : m.enName,
-    role: currentLanguage === 'mr' ? m.role : m.enRole,
-    img: m.img
+  // Get admin members from translations
+  const adminMembersData = currentLanguage === 'en' ? translations.en?.['admin.members'] || [] : translations.mr?.['admin.members'] || [];
+
+  const adminMembers = adminMembersData.map((m) => ({
+    name: m.name || m.enName,
+    role: m.role || m.enRole,
+    img: "/human.jfif"
   }));
 
   return (
@@ -38,12 +33,10 @@ export default function AdminCommittee() {
           <h1 style={{ color: "#fff", fontSize: "clamp(22px,5vw,34px)", fontWeight: 800 }}>
             {t('admin.title')}
           </h1>
-
           <p style={{ color: "#cbd5f5", marginTop: 10 }}>
             {t('admin.desc')}
           </p>
         </div>
-
         <div style={{ fontSize: 80 }}>🏛️</div>
       </div>
 
@@ -60,7 +53,7 @@ export default function AdminCommittee() {
           maxWidth: 1100,
           margin: "0 auto"
         }}>
-          {adminMembers.map((m, i) => (
+          {adminMembers.slice(0, 14).map((m, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, y: 30 }}
@@ -78,7 +71,7 @@ export default function AdminCommittee() {
             >
               <img
                 src={m.img}
-                alt="profile"
+                alt="Member Profile"
                 style={{
                   width: 80,
                   height: 80,
@@ -88,11 +81,9 @@ export default function AdminCommittee() {
                   border: "3px solid #6366f1"
                 }}
               />
-
               <p style={{ fontWeight: 700, color: "#1e293b" }}>
                 {m.name}
               </p>
-
               <span style={{
                 display: "inline-block",
                 marginTop: 8,

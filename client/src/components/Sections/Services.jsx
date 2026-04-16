@@ -1,5 +1,6 @@
 import { useTranslator } from '../../context/LanguageContext.js';
 import { Link } from 'react-router-dom';
+import Navbar from "./Navbar.jsx";
 import { FileText, Skull, Home, AlertCircle, Newspaper, CreditCard } from 'lucide-react';
 
 export default function OnlineServices() {

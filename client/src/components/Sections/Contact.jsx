@@ -1,5 +1,7 @@
 import { useTranslator } from "../../context/LanguageContext.js";
 
+import Navbar from "./Navbar.jsx";
+
 export default function Contact() {
   const { t } = useTranslator();
 
